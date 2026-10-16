@@ -1,0 +1,380 @@
+/* ========================================
+    TABLET Y ESCRITORIO COMPACTO
+======================================== */
+
+@media (max-width: 1050px) {
+    :root {
+        --shell-max-width: 860px;
+        --shell-gutter: 52px;
+    }
+
+    .hero {
+        grid-template-columns: .84fr 1.16fr;
+        gap: 24px;
+        padding-top: 56px;
+    }
+
+    .hero h1 {
+        font-size: 46px;
+    }
+
+    .dashboard-content {
+        grid-template-columns: 36px minmax(205px, 1fr) 150px;
+    }
+
+    .patient-card {
+        padding-inline: 10px;
+    }
+
+    .floating-reminder {
+        right: -9px;
+    }
+
+    .care-inner {
+        grid-template-columns: .7fr 1.2fr 1fr;
+        gap: 25px;
+    }
+
+    .care-symbol {
+        width: 165px;
+        height: 165px;
+    }
+
+    .care-copy h2 {
+        font-size: 32px;
+    }
+}
+
+
+/* ========================================
+    TABLETAS Y MÓVILES
+======================================== */
+
+@media (max-width: 760px) {
+    :root {
+        --shell-gutter: 40px;
+        --section-title-size: 39px;
+        --contact-title-size: 39px;
+    }
+
+    .hero {
+        grid-template-columns: 1fr;
+        gap: 53px;
+        padding-top: 64px;
+        padding-bottom: 76px;
+    }
+
+    .hero h1 {
+        font-size: 49px;
+    }
+
+    .hero-description {
+        max-width: 470px;
+
+        font-size: 14px;
+    }
+
+    .product-stage {
+        width: 100%;
+    }
+
+    .dashboard-content {
+        grid-template-columns: 35px minmax(0, 1fr) 158px;
+    }
+
+    .dashboard-window {
+        min-width: 0;
+    }
+
+    .schedule-panel {
+        padding-inline: 10px;
+    }
+
+    .floating-reminder {
+        right: 8px;
+        bottom: -27px;
+    }
+
+    .stage-sticker {
+        right: -8px;
+
+        width: 76px;
+        height: 76px;
+    }
+
+    .trust-inner {
+        min-height: 100px;
+
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 13px 25px;
+
+        padding-block: 18px;
+    }
+
+    .trust-inner > span {
+        flex-basis: 100%;
+        max-width: none;
+    }
+
+    .trust-inner strong {
+        font-size: 11px;
+    }
+
+    .features {
+        padding-top: 83px;
+        padding-bottom: 86px;
+    }
+
+    .section-heading {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .section-heading .eyebrow {
+        grid-column: auto;
+
+        margin-bottom: 4px;
+    }
+
+    .section-heading > p:last-child {
+        margin-top: 6px;
+    }
+
+    .feature-grid {
+        grid-template-columns: 1fr;
+        gap: 38px;
+
+        margin-top: 34px;
+    }
+
+    .care-inner {
+        grid-template-columns: 120px 1fr;
+        gap: 25px 20px;
+
+        padding-top: 62px;
+        padding-bottom: 48px;
+    }
+
+    .care-symbol {
+        width: 110px;
+        height: 110px;
+    }
+
+    .care-symbol::before {
+        inset: 11px;
+    }
+
+    .care-symbol::after {
+        inset: 23px;
+    }
+
+    .care-symbol span {
+        width: 42px;
+        height: 42px;
+
+        font-size: 28px;
+    }
+
+    .care-symbol i {
+        top: 15px;
+        right: 17px;
+
+        width: 9px;
+        height: 9px;
+    }
+
+    .care-copy h2 {
+        font-size: 29px;
+    }
+
+    .care-copy .eyebrow {
+        font-size: 8px;
+    }
+
+    .care-details {
+        grid-column: 2;
+    }
+
+    .care-index {
+        margin-top: 29px;
+
+        font-size: 6px;
+    }
+
+    .contact-section {
+        min-height: auto;
+
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 22px;
+
+        padding-top: 68px;
+        padding-bottom: 68px;
+    }
+
+    .contact-action {
+        max-width: 460px;
+    }
+
+    .site-footer {
+        flex-wrap: wrap;
+
+        padding-block: 20px;
+    }
+
+    .site-footer > span {
+        order: 3;
+        flex-basis: 100%;
+    }
+}
+
+
+/* ========================================
+    MÓVILES
+======================================== */
+
+@media (max-width: 520px) {
+    :root {
+        --shell-gutter: 32px;
+        --section-title-size: 35px;
+        --contact-title-size: 35px;
+    }
+
+    .hero {
+        padding-top: 54px;
+    }
+
+    .eyebrow {
+        font-size: 9px;
+    }
+
+    .hero h1 {
+        font-size: 42px;
+    }
+
+    .hero-actions {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 17px;
+    }
+
+    .hero-note {
+        align-items: flex-start;
+        max-width: 290px;
+
+        line-height: 1.5;
+    }
+
+    .dashboard-topbar {
+        height: 42px;
+
+        padding-inline: 9px;
+    }
+
+    .workspace-label,
+    .tool-search,
+    .dashboard-sidebar,
+    .patient-card {
+        display: none;
+    }
+
+    .dashboard-content {
+        min-height: 330px;
+
+        display: block;
+    }
+
+    .schedule-panel {
+        padding: 17px 13px;
+    }
+
+    .schedule-heading h2 {
+        font-size: 17px;
+    }
+
+    .calendar-grid {
+        grid-template-columns: 37px 1fr;
+    }
+
+    .appointments {
+        min-height: 245px;
+    }
+
+    .appointment {
+        min-height: 48px;
+    }
+
+    .floating-reminder {
+        right: 7px;
+
+        padding: 8px 10px;
+    }
+
+    .reminder-icon {
+        width: 23px;
+        height: 23px;
+    }
+
+    .stage-sticker {
+        top: -24px;
+        right: -4px;
+
+        width: 66px;
+        height: 66px;
+
+        font-size: 7px;
+    }
+
+    .care-inner {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .care-symbol {
+        position: absolute;
+        top: 50px;
+        right: 3px;
+
+        width: 76px;
+        height: 76px;
+
+        opacity: .8;
+    }
+
+    .care-symbol::before {
+        inset: 8px;
+    }
+
+    .care-symbol::after {
+        inset: 16px;
+    }
+
+    .care-symbol span {
+        width: 32px;
+        height: 32px;
+
+        font-size: 21px;
+    }
+
+    .care-symbol i {
+        top: 10px;
+        right: 12px;
+
+        width: 7px;
+        height: 7px;
+    }
+
+    .care-copy {
+        position: relative;
+        z-index: 1;
+    }
+
+    .care-copy h2 {
+        font-size: 32px;
+    }
+
+    .care-details {
+        grid-column: auto;
+    }
+}

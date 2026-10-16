@@ -1,0 +1,80 @@
+/* ========================================
+	PORTADA
+======================================== */
+
+.hero {
+	min-height: 640px;
+
+	display: grid;
+	grid-template-columns: .88fr 1.12fr;
+	align-items: center;
+	gap: 45px;
+
+	padding-top: 68px;
+	padding-bottom: 74px;
+}
+
+.hero-copy {
+	position: relative;
+	z-index: 1;
+
+	padding-bottom: 12px;
+}
+
+.eyebrow-dot {
+	display: inline-block;
+	width: 7px;
+	height: 7px;
+
+	margin: 0 8px 1px 0;
+
+	border-radius: 50%;
+	background: var(--coral);
+}
+
+.hero h1 {
+	font-size: 55px;
+	line-height: 1.08;
+}
+
+.hero-description {
+	max-width: 420px;
+	margin: 24px 0 27px;
+
+	color: var(--muted);
+
+	font-size: 15px;
+	line-height: 1.75;
+}
+
+.hero-actions {
+	display: flex;
+	align-items: center;
+	gap: 26px;
+}
+
+.hero-note {
+	display: flex;
+	align-items: center;
+	gap: 9px;
+
+	margin-top: 35px;
+
+	color: var(--muted);
+
+	font-size: 11px;
+}
+
+.note-check {
+	display: grid;
+	width: 19px;
+	height: 19px;
+	place-items: center;
+
+	border: 1px solid #adc4b4;
+	border-radius: 50%;
+
+	color: var(--green);
+
+	font-size: 11px;
+}
