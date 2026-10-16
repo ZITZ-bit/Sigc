@@ -1,0 +1,101 @@
+.auth-layout-register {
+    grid-template-columns: .9fr 1.1fr;
+}
+
+.auth-aside-register {
+    background-color: #284f43;
+}
+
+.register-note {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 14px;
+
+    padding: 17px 0;
+
+    border-top: 1px solid rgba(255, 255, 255, .25);
+    border-bottom: 1px solid rgba(255, 255, 255, .25);
+}
+
+.register-note-mark {
+    color: #f1cd6f;
+
+    font-size: 25px;
+}
+
+.register-note div {
+    display: grid;
+    gap: 5px;
+}
+
+.register-note strong {
+    color: white;
+
+    font-size: 11px;
+}
+
+.register-note div span {
+    color: #d1dfd5;
+
+    font-size: 9px;
+}
+
+.register-note-arrow {
+    color: #d8e9bb;
+
+    font-size: 16px;
+}
+
+.auth-register-form {
+    gap: 13px;
+}
+
+.auth-field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 13px;
+}
+
+.auth-field > span small {
+    margin-left: 5px;
+
+    color: #87948b;
+
+    font-size: 7px;
+    letter-spacing: .5px;
+}
+
+.auth-register-form .auth-submit {
+    margin-top: 5px;
+}
+
+.auth-register-form + .auth-switch {
+    margin-top: 17px;
+}
+
+.auth-register-form ~ .auth-privacy {
+    margin-top: 20px;
+}
+
+@media (max-width: 900px) {
+    .auth-layout-register {
+        grid-template-columns: .85fr 1.15fr;
+    }
+}
+
+@media (max-width: 680px) {
+    .auth-layout-register {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-field-row {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 420px) {
+    .auth-field-row {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,32 @@
+.site-footer > a:last-child {
+    transition: color .2s ease;
+}
+
+.site-footer > a:last-child:hover {
+    color: var(--coral);
+}
+
+.button {
+    transition: transform .2s ease, background .2s ease;
+}
+
+.button:hover {
+    transform: translateY(-2px);
+}
+
+.button-primary:hover {
+    background: var(--green-dark);
+}
+
+.text-link:hover {
+    color: var(--coral);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+    }
+}

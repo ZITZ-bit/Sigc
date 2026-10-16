@@ -1,0 +1,199 @@
+/* ========================================
+	SECCIÓN DE CUIDADO
+======================================== */
+
+.care-band {
+	overflow: hidden;
+
+	color: white;
+	background: var(--green-dark);
+}
+
+.care-inner {
+	position: relative;
+	min-height: 395px;
+
+	display: grid;
+	grid-template-columns: .72fr 1.2fr 1fr;
+	align-items: center;
+	gap: 42px;
+
+	padding-top: 65px;
+	padding-bottom: 65px;
+}
+
+.care-symbol {
+	position: relative;
+
+	width: 210px;
+	height: 210px;
+
+	display: grid;
+	place-items: center;
+
+	border: 1px solid rgba(235, 242, 225, .25);
+	border-radius: 50%;
+
+	background: #225346;
+}
+
+.care-symbol::before,
+.care-symbol::after {
+	position: absolute;
+
+	content: '';
+
+	border: 1px solid rgba(235, 242, 225, .2);
+	border-radius: 50%;
+}
+
+.care-symbol::before {
+	inset: 20px;
+}
+
+.care-symbol::after {
+	inset: 40px;
+
+	border-color: rgba(235, 242, 225, .36);
+}
+
+.care-symbol span {
+	z-index: 1;
+
+	width: 68px;
+	height: 68px;
+
+	display: grid;
+	place-items: center;
+
+	border-radius: 50%;
+
+	color: var(--green-dark);
+	background: var(--yellow);
+
+	font-size: 43px;
+	font-weight: 400;
+}
+
+.care-symbol i {
+	position: absolute;
+	top: 29px;
+	right: 32px;
+
+	width: 13px;
+	height: 13px;
+
+	border-radius: 50%;
+
+	background: var(--coral);
+}
+
+.care-copy .eyebrow {
+	margin-bottom: 17px;
+
+	color: #c2d9c5;
+}
+
+.care-copy h2 {
+	font-size: 37px;
+	line-height: 1.18;
+}
+
+.care-copy h2 span {
+	color: #d8e9bb;
+}
+
+.care-details {
+	align-self: end;
+
+	padding-bottom: 5px;
+}
+
+.care-details > p {
+	max-width: 300px;
+	margin: 0 0 22px;
+
+	color: #d1dfd5;
+
+	font-size: 12px;
+	line-height: 1.8;
+}
+
+.text-link-light {
+	color: #e2edca;
+}
+
+.care-index {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+
+	margin-top: 57px;
+
+	color: #9cb6a2;
+
+	font-size: 7px;
+	font-weight: 700;
+	letter-spacing: .8px;
+}
+
+.care-index span {
+	color: var(--coral);
+
+	font-size: 16px;
+	line-height: 8px;
+}
+
+
+/* ========================================
+	CONTACTO Y PIE DE PÁGINA
+======================================== */
+
+.contact-section {
+	min-height: 330px;
+
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 50px;
+
+	padding-top: 70px;
+	padding-bottom: 70px;
+}
+
+.contact-section .eyebrow {
+	margin-bottom: 15px;
+}
+
+.contact-section h2 {
+	font-size: var(--contact-title-size);
+	line-height: 1.13;
+}
+
+.contact-action {
+	max-width: 370px;
+}
+
+.contact-action p {
+	margin: 0 0 20px;
+
+	color: var(--muted);
+
+	font-size: 13px;
+	line-height: 1.8;
+}
+
+.site-footer {
+	min-height: 75px;
+
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 20px;
+
+	border-top: 1px solid #dfe5dc;
+
+	color: #718078;
+
+	font-size: 10px;
+}

@@ -1,0 +1,163 @@
+/* ========================================
+    VARIABLES GLOBALES
+======================================== */
+
+:root {
+    --ink: #1c302b;
+    --muted: #65746e;
+    --paper: #f5f7f1;
+    --white: #fffefa;
+
+    --green: #1d5949;
+    --green-dark: #173f36;
+    --mint: #dcefe5;
+
+    --coral: #e77f64;
+    --yellow: #f1cd6f;
+    --line: #dfe5dc;
+
+    --shell-max-width: 1240px;
+    --shell-gutter: 80px;
+
+    --section-title-size: 43px;
+    --contact-title-size: 42px;
+
+    font-family: 'DM Sans', sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+}
+
+
+/* ========================================
+    ESTILOS GENERALES
+======================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    min-width: 320px;
+    background: var(--paper);
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+
+/* ========================================
+    CONTENEDORES
+======================================== */
+
+.section-shell,
+.trust-inner,
+.care-inner,
+.site-footer {
+    width: min(
+        var(--shell-max-width),
+        calc(100% - var(--shell-gutter))
+    );
+
+    margin-inline: auto;
+}
+
+
+/* ========================================
+    TEXTOS SECUNDARIOS
+======================================== */
+
+.eyebrow {
+    margin: 0 0 22px;
+
+    color: var(--green);
+
+    font-size: 10px;
+    line-height: 1.5;
+    font-weight: 700;
+    letter-spacing: 1.1px;
+}
+
+
+/* ========================================
+    TÍTULOS
+======================================== */
+
+h1,
+.section-heading h2,
+.care-copy h2,
+.contact-section h2 {
+    margin: 0;
+
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-weight: 400;
+    letter-spacing: 0;
+}
+
+
+/* ========================================
+    COLORES DE TÍTULOS
+======================================== */
+
+.hero h1 span,
+.section-heading h2 span,
+.contact-section h2 span {
+    color: var(--green);
+}
+
+
+/* ========================================
+    BOTONES
+======================================== */
+
+.button {
+    min-height: 48px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+
+    padding: 0 19px;
+
+    border-radius: 3px;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.button-primary {
+    color: white;
+    background: var(--green);
+}
+
+
+/* ========================================
+    ENLACES DE TEXTO Y FLECHAS
+======================================== */
+
+.button-primary span,
+.text-link span {
+    font-size: 17px;
+    line-height: 1;
+}
+
+.text-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+
+    color: var(--green);
+
+    font-size: 12px;
+    font-weight: 700;
+}

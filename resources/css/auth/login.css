@@ -1,0 +1,90 @@
+.auth-agenda {
+    border-top: 1px solid rgba(255, 255, 255, .25);
+    border-bottom: 1px solid rgba(255, 255, 255, .25);
+}
+
+.auth-agenda-top,
+.auth-agenda-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.auth-agenda-top {
+    padding: 13px 0;
+
+    color: #bdd5c2;
+
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: .7px;
+}
+
+.auth-agenda-row {
+    display: grid;
+    grid-template-columns: 48px 1fr auto;
+    align-items: center;
+    gap: 10px;
+
+    padding: 13px 0;
+
+    border-top: 1px solid rgba(255, 255, 255, .14);
+}
+
+.auth-agenda-row time {
+    color: #d8e9bb;
+
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.auth-agenda-row > span {
+    position: relative;
+    display: grid;
+    gap: 3px;
+    padding-left: 12px;
+}
+
+.auth-agenda-row > span i {
+    position: absolute;
+    top: 2px;
+    bottom: 2px;
+    left: 0;
+
+    width: 2px;
+
+    background: var(--auth-coral);
+}
+
+.auth-agenda-row strong {
+    color: white;
+
+    font-size: 10px;
+}
+
+.auth-agenda-row small {
+    color: #bdd0c1;
+
+    font-size: 8px;
+}
+
+.auth-agenda-row b {
+    color: #a7c6aa;
+
+    font-size: 7px;
+    letter-spacing: .5px;
+}
+
+.auth-agenda-footer {
+    padding: 12px 0;
+
+    color: #d1dfd5;
+
+    font-size: 9px;
+}
+
+.auth-agenda-footer span:last-child {
+    color: #d8e9bb;
+
+    font-size: 14px;
+}
