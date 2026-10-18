@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: sigc
+    runtime: docker
+    dockerfilePath: ./docker/Dockerfile
+    dockerContext: .
+    healthCheckPath: /up
+    region: oregon
+    plan: free
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        generateValue: true
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: APP_URL
+        value: https://sigc.onrender.com
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "3306"
+      - key: DB_DATABASE
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: SESSION_DRIVER
+        value: file
+      - key: CACHE_STORE
+        value: file
+    # Migraciones se ejecutan en docker/entrypoint.sh
