@@ -17,7 +17,7 @@ services:
       - key: LOG_CHANNEL
         value: stderr
       - key: APP_URL
-        value: https://sigc.onrender.com
+        value: https://sigc-3bau.onrender.com
       - key: DB_CONNECTION
         value: mysql
       - key: DB_HOST
