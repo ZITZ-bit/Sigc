@@ -10,8 +10,10 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
     @vite(['resources/css/components.css', 'resources/css/register.css'])
 </head>
+
 <body class="auth-page">
     <main class="auth-layout auth-layout-register">
+
         <aside class="auth-aside auth-aside-register">
             <x-brand class="auth-aside-brand" href="{{ url('/') }}" label="SIGC, volver al inicio" />
             <div class="auth-aside-copy">
@@ -34,31 +36,50 @@
                 <h2 id="register-title">Crea tu cuenta</h2>
                 <p class="auth-intro">Cuéntanos un poco de ti y de tu clínica.</p>
 
-                <form class="auth-form auth-register-form">
+                <form class="auth-form auth-register-form" method="POST" action="{{ route('register') }}">
+                    @csrf
+
                     <div class="auth-field-row">
+
                         <label class="auth-field">
                             <span>Nombre</span>
-                            <input type="text" name="name" autocomplete="given-name" placeholder="Tu nombre" required>
+                            <input type="text" name="name" autocomplete="given-name" placeholder="Tu nombre" value="{{ old('name') }}" required>
                         </label>
                         <label class="auth-field">
                             <span>Apellido</span>
-                            <input type="text" name="last_name" autocomplete="family-name" placeholder="Tu apellido" required>
+                            <input type="text" name="last_name" autocomplete="family-name" placeholder="Tu apellido" value="{{ old('last_name') }}" required>
                         </label>
+
                     </div>
+
                     <label class="auth-field">
                         <span>Correo electrónico</span>
-                        <input type="email" name="email" autocomplete="email" placeholder="nombre@clinica.com" required>
+                        <input type="email" name="email" autocomplete="email" placeholder="tu@correo.com" value="{{ old('email') }}" required>
                     </label>
+
+                    <label class="auth-field">
+                        <span>Usuario (opcional)</span>
+                        <input type="text" name="username" autocomplete="username" placeholder="nombre de usuario" value="{{ old('username') }}">
+                    </label>
+
                     <label class="auth-field">
                         <span>Nombre de tu clínica <small>OPCIONAL</small></span>
-                        <input type="text" name="clinic" autocomplete="organization" placeholder="¿Cómo se llama tu clínica?">
+                        <input type="text" name="clinic" autocomplete="organization" placeholder="¿Cómo se llama tu clínica?" value="{{ old('clinic') }}">
                     </label>
+
                     <label class="auth-field">
                         <span>Contraseña</span>
-                        <input type="password" name="password" autocomplete="new-password" placeholder="Crea una contraseña" required>
+                        <input type="password" name="password" autocomplete="new-password" placeholder="Crea una contraseña (mínimo 8 caracteres)" required minlength="8">
                     </label>
-                    <button class="auth-submit" type="button">Crear mi cuenta <span aria-hidden="true">→</span></button>
+                    <button class="auth-submit" type="submit">Crear mi cuenta <span aria-hidden="true">→</span></button>
                 </form>
+                @if($errors->any())
+                    <div style="margin-top:16px; color:#b91c1c;">
+                        @foreach($errors->all() as $error)
+                            <p>{{ $error }}</p>
+                        @endforeach
+                    </div>
+                @endif
 
                 <p class="auth-switch">¿Ya tienes cuenta? <a href="{{ route('login') }}">Inicia sesión</a></p>
                 <p class="auth-privacy">Tu información de acceso se mantiene privada y protegida.</p>

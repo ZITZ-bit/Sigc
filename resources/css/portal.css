@@ -6,3 +6,4 @@
 @import './portal/responsive.css';
 @import '../modules/rise-in.css';
 @import '../modules/hover-transitions.css';
+@import './pacientes/paciente-panel.css';
