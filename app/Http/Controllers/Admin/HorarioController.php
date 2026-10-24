@@ -8,11 +8,6 @@ use Illuminate\Http\Request;
 
 class HorarioController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(['auth', 'role:administrador']);
-    }
-
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -32,6 +27,19 @@ class HorarioController extends Controller
             'activo' => true,
         ]);
 
-        return redirect()->back()->with('success', 'Horario creado correctamente.');
+        return redirect()->route('admin.panel', ['view' => 'consultas', 'tab' => 'hours'])
+            ->with('success', 'Horario creado correctamente.');
+    }
+
+    public function updateStatus(Request $request, Horario $horario)
+    {
+        $validated = $request->validate([
+            'activo' => ['required', 'boolean'],
+        ]);
+
+        $horario->update(['activo' => $validated['activo']]);
+
+        return redirect()->route('admin.panel', ['view' => 'consultas', 'tab' => 'hours'])
+            ->with('success', 'Disponibilidad actualizada.');
     }
 }

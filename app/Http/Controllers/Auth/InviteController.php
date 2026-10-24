@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Invite;
 use App\Models\Medico;
+use App\Models\Paciente;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -62,6 +63,13 @@ class InviteController extends Controller
                     'cedula_profesional' => $validated['cedula_profesional'] ?? null,
                     'anios_experiencia' => $validated['anios_experiencia'] ?? null,
                     'consultorio' => $validated['consultorio'] ?? null,
+                ]);
+            }
+
+            if ($invite->role->nombre === 'paciente') {
+                Paciente::create([
+                    'user_id' => $user->id,
+                    'expediente_numero' => 'EXP-' . str_pad($user->id, 6, '0', STR_PAD_LEFT),
                 ]);
             }
 

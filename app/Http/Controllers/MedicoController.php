@@ -9,11 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class MedicoController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(['auth', 'role:medico']);
-    }
-
     public function dashboard()
     {
         $user = Auth::user();
@@ -26,8 +21,14 @@ class MedicoController extends Controller
             ->where('medico_id', $medico->id)
             ->where('firmada', false)
             ->get();
+        $notasFirmadas = Nota::with('paciente.user')
+            ->where('medico_id', $medico->id)
+            ->where('firmada', true)
+            ->orderBy('firmada_at', 'desc')
+            ->take(5)
+            ->get();
 
-        return view('ui.medicos.medico-portal', compact('user', 'medico', 'consultas', 'notasPendientes'));
+        return view('ui.medicos.medico-portal', compact('user', 'medico', 'consultas', 'notasPendientes', 'notasFirmadas'));
     }
 
     public function atenderConsulta(Request $request, Consulta $consulta)

@@ -13,17 +13,9 @@ use Illuminate\Support\Str;
 
 class MedicoAdminController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(['auth', 'role:administrador']);
-    }
-
     public function index()
     {
-        $medicos = \App\Models\Medico::with('user', 'especialidad', 'clinica')->get();
-        $clinicas = Clinica::all();
-        $especialidades = Especialidad::all();
-        return view('ui.administracion.admin-portal', compact('medicos', 'clinicas', 'especialidades'));
+        return redirect()->route('admin.panel', ['view' => 'equipo']);
     }
 
     public function inviteMedico(Request $request)
@@ -36,7 +28,7 @@ class MedicoAdminController extends Controller
 
         $roleMedico = Role::where('nombre', 'medico')->firstOrFail();
 
-        Invite::create([
+        $invite = Invite::create([
             'email' => $validated['email'],
             'token' => Str::random(64),
             'role_id' => $roleMedico->id,
@@ -46,7 +38,9 @@ class MedicoAdminController extends Controller
             'expires_at' => now()->addDays(7),
         ]);
 
-        return redirect()->back()->with('success', 'Invitación enviada al médico. Enlace generado (revisar logs/enlace de invitación).');
+        return redirect()->route('admin.panel', ['view' => 'equipo'])
+            ->with('success', 'Invitación creada para el médico. Comparte el enlace para que active su cuenta.')
+            ->with('invite_url', route('invite.accept', $invite->token));
     }
 
     public function inviteAdmin(Request $request)
@@ -57,7 +51,7 @@ class MedicoAdminController extends Controller
 
         $roleAdmin = Role::where('nombre', 'administrador')->firstOrFail();
 
-        Invite::create([
+        $invite = Invite::create([
             'email' => $validated['email'],
             'token' => Str::random(64),
             'role_id' => $roleAdmin->id,
@@ -65,6 +59,8 @@ class MedicoAdminController extends Controller
             'expires_at' => now()->addDays(7),
         ]);
 
-        return redirect()->back()->with('success', 'Invitación enviada al administrador.');
+        return redirect()->route('admin.panel', ['view' => 'equipo'])
+            ->with('success', 'Invitación creada para el administrador. Comparte el enlace para que active su cuenta.')
+            ->with('invite_url', route('invite.accept', $invite->token));
     }
 }

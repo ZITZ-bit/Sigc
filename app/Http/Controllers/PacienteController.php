@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Consulta;
+use App\Models\Horario;
 use App\Models\Medico;
 use App\Models\Notificacion;
 use Illuminate\Http\Request;
@@ -10,19 +11,15 @@ use Illuminate\Support\Facades\Auth;
 
 class PacienteController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(['auth', 'role:paciente']);
-    }
-
     public function dashboard()
     {
         $user = Auth::user();
         $paciente = $user->paciente()->with('consultas.medico.user', 'consultas.medico.especialidad')->first();
         $medicos = Medico::with('user', 'especialidad')->get();
+        $horarios = Horario::with('medico.user', 'medico.especialidad')->where('activo', true)->get();
         $notificaciones = Notificacion::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
 
-        return view('ui.pacientes.paciente-portal', compact('user', 'paciente', 'medicos', 'notificaciones'));
+        return view('ui.pacientes.paciente-portal', compact('user', 'paciente', 'medicos', 'horarios', 'notificaciones'));
     }
 
     public function updateProfile(Request $request)

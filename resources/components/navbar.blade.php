@@ -7,8 +7,17 @@
             <a class="transition-colors duration-200 hover:text-[var(--coral)] max-[520px]:hidden" href="#contacto">Contacto</a>
         </div>
         <div class="flex items-center gap-2 max-[520px]:gap-1">
-            <a class="inline-flex min-h-10 items-center justify-center border border-[#b9c7bc] px-3 text-[11px] font-bold transition-colors duration-200 hover:bg-[#e8eee6] max-[760px]:min-h-9 max-[760px]:px-2 max-[760px]:text-[10px] max-[520px]:min-h-8 max-[520px]:px-[6px] max-[520px]:text-[9px]" href="{{ route('login') }}">Iniciar sesión</a>
-            <a class="inline-flex min-h-10 items-center justify-center gap-2 border border-[var(--green)] bg-[var(--green)] px-3 text-[11px] font-bold text-white transition-colors duration-200 hover:bg-[var(--green-dark)] max-[760px]:min-h-9 max-[760px]:gap-1 max-[760px]:px-2 max-[760px]:text-[10px] max-[520px]:min-h-8 max-[520px]:gap-0 max-[520px]:px-[6px] max-[520px]:text-[9px]" href="{{ route('register') }}">Crear cuenta <span aria-hidden="true">↗</span></a>
+            @auth
+                <a href="{{ Auth::user()->redirectToPanel() }}" class="inline-flex min-h-10 items-center justify-center gap-2 border border-[#b9c7bc] px-3 text-[11px] font-bold transition-colors duration-200 hover:bg-[#e8eee6] max-[760px]:min-h-9 max-[760px]:px-2 max-[760px]:text-[10px]">
+                    <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[var(--green)] text-white text-[10px] font-bold">
+                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                    </span>
+                    <span>{{ Auth::user()->name }}</span>
+                </a>
+            @else
+                <a class="inline-flex min-h-10 items-center justify-center border border-[#b9c7bc] px-3 text-[11px] font-bold transition-colors duration-200 hover:bg-[#e8eee6] max-[760px]:min-h-9 max-[760px]:px-2 max-[760px]:text-[10px] max-[520px]:min-h-8 max-[520px]:px-[6px] max-[520px]:text-[9px]" href="{{ route('login') }}">Iniciar sesión</a>
+                <a class="inline-flex min-h-10 items-center justify-center gap-2 border border-[var(--green)] bg-[var(--green)] px-3 text-[11px] font-bold text-white transition-colors duration-200 hover:bg-[var(--green-dark)] max-[760px]:min-h-9 max-[760px]:gap-1 max-[760px]:px-2 max-[760px]:text-[10px] max-[520px]:min-h-8 max-[520px]:gap-0 max-[520px]:px-[6px] max-[520px]:text-[9px]" href="{{ route('register') }}">Crear cuenta <span aria-hidden="true">↗</span></a>
+            @endauth
         </div>
     </nav>
 </header>

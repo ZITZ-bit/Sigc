@@ -15,12 +15,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    if (Auth::check()) {
-        return redirect()->intended(Auth::user()->redirectToPanel());
-    }
-
     return view('portal');
-});
+})->name('home');
 
 // Autenticación
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -51,8 +47,12 @@ Route::middleware(['auth', 'role:medico'])->group(function () {
 Route::middleware(['auth', 'role:administrador'])->group(function () {
     Route::get('/panel-admin', [ClinicaController::class, 'index'])->name('admin.panel');
     Route::resource('/admin/clinicas', ClinicaController::class)->except(['create', 'edit']);
-    Route::resource('/admin/especialidades', EspecialidadController::class)->except(['create', 'edit', 'show']);
+    Route::post('/admin/especialidades', [EspecialidadController::class, 'store'])->name('admin.especialidades.store');
+    Route::put('/admin/especialidades/{especialidad}', [EspecialidadController::class, 'update'])->name('admin.especialidades.update');
     Route::get('/admin/pacientes', [PacienteAdminController::class, 'index'])->name('admin.pacientes.index');
+    Route::post('/admin/pacientes/invitar', [PacienteAdminController::class, 'invite'])->name('admin.pacientes.invitar');
+    Route::put('/admin/pacientes/{paciente}', [PacienteAdminController::class, 'update'])->name('admin.pacientes.update');
+    Route::patch('/admin/pacientes/{paciente}/estado', [PacienteAdminController::class, 'updateStatus'])->name('admin.pacientes.estado');
     Route::get('/admin/medicos', [MedicoAdminController::class, 'index'])->name('admin.medicos.index');
     Route::post('/admin/medicos/invitar', [MedicoAdminController::class, 'inviteMedico'])->name('admin.medicos.invitar');
     Route::post('/admin/administradores/invitar', [MedicoAdminController::class, 'inviteAdmin'])->name('admin.administradores.invitar');
@@ -60,4 +60,5 @@ Route::middleware(['auth', 'role:administrador'])->group(function () {
     Route::post('/admin/consultas', [AdminConsultaController::class, 'store'])->name('admin.consultas.store');
     Route::put('/admin/consultas/{consulta}', [AdminConsultaController::class, 'update'])->name('admin.consultas.update');
     Route::post('/admin/horarios', [HorarioController::class, 'store'])->name('admin.horarios.store');
+    Route::patch('/admin/horarios/{horario}/estado', [HorarioController::class, 'updateStatus'])->name('admin.horarios.estado');
 });

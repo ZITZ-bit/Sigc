@@ -3,18 +3,62 @@ const navItems = [...document.querySelectorAll('[data-admin-view]')];
 const modal = document.querySelector('.admin-modal');
 const modalTitle = document.querySelector('#admin-modal-title');
 const modalFields = document.querySelector('[data-modal-fields]');
+const modalForm = document.querySelector('[data-admin-form]');
+const modalMethod = document.querySelector('[data-admin-method]');
 const toast = document.querySelector('.admin-toast');
 const globalSearch = document.querySelector('.admin-search input');
+const formOptions = JSON.parse(document.querySelector('#admin-form-options').textContent);
 let toastTimer;
-let calendarOffset = 0;
 let globalQuery = '';
 
 const modalConfigs = {
-    paciente: { title: 'Nuevo paciente de muestra', fields: [['Nombre completo', 'text'], ['Correo electrónico', 'email'], ['Teléfono', 'tel']] },
-    medico: { title: 'Nuevo médico de muestra', fields: [['Nombre completo', 'text'], ['Especialidad', 'text'], ['Consultorio', 'text']] },
-    especialidad: { title: 'Nueva especialidad de muestra', fields: [['Nombre de especialidad', 'text'], ['Descripción', 'text']] },
-    consulta: { title: 'Nueva consulta de muestra', fields: [['Nombre del paciente', 'text'], ['Médico', 'text'], ['Fecha y hora', 'datetime-local']] },
-    horario: { title: 'Nuevo horario de muestra', fields: [['Nombre del médico', 'text'], ['Días de atención', 'text'], ['Horario', 'text']] },
+    'paciente-invite': {
+        title: 'Invitar paciente', action: document.body.dataset.invitePatientUrl, method: 'POST',
+        fields: [{ label: 'Correo electrónico', name: 'email', type: 'email' }],
+    },
+    paciente: {
+        title: 'Editar paciente', action: null, method: 'PUT',
+        fields: [
+            { label: 'Nombre', name: 'name', type: 'text' },
+            { label: 'Apellido', name: 'apellido', type: 'text', required: false },
+            { label: 'Correo electrónico', name: 'email', type: 'email' },
+            { label: 'Teléfono', name: 'telefono', type: 'tel', required: false },
+        ],
+    },
+    medico: {
+        title: 'Invitar médico', action: document.body.dataset.inviteDoctorUrl, method: 'POST',
+        fields: [
+            { label: 'Correo electrónico', name: 'email', type: 'email' },
+            { label: 'Clínica', name: 'clinica_id', type: 'select', options: formOptions.clinics },
+            { label: 'Especialidad', name: 'especialidad_id', type: 'select', options: formOptions.specialties },
+        ],
+    },
+    especialidad: {
+        title: 'Nueva especialidad', action: document.body.dataset.createSpecialtyUrl, method: 'POST',
+        fields: [
+            { label: 'Nombre', name: 'nombre', type: 'text' },
+            { label: 'Descripción', name: 'descripcion', type: 'textarea', required: false },
+        ],
+    },
+    consulta: {
+        title: 'Nueva consulta', action: document.body.dataset.createAppointmentUrl, method: 'POST',
+        fields: [
+            { label: 'Paciente', name: 'paciente_id', type: 'select', options: formOptions.patients },
+            { label: 'Médico', name: 'medico_id', type: 'select', options: formOptions.doctors },
+            { label: 'Fecha y hora', name: 'fecha_hora', type: 'datetime-local' },
+            { label: 'Motivo', name: 'motivo', type: 'text', required: false },
+        ],
+    },
+    horario: {
+        title: 'Agregar horario médico', action: document.body.dataset.createScheduleUrl, method: 'POST',
+        fields: [
+            { label: 'Médico', name: 'medico_id', type: 'select', options: formOptions.doctors },
+            { label: 'Día de la semana', name: 'dia_semana', type: 'select', options: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'].map((label) => ({ id: label, label })) },
+            { label: 'Hora inicial', name: 'hora_inicio', type: 'time' },
+            { label: 'Hora final', name: 'hora_fin', type: 'time' },
+            { label: 'Duración por consulta (minutos)', name: 'duracion_minutos', type: 'number', value: '30', required: false },
+        ],
+    },
 };
 
 function showToast(message) {
@@ -118,80 +162,187 @@ document.querySelectorAll('[data-status-filter] button').forEach((button) => {
     });
 });
 
+function openAdminModal(config, values = {}) {
+    modalTitle.textContent = config.title;
+    modalForm.action = config.action;
+    modalMethod.value = config.method;
+    modalFields.replaceChildren(...config.fields.map((field) => {
+        const wrapper = document.createElement('label');
+        const caption = document.createElement('span');
+        caption.textContent = field.label;
+        let control;
+        if (field.type === 'select') {
+            control = document.createElement('select');
+            control.add(new Option('Seleccionar...', ''));
+            field.options.forEach((option) => control.add(new Option(option.label, option.id)));
+        } else if (field.type === 'textarea') {
+            control = document.createElement('textarea');
+            control.rows = 3;
+        } else {
+            control = document.createElement('input');
+            control.type = field.type;
+        }
+        control.name = field.name;
+        control.required = field.required !== false;
+        if (field.value) control.value = field.value;
+        if (values[field.name] !== undefined) control.value = values[field.name] ?? '';
+        wrapper.append(caption, control);
+        return wrapper;
+    }));
+    modal.showModal();
+}
+
 document.querySelectorAll('[data-open-modal]').forEach((button) => {
-    button.addEventListener('click', () => {
-        const config = modalConfigs[button.dataset.openModal];
-        modalTitle.textContent = config.title;
-        modalFields.replaceChildren(...config.fields.map(([label, type]) => {
-            const wrapper = document.createElement('label');
-            const caption = document.createElement('span');
-            const input = document.createElement('input');
-            caption.textContent = label;
-            input.type = type;
-            input.required = true;
-            wrapper.append(caption, input);
-            return wrapper;
-        }));
-        modal.showModal();
-    });
+    button.addEventListener('click', () => openAdminModal(modalConfigs[button.dataset.openModal]));
 });
 
-document.querySelector('[data-local-form]').addEventListener('submit', (event) => {
-    if (event.submitter?.value !== 'save') return;
-    event.preventDefault();
-    modal.close();
-    showToast('Muestra guardada solo en esta sesión visual. No se envió información.');
+document.querySelectorAll('[data-edit-specialty]').forEach((button) => {
+    button.addEventListener('click', () => openAdminModal({
+        title: 'Editar especialidad',
+        action: `${document.body.dataset.updateSpecialtyUrl}/${button.dataset.editSpecialty}`,
+        method: 'PUT',
+        fields: [
+            { label: 'Nombre', name: 'nombre', type: 'text' },
+            { label: 'Descripción', name: 'descripcion', type: 'textarea', required: false },
+        ],
+    }, { nombre: button.dataset.specialtyName, descripcion: button.dataset.specialtyDescription }));
 });
+
+document.querySelectorAll('[data-edit-patient]').forEach((button) => {
+    button.addEventListener('click', () => openAdminModal({
+        ...modalConfigs.paciente,
+        action: `${document.body.dataset.updatePatientUrl}/${button.dataset.editPatient}`,
+    }, {
+        name: button.dataset.name,
+        apellido: button.dataset.surname,
+        email: button.dataset.email,
+        telefono: button.dataset.phone,
+    }));
+});
+
+document.querySelectorAll('[data-close-admin-modal]').forEach((button) => button.addEventListener('click', () => modal.close()));
 
 const calendarGrid = document.querySelector('[data-calendar-grid]');
 const calendarWeek = document.querySelector('[data-calendar-week]');
 const calendarHeading = document.querySelector('[data-calendar-heading]');
 const weekdayNames = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 const weekdayShortNames = ['LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB', 'DOM'];
+const agendaData = JSON.parse(document.querySelector('#admin-agenda-data').textContent);
+const agendaDateInitial = new Date(`${document.body.dataset.initialDate}T00:00:00`);
+let selectedAgendaDate = new Date(agendaDateInitial);
 let calendarMode = 'day';
 
-function renderCalendarDate() {
-    const date = new Date(2026, 9, 23 + calendarOffset);
-    calendarHeading.textContent = `${weekdayNames[date.getDay()]}, ${date.toLocaleDateString('es-MX', { day: 'numeric', month: 'long' })}`;
-    document.querySelector('[data-day-label]').innerHTML = `${weekdayNames[date.getDay()].toUpperCase()} <b>${date.getDate()}</b>`;
-    document.querySelector('.calendar-month-mark span').textContent = date.toLocaleDateString('es-MX', { month: 'short' }).replace('.', '').toUpperCase();
-    document.querySelector('.calendar-month-mark strong').textContent = date.getDate();
-    renderCalendarWeek(date);
+function localDateKey(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
 }
 
-function renderCalendarWeek(selectedDate) {
-    const mondayOffset = (selectedDate.getDay() + 6) % 7;
-    const monday = new Date(selectedDate);
-    monday.setDate(selectedDate.getDate() - mondayOffset);
-    const cells = ['<div class="admin-week-head admin-week-corner">HORA</div>'];
-    const sampleEvents = {
-        0: [['08:00 Elena Vargas · Dra. Andrea Méndez', 'event-green'], ['11:00 Miguel Herrera · Dr. Pablo Ríos', 'event-yellow']],
-        2: [['10:00 Camila Ortega · Dra. Lucía Torres', 'event-yellow']],
-        4: [['09:00 Elena Vargas · Dra. Andrea Méndez', 'event-green'], ['09:30 Roberto Silva · Dr. Diego Ramírez', 'event-coral'], ['10:00 Camila Ortega · Dra. Lucía Torres', 'event-yellow'], ['11:00 Miguel Herrera · Dr. Pablo Ríos', 'event-green']],
-        5: [['10:00 Lucía Navarro · Dra. Lucía Torres', 'event-coral']],
-    };
+function statusTone(status) {
+    if (status === 'pendiente') return 'event-coral';
+    if (status === 'completada') return 'event-yellow';
+    return 'event-green';
+}
 
+function createCalendarEvent(appointment, weekly = false) {
+    const event = document.createElement(weekly ? 'span' : 'article');
+    event.className = `${weekly ? 'admin-week-event' : 'calendar-event'} ${statusTone(appointment.status)}`;
+    event.dataset.doctorId = appointment.doctorId;
+    if (weekly) {
+        event.textContent = `${appointment.time} ${appointment.patient}`;
+        event.title = `${appointment.patient} · ${appointment.doctor} · ${appointment.specialty}`;
+    } else {
+        const patient = document.createElement('strong');
+        patient.textContent = appointment.patient;
+        const doctor = document.createElement('span');
+        doctor.textContent = `${appointment.doctor} · ${appointment.specialty}`;
+        const time = document.createElement('small');
+        time.textContent = `${appointment.time} – ${appointment.end} · Consultorio ${appointment.room}`;
+        event.append(patient, doctor, time);
+    }
+    return event;
+}
+
+function renderCalendarDay() {
+    calendarGrid.replaceChildren();
+    const header = document.createElement('div');
+    header.className = 'calendar-day-head';
+    const timeHeader = document.createElement('span');
+    timeHeader.textContent = 'HORA';
+    const dayHeader = document.createElement('strong');
+    const dayNumber = document.createElement('b');
+    dayNumber.textContent = selectedAgendaDate.getDate();
+    dayHeader.append(`${weekdayNames[selectedAgendaDate.getDay()].toUpperCase()} `, dayNumber);
+    const eventHeader = document.createElement('span');
+    eventHeader.textContent = 'CONSULTAS';
+    header.append(timeHeader, dayHeader, eventHeader);
+    calendarGrid.append(header);
+
+    const dateKey = localDateKey(selectedAgendaDate);
+    for (let hour = 8; hour <= 18; hour += 1) {
+        const row = document.createElement('div');
+        row.className = 'calendar-day-row';
+        const label = document.createElement('time');
+        label.textContent = `${String(hour).padStart(2, '0')}:00`;
+        const events = document.createElement('div');
+        agendaData.filter((appointment) => appointment.date === dateKey && Number(appointment.time.slice(0, 2)) === hour)
+            .forEach((appointment) => events.append(createCalendarEvent(appointment)));
+        row.append(label, events);
+        calendarGrid.append(row);
+    }
+}
+
+function renderCalendarWeek() {
+    calendarWeek.replaceChildren();
+    const monday = new Date(selectedAgendaDate);
+    monday.setDate(selectedAgendaDate.getDate() - ((selectedAgendaDate.getDay() + 6) % 7));
+    const corner = document.createElement('div');
+    corner.className = 'admin-week-head admin-week-corner';
+    corner.textContent = 'HORA';
+    calendarWeek.append(corner);
+
+    const weekDates = [];
     for (let dayIndex = 0; dayIndex < 7; dayIndex += 1) {
         const date = new Date(monday);
         date.setDate(monday.getDate() + dayIndex);
-        const selected = date.toDateString() === selectedDate.toDateString();
-        cells.push(`<div class="admin-week-head${selected ? ' is-selected' : ''}">${weekdayShortNames[dayIndex]} <strong>${date.getDate()}</strong></div>`);
+        weekDates.push(date);
+        const heading = document.createElement('div');
+        heading.className = `admin-week-head${localDateKey(date) === localDateKey(selectedAgendaDate) ? ' is-selected' : ''}`;
+        const number = document.createElement('strong');
+        number.textContent = date.getDate();
+        heading.append(`${weekdayShortNames[dayIndex]} `, number);
+        calendarWeek.append(heading);
     }
-    for (let hour = 8; hour <= 16; hour += 1) {
-        cells.push(`<time class="admin-week-time">${String(hour).padStart(2, '0')}:00</time>`);
-        for (let dayIndex = 0; dayIndex < 7; dayIndex += 1) {
-            const events = (sampleEvents[dayIndex] ?? []).filter(([event]) => Number(event.slice(0, 2)) === hour);
-            const eventMarkup = events.map(([event, tone]) => `<span class="admin-week-event ${tone}">${event.slice(6)}</span>`).join('');
-            cells.push(`<div class="admin-week-cell">${eventMarkup}</div>`);
-        }
+
+    for (let hour = 8; hour <= 18; hour += 1) {
+        const time = document.createElement('time');
+        time.className = 'admin-week-time';
+        time.textContent = `${String(hour).padStart(2, '0')}:00`;
+        calendarWeek.append(time);
+        weekDates.forEach((date) => {
+            const cell = document.createElement('div');
+            cell.className = 'admin-week-cell';
+            agendaData.filter((appointment) => appointment.date === localDateKey(date) && Number(appointment.time.slice(0, 2)) === hour)
+                .forEach((appointment) => cell.append(createCalendarEvent(appointment, true)));
+            calendarWeek.append(cell);
+        });
     }
-    calendarWeek.innerHTML = cells.join('');
+}
+
+function renderCalendarDate() {
+    calendarHeading.textContent = `${weekdayNames[selectedAgendaDate.getDay()]}, ${selectedAgendaDate.toLocaleDateString('es-MX', { day: 'numeric', month: 'long' })}`;
+    document.querySelector('.calendar-month-mark span').textContent = selectedAgendaDate.toLocaleDateString('es-MX', { month: 'short' }).replace('.', '').toUpperCase();
+    document.querySelector('.calendar-month-mark strong').textContent = selectedAgendaDate.getDate();
+    renderCalendarDay();
+    renderCalendarWeek();
+    applyCalendarDoctorFilter();
 }
 
 function applyCalendarDoctorFilter() {
     const selectedDoctor = document.querySelector('[data-calendar-doctor-filter]').value;
     document.querySelectorAll('.calendar-event,.admin-week-event').forEach((event) => {
-        const matchesDoctor = selectedDoctor === 'all' || event.textContent.includes(selectedDoctor);
+        const matchesDoctor = selectedDoctor === 'all' || event.dataset.doctorId === selectedDoctor;
         const matchesSearch = event.textContent.toLocaleLowerCase('es').includes(globalQuery);
         event.hidden = !matchesDoctor || !matchesSearch;
     });
@@ -209,18 +360,27 @@ document.querySelectorAll('[data-calendar-mode]').forEach((button) => {
     });
 });
 document.querySelectorAll('[data-calendar-step]').forEach((button) => button.addEventListener('click', () => {
-    calendarOffset += Number(button.dataset.calendarStep) * (calendarMode === 'week' ? 7 : 1);
+    selectedAgendaDate.setDate(selectedAgendaDate.getDate() + Number(button.dataset.calendarStep) * (calendarMode === 'week' ? 7 : 1));
     renderCalendarDate();
-    applyCalendarDoctorFilter();
 }));
 document.querySelector('[data-calendar-today]').addEventListener('click', () => {
-    calendarOffset = 0;
+    selectedAgendaDate = new Date(agendaDateInitial);
     renderCalendarDate();
-    showToast('Agenda de hoy, 23 de octubre de 2026.');
+    showToast('Mostrando la fecha actual.');
 });
 
 renderCalendarDate();
 applyCalendarDoctorFilter();
 
+const initialParams = new URLSearchParams(window.location.search);
+const requestedView = initialParams.get('view');
+if (requestedView && document.querySelector(`#admin-view-${CSS.escape(requestedView)}`)) {
+    activateView(requestedView);
+    const requestedTab = initialParams.get('tab');
+    if (requestedTab) {
+        document.querySelector(`#admin-view-${CSS.escape(requestedView)} [data-local-tab="${CSS.escape(requestedTab)}"]`)?.click();
+    }
+}
+
 document.querySelectorAll('.admin-pagination button:not(:disabled)').forEach((button) => button.addEventListener('click', () => showToast('Paginación visual de demostración.')));
-document.querySelectorAll('.admin-row-menu,.admin-more-button,.admin-rail-bottom,.admin-icon-button,.admin-user').forEach((button) => button.addEventListener('click', () => showToast('Acción disponible en la futura integración.')));
+// Las acciones reales del panel están dadas por handlers específicos de cada formulario/modal; no se usan toasts de demo.

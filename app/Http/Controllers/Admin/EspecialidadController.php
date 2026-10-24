@@ -8,11 +8,6 @@ use Illuminate\Http\Request;
 
 class EspecialidadController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(['auth', 'role:administrador']);
-    }
-
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -21,6 +16,20 @@ class EspecialidadController extends Controller
         ]);
 
         Especialidad::create($validated);
-        return redirect()->back()->with('success', 'Especialidad creada correctamente.');
+        return redirect()->route('admin.panel', ['view' => 'equipo'])
+            ->with('success', 'Especialidad creada correctamente.');
+    }
+
+    public function update(Request $request, Especialidad $especialidad)
+    {
+        $validated = $request->validate([
+            'nombre' => ['required', 'string', 'max:255', 'unique:especialidades,nombre,' . $especialidad->id],
+            'descripcion' => ['nullable', 'string'],
+        ]);
+
+        $especialidad->update($validated);
+
+        return redirect()->route('admin.panel', ['view' => 'equipo'])
+            ->with('success', 'Especialidad actualizada correctamente.');
     }
 }

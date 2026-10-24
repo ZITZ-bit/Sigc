@@ -21,9 +21,20 @@
                     <button class="side-icon" type="button" data-view="consultas" title="Consultas" aria-label="Consultas">♡</button>
                     <button class="side-icon" type="button" data-view="notificaciones" title="Notificaciones" aria-label="Notificaciones">▤</button>
                     <a class="patient-home-link" href="{{ url('/') }}" title="Volver al portal principal" aria-label="Volver al portal principal"><span aria-hidden="true">⌂</span><small>Portal</small></a>
+                <form action="{{ route('logout') }}" method="POST" style="margin-top:auto;">@csrf<button type="submit" class="button button-primary" style="width:100%;margin-top:14px;">Cerrar sesión</button></form>
                 </aside>
 
                 <div class="panel-body">
+                    @if (session('success'))
+                        <div class="patient-feedback patient-feedback-success" role="status">{{ session('success') }}</div>
+                    @endif
+                    @if (session('error'))
+                        <div class="patient-feedback patient-feedback-error" role="alert">{{ session('error') }}</div>
+                    @endif
+                    @if ($errors->any())
+                        <div class="patient-feedback patient-feedback-error" role="alert">{{ $errors->first() }}</div>
+                    @endif
+
                     <!-- Perfil / datos personales -->
                     <section class="panel-view active" id="view-perfil">
                         <div class="panel-header">
@@ -32,27 +43,33 @@
                         </div>
                         <div class="profile-layout">
                             <div class="profile-summary">
-                                <div class="avatar avatar-large">JP</div>
-                                <h3>Juan Pérez</h3>
-                                <p>Paciente desde 2025</p>
+                                <div class="avatar avatar-large">{{ mb_substr($user->name, 0, 1) }}{{ mb_substr($user->apellido ?? '', 0, 1) }}</div>
+                                <h3>{{ $user->name }} {{ $user->apellido }}</h3>
+                                <p>Paciente</p>
                                 <div class="patient-divider"></div>
-                                <div class="detail-row"><span>Correo</span><strong>juan@correo.com</strong></div>
-                                <div class="detail-row"><span>Teléfono</span><strong>+52 55 0000 0000</strong></div>
-                                <div class="detail-row"><span>Notificaciones</span><strong>Activas</strong></div>
-                                <div class="patient-status"><span></span> Datos actualizados</div>
-                                <button class="button button-primary profile-edit">Editar mis datos <span aria-hidden="true">→</span></button>
+                                <div class="detail-row"><span>Correo</span><strong>{{ $user->email }}</strong></div>
+                                <div class="detail-row"><span>Teléfono</span><strong>{{ $user->telefono ?? 'Sin teléfono' }}</strong></div>
+                                <div class="detail-row"><span>Expediente</span><strong>{{ $paciente?->expediente_numero ?? 'Sin expediente asignado' }}</strong></div>
+                                <div class="patient-status"><span></span> Datos del perfil</div>
+                                <button class="button button-primary profile-edit" type="button">Editar mis datos <span aria-hidden="true">→</span></button>
                             </div>
-                            <form class="profile-form" data-profile-form>
+                            <form class="profile-form" data-profile-form method="POST" action="{{ route('paciente.perfil.update') }}">
+                                @csrf
                                 <p class="dashboard-kicker">ACTUALIZAR INFORMACIÓN</p>
                                 <h3>Editar datos personales</h3>
                                 <div class="auth-field-row">
-                                    <label class="auth-field"><span>Nombre</span><input type="text" value="Juan" required></label>
-                                    <label class="auth-field"><span>Apellido</span><input type="text" value="Pérez" required></label>
+                                    <label class="auth-field"><span>Nombre</span><input type="text" name="name" value="{{ old('name', $user->name) }}" required></label>
+                                    <label class="auth-field"><span>Apellido</span><input type="text" name="apellido" value="{{ old('apellido', $user->apellido) }}" required></label>
                                 </div>
-                                <label class="auth-field"><span>Correo electrónico</span><input type="email" value="juan@correo.com" required></label>
-                                <label class="auth-field"><span>Teléfono</span><input type="tel" value="+52 55 0000 0000"></label>
-                                <label class="auth-field"><span>Fecha de nacimiento</span><input type="date"></label>
-                                <label class="auth-field"><span>Tipo de sangre</span><select><option>O+</option><option>A+</option><option>B+</option><option>AB+</option><option>O-</option><option>A-</option><option>B-</option><option>AB-</option></select></label>
+                                <label class="auth-field"><span>Correo electrónico</span><input type="email" name="email" value="{{ old('email', $user->email) }}" required></label>
+                                <label class="auth-field"><span>Teléfono</span><input type="tel" name="telefono" value="{{ old('telefono', $user->telefono) }}"></label>
+                                <label class="auth-field"><span>Fecha de nacimiento</span><input type="date" name="fecha_nacimiento" value="{{ old('fecha_nacimiento', $user->fecha_nacimiento?->format('Y-m-d')) }}"></label>
+                                <label class="auth-field"><span>Tipo de sangre</span><select name="tipo_sangre">
+                                    <option value="" {{ old('tipo_sangre', $user->tipo_sangre) === '' ? 'selected' : '' }}>Seleccionar</option>
+                                    @foreach (['O+', 'A+', 'B+', 'AB+', 'O-', 'A-', 'B-', 'AB-'] as $tipo)
+                                        <option value="{{ $tipo }}" {{ old('tipo_sangre', $user->tipo_sangre) === $tipo ? 'selected' : '' }}>{{ $tipo }}</option>
+                                    @endforeach
+                                </select></label>
                                 <button class="button button-primary" type="submit">Guardar cambios <span aria-hidden="true">→</span></button>
                             </form>
                         </div>
@@ -70,52 +87,29 @@
                         </label>
                         <p class="eyebrow" style="margin:22px 0 8px;">ESPECIALIDADES DISPONIBLES</p>
                         <div class="specialty-grid">
-                            <button class="specialty-chip" type="button" data-specialty-filter="Cardiología">
-                                <span>Cardiología</span><strong>3 médicos</strong>
-                            </button>
-                            <button class="specialty-chip" type="button" data-specialty-filter="Dermatología">
-                                <span>Dermatología</span><strong>2 médicos</strong>
-                            </button>
-                            <button class="specialty-chip" type="button" data-specialty-filter="Pediatría">
-                                <span>Pediatría</span><strong>4 médicos</strong>
-                            </button>
-                            <button class="specialty-chip" type="button" data-specialty-filter="Ginecología">
-                                <span>Ginecología</span><strong>2 médicos</strong>
-                            </button>
-                            <button class="specialty-chip" type="button" data-specialty-filter="Traumatología">
-                                <span>Traumatología</span><strong>1 médico</strong>
-                            </button>
-                            <button class="specialty-chip" type="button" data-specialty-filter="Medicina general">
-                                <span>Medicina general</span><strong>5 médicos</strong>
-                            </button>
+                            @php
+                                $medicosPorEspecialidad = $medicos->groupBy(fn ($medico) => $medico->especialidad?->nombre ?? 'Sin especialidad');
+                            @endphp
+                            @foreach ($medicosPorEspecialidad as $especialidad => $grupo)
+                                <button class="specialty-chip" type="button" data-specialty-filter="{{ $especialidad }}">
+                                    <span>{{ $especialidad }}</span><strong>{{ $grupo->count() }} médico{{ $grupo->count() > 1 ? 's' : '' }}</strong>
+                                </button>
+                            @endforeach
                         </div>
                         <button class="patient-clear-filter" type="button" data-clear-doctor-filter hidden>Limpiar filtro</button>
                         <p class="eyebrow" style="margin:30px 0 8px;">RESULTADOS</p>
                         <div class="doctors-list">
-                            <article class="doctor-card" data-doctor="Dra. Andrea Méndez" data-specialty="Cardiología">
-                                <div class="doctor-avatar">AM</div>
-                                <div>
-                                    <div class="doctor-meta"><strong>Dra. Andrea Méndez</strong><span>Cardiología · 10 años</span></div>
-                                    <div class="doctor-rating"><span>★ 4.9</span><span>(24 reseñas)</span></div>
-                                </div>
-                                <button class="button button-primary doctor-btn" type="button" data-doctor-schedule="Dra. Andrea Méndez">Ver horario</button>
-                            </article>
-                            <article class="doctor-card" data-doctor="Dr. Diego Ramírez" data-specialty="Dermatología">
-                                <div class="doctor-avatar">DR</div>
-                                <div>
-                                    <div class="doctor-meta"><strong>Dr. Diego Ramírez</strong><span>Dermatología · 8 años</span></div>
-                                    <div class="doctor-rating"><span>★ 4.7</span><span>(18 reseñas)</span></div>
-                                </div>
-                                <button class="button button-primary doctor-btn" type="button" data-doctor-schedule="Dr. Diego Ramírez">Ver horario</button>
-                            </article>
-                            <article class="doctor-card" data-doctor="Dra. Lucía Torres" data-specialty="Pediatría">
-                                <div class="doctor-avatar">LT</div>
-                                <div>
-                                    <div class="doctor-meta"><strong>Dra. Lucía Torres</strong><span>Pediatría · 12 años</span></div>
-                                    <div class="doctor-rating"><span>★ 4.8</span><span>(31 reseñas)</span></div>
-                                </div>
-                                <button class="button button-primary doctor-btn" type="button" data-doctor-schedule="Dra. Lucía Torres">Ver horario</button>
-                            </article>
+                            @forelse ($medicos as $medico)
+                                <article class="doctor-card" data-doctor="{{ $medico->user?->name ?? 'Médico' }} {{ $medico->user?->apellido }}" data-specialty="{{ $medico->especialidad?->nombre ?? 'Sin especialidad' }}" data-medico-id="{{ $medico->id }}">
+                                    <div class="doctor-avatar">{{ mb_substr($medico->user?->name ?? 'M', 0, 1) }}{{ mb_substr($medico->user?->apellido ?? '', 0, 1) }}</div>
+                                    <div>
+                                        <div class="doctor-meta"><strong>{{ $medico->user?->name ?? 'Médico' }} {{ $medico->user?->apellido }}</strong><span>{{ $medico->especialidad?->nombre ?? 'Sin especialidad' }} · {{ $medico->anios_experiencia ?? 0 }} años{{ $medico->consultorio ? ' · Consultorio ' . $medico->consultorio : '' }}</span></div>
+                                        <button class="button button-primary doctor-btn" type="button" data-view-horarios data-medico-id="{{ $medico->id }}">Ver horario</button>
+                                    </div>
+                                </article>
+                            @empty
+                                <p class="patient-empty-state" data-doctor-empty>No hay médicos registrados en el sistema.</p>
+                            @endforelse
                         </div>
                         <p class="patient-empty-state" data-doctor-empty hidden>No hay médicos para esta búsqueda.</p>
                     </section>
@@ -126,19 +120,19 @@
                             <p class="dashboard-kicker">DISPONIBILIDAD</p>
                             <h2>Horarios disponibles</h2>
                         </div>
-                        <div class="schedule-date"><button class="schedule-arrow" type="button" data-date-step="-1" aria-label="Día anterior">‹</button><strong data-schedule-date>Jueves, 15 oct</strong><button class="schedule-arrow" type="button" data-date-step="1" aria-label="Día siguiente">›</button><span class="view-toggle" role="group" aria-label="Vista de horarios"><button type="button" class="is-active" data-schedule-mode="day">Día</button><button type="button" data-schedule-mode="week">Semana</button></span></div>
+                        <div class="schedule-date"><strong data-schedule-date>{{ now()->locale('es')->translatedFormat('l, d \d\e F \d\e Y') }}</strong><span class="view-toggle" role="group" aria-label="Vista de horarios"><button type="button" class="is-active" data-schedule-mode="day">Día</button></span></div>
                         <div class="calendar-grid">
-                            <div class="time-column"><span>8:00</span><span>9:00</span><span>10:00</span><span>11:00</span><span>12:00</span><span>13:00</span><span>14:00</span><span>15:00</span><span>16:00</span></div>
+                            <div class="time-column"></div>
                             <div class="appointments">
-                                <div class="slot slot-available" data-doctor="Dra. Andrea Méndez"><span>Dra. Andrea Méndez</span><small>Cardiología · Consulta inicial</small><button type="button" data-reserve>Reservar</button></div>
-                                <div class="slot slot-taken" data-doctor="Dr. Diego Ramírez"><span>Dr. Diego Ramírez</span><small>Dermatología · Seguimiento</small><button type="button" disabled>Ocupado</button></div>
-                                <div class="slot slot-available" data-doctor="Dra. Lucía Torres"><span>Dra. Lucía Torres</span><small>Pediatría · Control</small><button type="button" data-reserve>Reservar</button></div>
-                                <div class="slot slot-available" data-doctor="Dra. Andrea Méndez"><span>Dra. Andrea Méndez</span><small>Cardiología · Consulta inicial</small><button type="button" data-reserve>Reservar</button></div>
-                                <div class="slot slot-taken" data-doctor="Dr. Diego Ramírez"><span>Dr. Diego Ramírez</span><small>Dermatología · Seguimiento</small><button type="button" disabled>Ocupado</button></div>
-                                <div class="slot slot-available" data-doctor="Dra. Lucía Torres"><span>Dra. Lucía Torres</span><small>Pediatría · Control</small><button type="button" data-reserve>Reservar</button></div>
-                                <div class="slot slot-available" data-doctor="Dra. Andrea Méndez"><span>Dra. Andrea Méndez</span><small>Cardiología · Consulta inicial</small><button type="button" data-reserve>Reservar</button></div>
-                                <div class="slot slot-taken" data-doctor="Dr. Diego Ramírez"><span>Dr. Diego Ramírez</span><small>Dermatología · Seguimiento</small><button type="button" disabled>Ocupado</button></div>
-                                <div class="slot slot-available" data-doctor="Dra. Lucía Torres"><span>Dra. Lucía Torres</span><small>Pediatría · Control</small><button type="button" data-reserve>Reservar</button></div>
+                                @forelse ($horarios as $horario)
+                                    <div class="slot slot-available" data-medico-id="{{ $horario->medico_id }}" data-horario-id="{{ $horario->id }}">
+                                        <span>{{ $horario->medico?->user?->name ?? 'Médico' }} {{ $horario->medico?->user?->apellido }}</span>
+                                        <small>{{ $horario->medico?->especialidad?->nombre ?? 'Sin especialidad' }} · {{ $horario->dia_semana }} {{ substr($horario->hora_inicio, 0, 5) }} – {{ substr($horario->hora_fin, 0, 5) }}{{ $horario->medico?->consultorio ? ' · Consultorio ' . $horario->medico->consultorio : '' }}</small>
+                                        <button type="button" data-reserve data-medico-id="{{ $horario->medico_id }}">Solicitar cita</button>
+                                    </div>
+                                @empty
+                                    <p class="patient-empty-state">No hay horarios disponibles registrados.</p>
+                                @endforelse
                             </div>
                         </div>
                         <div class="patient-week-scroll"><div class="patient-week-grid" data-week-grid hidden></div></div>
@@ -152,51 +146,28 @@
                         </div>
                         <div class="consultas-tabs">
                             <button class="consulta-tab active" type="button" data-consultation-filter="all">Todas</button>
-                            <button class="consulta-tab" type="button" data-consultation-filter="pending">Pendientes</button>
-                            <button class="consulta-tab" type="button" data-consultation-filter="confirmed">Confirmadas</button>
-                            <button class="consulta-tab" type="button" data-consultation-filter="completed">Completadas</button>
+                            <button class="consulta-tab" type="button" data-consultation-filter="pendiente">Pendientes</button>
+                            <button class="consulta-tab" type="button" data-consultation-filter="confirmada">Confirmadas</button>
+                            <button class="consulta-tab" type="button" data-consultation-filter="completada">Completadas</button>
                         </div>
                         <div class="consultas-list">
-                            <div class="consulta-card" data-consultation-status="pending">
-                                <div class="consulta-info">
-                                    <strong>Consulta inicial · Cardiología</strong>
-                                    <span>Dra. Andrea Méndez</span>
+                            @forelse ($paciente?->consultas as $consulta)
+                                @php
+                                    $estadoLabel = ['pendiente' => 'Pendiente', 'confirmada' => 'Confirmada', 'completada' => 'Completada', 'cancelada' => 'Cancelada'][$consulta->estado] ?? $consulta->estado;
+                                @endphp
+                                <div class="consulta-card" data-consultation-status="{{ $consulta->estado }}">
+                                    <div class="consulta-info">
+                                        <strong>{{ $consulta->motivo ?: 'Consulta general' }}</strong>
+                                        <span>{{ $consulta->medico?->user?->name ?? 'Médico' }} {{ $consulta->medico?->user?->apellido }} · {{ $consulta->medico?->especialidad?->nombre ?? 'Sin especialidad' }}</span>
+                                    </div>
+                                    <div class="consulta-meta">
+                                        <span>{{ $consulta->fecha_hora->format('d M \d\e Y \a \l\a\s H:i') }}</span><span>{{ $consulta->medico?->consultorio ?: 'Sin consultorio' }}</span>
+                                    </div>
+                                    <span class="consulta-status status-{{ $consulta->estado }}">{{ $estadoLabel }}</span>
                                 </div>
-                                <div class="consulta-meta">
-                                    <span>Jue 15 oct · 9:00</span><span>Consultorio 3</span>
-                                </div>
-                                <span class="consulta-status status-pending">Pendiente</span>
-                            </div>
-                            <div class="consulta-card" data-consultation-status="confirmed">
-                                <div class="consulta-info">
-                                    <strong>Seguimiento · Dermatología</strong>
-                                    <span>Dr. Diego Ramírez</span>
-                                </div>
-                                <div class="consulta-meta">
-                                    <span>Mar 20 oct · 10:30</span><span>Consultorio 7</span>
-                                </div>
-                                <span class="consulta-status status-confirmed">Confirmada</span>
-                            </div>
-                            <div class="consulta-card" data-consultation-status="completed">
-                                <div class="consulta-info">
-                                    <strong>Control · Pediatría</strong>
-                                    <span>Dra. Lucía Torres</span>
-                                </div>
-                                <div class="consulta-meta">
-                                    <span>Lun 26 oct · 11:30</span><span>Consultorio 2</span>
-                                </div>
-                                <span class="consulta-status status-completed">Completada</span>
-                            </div>
-                            <div class="consulta-card" data-consultation-status="pending">
-                                <div class="consulta-info">
-                                    <strong>Consulta inicial · Cardiología</strong>
-                                    <span>Dra. Andrea Méndez</span>
-                                </div>
-                                <div class="consulta-meta">
-                                    <span>Vie 30 oct · 12:15</span><span>Consultorio 3</span>
-                                </div>
-                                <span class="consulta-status status-pending">Pendiente</span>
-                            </div>
+                            @empty
+                                <p class="patient-empty-state">No tienes consultas registradas.</p>
+                            @endforelse
                         </div>
                         <p class="patient-empty-state" data-consultations-empty hidden>No hay consultas en esta categoría.</p>
                     </section>
@@ -206,65 +177,47 @@
                         <div class="panel-header">
                             <p class="dashboard-kicker">AVISOS Y RECUERDOS</p>
                             <h2>Notificaciones</h2>
-                            <button class="patient-clear-filter" type="button" data-mark-notifications>Marcar todas como leídas</button>
                         </div>
                         <div class="notifications-list">
-                            <div class="notification-item notification-unread">
-                                <div class="notification-dot"></div>
-                                <div class="notification-content">
-                                    <strong>Cita confirmada</strong>
-                                    <span>Tu consulta con la Dra. Andrea Méndez ha sido confirmada para el jueves 15 de octubre a las 9:00.</span>
-                                    <time>Hace 2 h</time>
+                            @forelse ($notificaciones as $notificacion)
+                                <div class="notification-item{{ $notificacion->leida ? '' : ' notification-unread' }}" data-notification-id="{{ $notificacion->id }}">
+                                    <div class="notification-dot"></div>
+                                    <div class="notification-content">
+                                        <strong>{{ $notificacion->titulo }}</strong>
+                                        <span>{{ $notificacion->mensaje }}</span>
+                                        <time>{{ $notificacion->created_at->format('d M Y, H:i') }}</time>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="notification-item">
-                                <div class="notification-dot"></div>
-                                <div class="notification-content">
-                                    <strong>Nueva solicitud recibida</strong>
-                                    <span>Tu solicitud de consulta con el Dr. Diego Ramírez está pendiente de confirmación.</span>
-                                    <time>Hace 5 h</time>
-                                </div>
-                            </div>
-                            <div class="notification-item">
-                                <div class="notification-dot"></div>
-                                <div class="notification-content">
-                                    <strong>Recordatorio de cita</strong>
-                                    <span>Mañana tienes una consulta con la Dra. Lucía Torres a las 11:30.</span>
-                                    <time>Ayer</time>
-                                </div>
-                            </div>
-                            <div class="notification-item">
-                                <div class="notification-dot"></div>
-                                <div class="notification-content">
-                                    <strong>Datos actualizados</strong>
-                                    <span>Tu perfil personal se ha actualizado correctamente.</span>
-                                    <time>Lun 12 oct</time>
-                                </div>
-                            </div>
+                            @empty
+                                <p class="patient-empty-state">No hay notificaciones.</p>
+                            @endforelse
                         </div>
                     </section>
                 </div>
 
                 <aside class="patient-card">
                     <div class="patient-card-heading"><span>MI PERFIL</span><button type="button" class="patient-profile-link" data-view="perfil" aria-label="Abrir mi perfil">•••</button></div>
-                    <div class="avatar avatar-large">JP</div>
-                    <h3>Juan Pérez</h3>
-                    <p>Paciente desde 2025</p>
+                    <div class="avatar avatar-large">{{ mb_substr($user->name, 0, 1) }}{{ mb_substr($user->apellido ?? '', 0, 1) }}</div>
+                    <h3>{{ $user->name }} {{ $user->apellido }}</h3>
+                    <p>Paciente</p>
                     <div class="patient-divider"></div>
-                    <div class="detail-row"><span>Correo</span><strong>juan@correo.com</strong></div>
-                    <div class="detail-row"><span>Teléfono</span><strong>+52 55 0000 0000</strong></div>
-                    <div class="detail-row"><span>Notificaciones</span><strong>Activas</strong></div>
-                    <div class="patient-status"><span></span> Datos actualizados</div>
+                    <div class="detail-row"><span>Correo</span><strong>{{ $user->email }}</strong></div>
+                    <div class="detail-row"><span>Teléfono</span><strong>{{ $user->telefono ?? 'Sin teléfono' }}</strong></div>
+                    <div class="detail-row"><span>Notificaciones</span><strong>{{ $notificaciones->where('leida', false)->count() }} sin leer</strong></div>
                 </aside>
             </div>
         </section>
     </main>
 
     <dialog class="patient-dialog" data-reservation-dialog aria-labelledby="reservation-title">
-        <form class="patient-dialog-content" method="dialog" data-reservation-form>
-            <p class="dashboard-kicker">RESERVA DE MUESTRA</p>
-            <h2 id="reservation-title">Solicitar horario</h2>
-            <p data-reservation-description></p>
+        <form class="patient-dialog-content" method="POST" action="{{ route('paciente.consulta.solicitar') }}" data-reservation-form>
+            @csrf
+            <p class="dashboard-kicker">SOLICITAR CITA</p>
+            <h2 id="reservation-title">Nueva solicitud de consulta</h2>
+            <input type="hidden" name="medico_id" data-reservation-medico>
+            <label class="auth-field"><span>Médico</span><input type="text" name="medico_nombre" readonly data-reservation-medico-name></label>
+            <label class="auth-field"><span>Fecha y hora</span><input type="datetime-local" name="fecha_hora" required></label>
+            <label class="auth-field"><span>Motivo</span><textarea name="motivo" rows="3" placeholder="Motivo de la consulta"></textarea></label>
             <div class="patient-dialog-actions"><button type="button" data-close-reservation>Cancelar</button><button type="submit">Confirmar solicitud</button></div>
         </form>
     </dialog>
