@@ -18,6 +18,7 @@ Route::get('/', function () {
     if (Auth::check()) {
         return redirect()->intended(Auth::user()->redirectToPanel());
     }
+
     return view('portal');
 });
 
