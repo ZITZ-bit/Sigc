@@ -1,4 +1,4 @@
-@props(['type' => 'submit', 'label' => 'Continuar', 'class' => null, 'loading' => false, 'disabled' => false])
+@props(['type' => 'submit', 'label' => 'Continuar', 'class' => null, 'loading' => false, 'disabled' => false, 'icon' => null])
 
 <button
     type="{{ $type }}"
@@ -11,5 +11,8 @@
         <span class="visually-hidden">Procesando...</span>
     @else
         {{ $label }}
+        @if ($icon)
+            <i data-lucide="{{ $icon }}" aria-hidden="true"></i>
+        @endif
     @endif
 </button>

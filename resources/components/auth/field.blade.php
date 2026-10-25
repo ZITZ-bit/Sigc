@@ -17,7 +17,7 @@ $isInvalid = filled($error);
                 value="{{ $value }}"
                 {{ $required ? 'required' : '' }}
                 autocomplete="{{ $autocomplete }}"
-                {{ $placeholder ? 'placeholder="' . e($placeholder) . '"' : '' }}
+                @if ($placeholder) placeholder="{{ trim($placeholder, '"') }}" @endif
                 class="auth-input{{ $isInvalid ? ' auth-input--error' : '' }}"
                 {{ $isInvalid ? 'aria-invalid="true" aria-describedby="' . $id . '-error"' : '' }}
             >
@@ -28,7 +28,7 @@ $isInvalid = filled($error);
                 aria-controls="{{ $id }}"
                 data-toggle-password="{{ $id }}"
             >
-                <span class="auth-password-toggle-icon" aria-hidden="true">&#x1F441;</span>
+                <i class="auth-password-toggle-icon" data-lucide="eye" aria-hidden="true"></i>
                 <span class="visually-hidden">{{ old('show_password_' . $name) ? 'Ocultar' : 'Mostrar' }}</span>
             </button>
         </div>
@@ -40,7 +40,7 @@ $isInvalid = filled($error);
             value="{{ $value }}"
             {{ $required ? 'required' : '' }}
             autocomplete="{{ $autocomplete }}"
-            {{ $placeholder ? 'placeholder="' . e($placeholder) . '"' : '' }}
+            @if ($placeholder) placeholder="{{ trim($placeholder, '"') }}" @endif
             class="auth-input{{ $isInvalid ? ' auth-input--error' : '' }}"
             {{ $isInvalid ? 'aria-invalid="true" aria-describedby="' . $id . '-error"' : '' }}
         >

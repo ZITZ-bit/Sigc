@@ -336,3 +336,68 @@
     align-self: flex-end;
   }
 }
+
+.coordinacion-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.coordinacion-sidebar-toggle {
+  display: grid;
+  place-items: center;
+  flex: 0 0 2rem;
+  width: 2rem;
+  height: 2rem;
+  color: var(--coordinacion-color-sidebar-text);
+  border: 1px solid rgb(255 255 255 / 0.18);
+  border-radius: var(--coordinacion-radius-sm);
+}
+
+.coordinacion-sidebar-toggle svg,
+.coordinacion-brand-icon svg,
+.coordinacion-nav-icon svg,
+.coordinacion-sidebar-return svg,
+.coordinacion-btn-logout svg,
+.coordinacion-mobile-toggle svg,
+.coordinacion-mobile-close svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex: 0 0 auto;
+}
+
+.coordinacion-nav-icon { font-size: 0; }
+
+.coordinacion-sidebar-return {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+@media (min-width: 1024px) {
+  body.sidebar-collapsed .coordinacion-sidebar { width: 76px; }
+  body.sidebar-collapsed .coordinacion-sidebar-header { justify-content: center; padding-inline: 0.75rem; }
+  body.sidebar-collapsed .coordinacion-brand-text,
+  body.sidebar-collapsed .coordinacion-nav-label,
+  body.sidebar-collapsed .coordinacion-profile-info,
+  body.sidebar-collapsed .coordinacion-sidebar-return span,
+  body.sidebar-collapsed .coordinacion-btn-logout span { display: none; }
+  body.sidebar-collapsed .coordinacion-sidebar-toggle {
+    position: absolute;
+    top: 1.25rem;
+    right: -2.5rem;
+    color: var(--coordinacion-color-ink);
+    background: #fffefa;
+    border-color: var(--coordinacion-color-border);
+    box-shadow: var(--coordinacion-shadow);
+  }
+  body.sidebar-collapsed .coordinacion-sidebar-toggle svg { transform: rotate(180deg); }
+  body.sidebar-collapsed .coordinacion-nav-list { padding-inline: 0.625rem; }
+  body.sidebar-collapsed .coordinacion-nav-link { justify-content: center; padding-inline: 0; }
+  body.sidebar-collapsed .coordinacion-sidebar-footer { padding-inline: 0.625rem; }
+  body.sidebar-collapsed .coordinacion-profile-summary,
+  body.sidebar-collapsed .coordinacion-sidebar-return { justify-content: center; }
+  body.sidebar-collapsed .coordinacion-btn-logout { padding-inline: 0; }
+  body.sidebar-collapsed .coordinacion-content-area { margin-left: 76px; }
+}

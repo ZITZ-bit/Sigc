@@ -11,67 +11,85 @@
 </head>
 <body>
 
-    <div class="auth-page">
-        <div class="auth-card">
-            <div class="auth-header">
-                <div class="auth-brand">
-                    <span class="auth-brand-icon" aria-hidden="true">&#x271a;</span>
+    <div class="auth-page auth-page--login">
+        <main class="auth-shell">
+            <aside class="auth-aside" aria-label="Información de la clínica">
+                <a href="{{ route('portal') }}" class="auth-brand" aria-label="{{ config('app.name') }} - Inicio">
+                    <span class="auth-brand-icon" aria-hidden="true"><i data-lucide="heart-pulse"></i></span>
                     <span>{{ config('app.name') }}</span>
-                </div>
-                <h1>Iniciar sesión</h1>
-                <p>Accede a tu cuenta para gestionar tu información médica.</p>
-            </div>
-
-            <nav class="auth-back-nav" aria-label="Navegación">
-                <a href="{{ route('portal') }}" class="auth-button-link" style="font-size: 0.9375rem; color: var(--auth-color-forest-dark);">
-                    &#x2190; Volver al portal
                 </a>
-            </nav>
+                <div class="auth-aside-content">
+                    <p class="auth-eyebrow">CUIDAMOS DE TI</p>
+                    <h2>Tu salud, en buenas manos.</h2>
+                    <p>Un espacio seguro para acompañar cada paso de tu atención médica.</p>
+                </div>
+                <div class="auth-aside-note">
+                    <span class="auth-aside-note-icon" aria-hidden="true"><i data-lucide="shield-check"></i></span>
+                    <span>Atención cercana, información protegida.</span>
+                </div>
+                <span class="auth-aside-index" aria-hidden="true">01 / 02</span>
+            </aside>
 
-            @include('portal::auth.errors', ['messages' => $errors->all()])
-
-            <form method="POST" action="{{ route('login.post') }}">
-                @csrf
-
-                @include('portal::auth.field', [
-                    'name' => 'email',
-                    'type' => 'email',
-                    'label' => 'Correo electrónico',
-                    'required' => true,
-                    'error' => $errors->first('email'),
-                    'help' => 'Ingresa el correo electrónico registrado en la clínica.',
-                    'autocomplete' => 'email',
-                ])
-
-                @include('portal::auth.field', [
-                    'name' => 'password',
-                    'type' => 'password',
-                    'label' => 'Contraseña',
-                    'required' => true,
-                    'error' => $errors->first('password'),
-                    'help' => 'Mínimo 8 caracteres.',
-                    'autocomplete' => 'current-password',
-                ])
-
-                <div class="auth-field" style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                    <input id="remember" type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
-                    <label for="remember" class="auth-field-label" style="margin-bottom: 0; font-weight: 500; font-size: 0.9375rem;">
-                        Recordar sesión
-                    </label>
+            <section class="auth-panel" aria-labelledby="auth-title">
+                <div class="auth-panel-top">
+                    <a href="{{ route('portal') }}" class="auth-back-link"><i data-lucide="arrow-left" aria-hidden="true"></i><span>Volver al portal</span></a>
+                    <span class="auth-secure-label"><i data-lucide="lock-keyhole" aria-hidden="true"></i> Acceso seguro</span>
                 </div>
 
-                @include('portal::auth.button', [
-                    'label' => 'Iniciar sesión',
-                ])
-            </form>
+                <div class="auth-header">
+                    <p class="auth-eyebrow">BIENVENIDO DE NUEVO</p>
+                    <h1 id="auth-title">Iniciar sesión</h1>
+                    <p>Accede para gestionar tu información y atención médica.</p>
+                </div>
 
-            <div class="auth-switch">
-                <p>¿No tienes una cuenta?</p>
-                <a href="{{ route('register') }}" class="auth-button-link" style="font-weight: 600; color: var(--auth-color-forest-dark); text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 2px;">
-                    Crear cuenta
-                </a>
-            </div>
-        </div>
+                @include('portal::auth.errors', ['messages' => $errors->all()])
+
+                <form method="POST" action="{{ route('login.post') }}" class="auth-form">
+                    @csrf
+
+                    @include('portal::auth.field', [
+                        'name' => 'email',
+                        'type' => 'email',
+                        'label' => 'Correo electrónico',
+                        'required' => true,
+                        'error' => $errors->first('email'),
+                        'help' => null,
+                        'autocomplete' => 'email',
+                        'placeholder' => 'nombre@correo.com',
+                    ])
+
+                    @include('portal::auth.field', [
+                        'name' => 'password',
+                        'type' => 'password',
+                        'label' => 'Contraseña',
+                        'required' => true,
+                        'error' => $errors->first('password'),
+                        'help' => null,
+                        'autocomplete' => 'current-password',
+                        'placeholder' => 'Ingresa tu contraseña',
+                    ])
+
+                    <div class="auth-form-options">
+                        <label class="auth-checkbox" for="remember">
+                            <input id="remember" type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
+                            <span>Recordar sesión</span>
+                        </label>
+                    </div>
+
+                    @include('portal::auth.button', [
+                        'label' => 'Iniciar sesión',
+                        'icon' => 'arrow-right',
+                    ])
+                </form>
+
+                <div class="auth-switch">
+                    <span>¿Aún no tienes una cuenta?</span>
+                    <a href="{{ route('register') }}" class="auth-button-link">Crear cuenta <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+                </div>
+
+                <p class="auth-legal-note">Al continuar, accedes a un entorno privado de {{ config('app.name') }}.</p>
+            </section>
+        </main>
     </div>
 
 </body>

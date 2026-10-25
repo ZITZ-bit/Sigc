@@ -21,9 +21,6 @@
                         <h1>Bienvenido, {{ auth()->user()->name }}</h1>
                         <p>Aquí encontrarás tus citas, historial médico y opciones de atención.</p>
                     </div>
-                    <div class="paciente-header-actions">
-                        <a href="{{ route('paciente.consulta') }}" class="paciente-btn-primary">Solicitar consulta</a>
-                    </div>
                 </header>
 
                 <section class="paciente-section" aria-labelledby="paciente-summary-title">
@@ -60,18 +57,13 @@
                             </div>
                             <span class="paciente-appointment-badge paciente-badge">Sin datos</span>
                         </div>
-                        <a href="{{ route('paciente.agenda') }}" class="paciente-btn-link">Consultar agenda</a>
                     </article>
                 </section>
 
                 <section class="paciente-section" aria-labelledby="paciente-actions-title">
                     <p class="paciente-eyebrow">Acceso directo</p>
                     <h2 id="paciente-actions-title" class="paciente-section-title">Acciones rápidas</h2>
-                    <div class="paciente-grid paciente-actions-grid paciente-actions-grid-cols-2 paciente-actions-grid-cols-4">
-                        <a href="{{ route('paciente.consulta') }}" class="paciente-action-btn">
-                            <span class="paciente-action-btn-icon" aria-hidden="true">CS</span>
-                            <span>Solicitar consulta</span>
-                        </a>
+                    <div class="paciente-grid paciente-actions-grid paciente-actions-grid-cols-2 paciente-actions-grid-cols-3">
                         <a href="{{ route('paciente.doctores') }}" class="paciente-action-btn">
                             <span class="paciente-action-btn-icon" aria-hidden="true">DR</span>
                             <span>Buscar doctores</span>
@@ -93,7 +85,6 @@
                             <p class="paciente-eyebrow">Seguimiento</p>
                             <h2 id="paciente-upcoming-title" class="paciente-section-title">Próximas citas</h2>
                         </div>
-                        <a href="{{ route('paciente.agenda') }}" class="paciente-btn-link">Abrir agenda</a>
                     </div>
                     <div class="paciente-cita-list">
                         <div class="paciente-empty-state">

@@ -338,3 +338,70 @@
     align-self: flex-end;
   }
 }
+
+.paciente-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.paciente-sidebar-toggle {
+  display: grid;
+  place-items: center;
+  flex: 0 0 2rem;
+  width: 2rem;
+  height: 2rem;
+  color: var(--paciente-color-sidebar-text);
+  border: 1px solid rgb(255 255 255 / 0.18);
+  border-radius: var(--paciente-radius-sm);
+}
+
+.paciente-sidebar-toggle svg,
+.paciente-brand-icon svg,
+.paciente-nav-icon svg,
+.paciente-sidebar-return svg,
+.paciente-btn-logout svg,
+.paciente-mobile-toggle svg,
+.paciente-mobile-close svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex: 0 0 auto;
+}
+
+.paciente-nav-icon {
+  font-size: 0;
+}
+
+.paciente-sidebar-return {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+@media (min-width: 1024px) {
+  body.sidebar-collapsed .paciente-sidebar { width: 76px; }
+  body.sidebar-collapsed .paciente-sidebar-header { justify-content: center; padding-inline: 0.75rem; }
+  body.sidebar-collapsed .paciente-brand-text,
+  body.sidebar-collapsed .paciente-nav-label,
+  body.sidebar-collapsed .paciente-profile-info,
+  body.sidebar-collapsed .paciente-sidebar-return span,
+  body.sidebar-collapsed .paciente-btn-logout span { display: none; }
+  body.sidebar-collapsed .paciente-sidebar-toggle {
+    position: absolute;
+    top: 1.25rem;
+    right: -2.5rem;
+    color: var(--paciente-color-ink);
+    background: #fffefa;
+    border-color: var(--paciente-color-border);
+    box-shadow: var(--paciente-shadow);
+  }
+  body.sidebar-collapsed .paciente-sidebar-toggle svg { transform: rotate(180deg); }
+  body.sidebar-collapsed .paciente-nav-list { padding-inline: 0.625rem; }
+  body.sidebar-collapsed .paciente-nav-link { justify-content: center; padding-inline: 0; }
+  body.sidebar-collapsed .paciente-sidebar-footer { padding-inline: 0.625rem; }
+  body.sidebar-collapsed .paciente-profile-summary,
+  body.sidebar-collapsed .paciente-sidebar-return { justify-content: center; }
+  body.sidebar-collapsed .paciente-btn-logout { padding-inline: 0; }
+  body.sidebar-collapsed .paciente-content-area { margin-left: 76px; }
+}

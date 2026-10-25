@@ -31,42 +31,13 @@
                     </div>
 
                     <div class="paciente-doctores-grid">
-                        <article class="paciente-doctor-card">
-                            <div class="paciente-doctor-avatar" aria-hidden="true">&#x1F468;&#x200D;&#x1F3EB;</div>
-                            <h3 class="paciente-doctor-name">Dr. Carlos Méndez</h3>
-                            <span class="paciente-doctor-specialty">Medicina General</span>
-                            <p class="paciente-doctor-bio">Atención primaria y control general de salud para pacientes de todas las edades.</p>
-                            <div class="paciente-doctor-rating">
-                                <span class="paciente-consulta-step-number">4.9</span>
-                                <span>(120 reseñas)</span>
-                            </div>
-                            <a href="#" class="paciente-doctor-btn">Solicitar consulta</a>
-                        </article>
-                        <article class="paciente-doctor-card">
-                            <div class="paciente-doctor-avatar" aria-hidden="true">&#x1F469;&#x200D;&#x1F3EB;</div>
-                            <h3 class="paciente-doctor-name">Dra. Laura Gómez</h3>
-                            <span class="paciente-doctor-specialty">Cardiología</span>
-                            <p class="paciente-doctor-bio">Especialista en salud cardiovascular y prevención de enfermedades del corazón.</p>
-                            <div class="paciente-doctor-rating">
-                                <span class="paciente-consulta-step-number">4.8</span>
-                                <span>(95 reseñas)</span>
-                            </div>
-                            <a href="#" class="paciente-doctor-btn">Solicitar consulta</a>
-                        </article>
-                        <article class="paciente-doctor-card">
-                            <div class="paciente-doctor-avatar" aria-hidden="true">&#x1F468;&#x200D;&#x1F3EB;</div>
-                            <h3 class="paciente-doctor-name">Dr. Roberto Silva</h3>
-                            <span class="paciente-doctor-specialty">Pediatría</span>
-                            <p class="paciente-doctor-bio">Cuidado integral de la salud infantil, desde recién nacidos hasta adolescentes.</p>
-                            <div class="paciente-doctor-rating">
-                                <span class="paciente-consulta-step-number">4.7</span>
-                                <span>(88 reseñas)</span>
-                            </div>
-                            <a href="#" class="paciente-doctor-btn">Solicitar consulta</a>
-                        </article>
+                        <div class="paciente-empty-state">
+                            <strong>No hay profesionales disponibles</strong>
+                            <p>Los médicos asociados a tu especialidad aparecerán aquí cuando estén disponibles.</p>
+                        </div>
                     </div>
 
-                    <p class="paciente-text-center paciente-disclaimer">Datos de demostración. No son profesionales reales.</p>
+                    <p class="paciente-text-center">Utiliza "Solicitar consulta" para iniciar una solicitud de atención médica.</p>
                 </section>
             </div>
         </div>

@@ -102,6 +102,29 @@ CREATE TABLE IF NOT EXISTS `invitaciones` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- -----------------------------------------------------
+-- Tabla consultas
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `consultas` (
+    `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+    `user_id` bigint UNSIGNED NOT NULL,
+    `medico_id` bigint UNSIGNED DEFAULT NULL,
+    `especialidad_id` bigint UNSIGNED DEFAULT NULL,
+    `fecha` date NOT NULL,
+    `hora` time NOT NULL,
+    `motivo` text DEFAULT NULL,
+    `estado` enum('pendiente','confirmada','completada','cancelada') NOT NULL DEFAULT 'pendiente',
+    `created_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NULL DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    KEY `consultas_user_id_foreign` (`user_id`),
+    KEY `consultas_medico_id_foreign` (`medico_id`),
+    KEY `consultas_especialidad_id_foreign` (`especialidad_id`),
+    CONSTRAINT `consultas_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `consultas_medico_id_foreign` FOREIGN KEY (`medico_id`) REFERENCES `medicos` (`id`) ON DELETE SET NULL,
+    CONSTRAINT `consultas_especialidad_id_foreign` FOREIGN KEY (`especialidad_id`) REFERENCES `especialidades` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- -----------------------------------------------------
 -- Tabla cache (Laravel)
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `cache` (

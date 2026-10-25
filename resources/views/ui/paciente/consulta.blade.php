@@ -43,18 +43,22 @@
                         </div>
                     </div>
 
-                    <form novalidate class="paciente-consulta-form">
+                    <form method="POST" action="{{ route('paciente.consulta.store') }}" class="paciente-consulta-form">
+                            @csrf
                         <div class="paciente-consulta-section">
                             <h3 class="paciente-consulta-section-title">1. Especialidad</h3>
                             <div class="paciente-consulta-field">
                                 <label class="paciente-consulta-label" for="especialidad">Selecciona una especialidad</label>
-                                <select class="paciente-consulta-select" id="especialidad" name="especialidad">
+                                <select class="paciente-consulta-select" id="especialidad" name="especialidad" required>
                                     <option value="">Seleccionar...</option>
                                     <option value="medicina-general">Medicina General</option>
                                     <option value="cardiologia">Cardiología</option>
                                     <option value="pediatria">Pediatría</option>
                                     <option value="medicina-interna">Medicina Interna</option>
                                 </select>
+                                @error('especialidad')
+                                    <p class="paciente-consulta-help text-error">{{ $message }}</p>
+                                @enderror
                                 <p class="paciente-consulta-help">Elige el área médica que necesitas.</p>
                             </div>
                         </div>
@@ -74,12 +78,15 @@
                             <h3 class="paciente-consulta-section-title">3. Fecha y hora</h3>
                             <div class="paciente-consulta-field">
                                 <label class="paciente-consulta-label" for="fecha">Fecha de la cita</label>
-                                <input type="date" class="paciente-consulta-input" id="fecha" name="fecha">
+                                <input type="date" class="paciente-consulta-input" id="fecha" name="fecha" required>
                                 <p class="paciente-consulta-help">Selecciona una fecha disponible.</p>
+                                @error('fecha')
+                                    <p class="paciente-consulta-help text-error">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div class="paciente-consulta-field">
                                 <label class="paciente-consulta-label" for="hora">Hora de la cita</label>
-                                <select class="paciente-consulta-select" id="hora" name="hora">
+                                <select class="paciente-consulta-select" id="hora" name="hora" required>
                                     <option value="">Seleccionar hora...</option>
                                     <option value="09:00">09:00</option>
                                     <option value="10:00">10:00</option>
@@ -89,6 +96,9 @@
                                     <option value="15:00">15:00</option>
                                     <option value="16:00">16:00</option>
                                 </select>
+                                @error('hora')
+                                    <p class="paciente-consulta-help text-error">{{ $message }}</p>
+                                @enderror
                                 <p class="paciente-consulta-help">Elige un horario disponible.</p>
                             </div>
                         </div>
@@ -122,7 +132,7 @@
                             </div>
                         </div>
 
-                        <p class="paciente-consulta-disclaimer">Este formulario es una demostración visual. No reserva ni guarda datos realmente.</p>
+                        <p class="paciente-consulta-help">Tu solicitud será procesada y asignada a un profesional disponible.</p>
                     </form>
                 </section>
             </div>
