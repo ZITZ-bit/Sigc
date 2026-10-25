@@ -1,14 +1,48 @@
+@media (max-width: 1023px) {
+  .paciente-content-area {
+    padding-top: 4.5rem;
+  }
+}
+
 @media (max-width: 767px) {
   .paciente-content-area {
-    padding: 1rem;
+    padding: 4.25rem 1rem 1.25rem;
   }
 
   .paciente-header {
     margin-bottom: 1.5rem;
+    gap: 1rem;
   }
 
   .paciente-header-content h1 {
     font-size: 1.5rem;
+    overflow-wrap: anywhere;
+  }
+
+  .paciente-header-actions {
+    align-self: stretch;
+  }
+
+  .paciente-header-actions .paciente-btn-primary {
+    width: 100%;
+  }
+
+  .paciente-section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .paciente-empty-state {
+    padding: 1.125rem;
+  }
+
+  .paciente-grid-cols-3 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .paciente-actions-grid-cols-4 {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .paciente-dashboard-grid {
@@ -67,6 +101,15 @@
 
   .paciente-historial-date {
     min-width: auto;
+  }
+
+  .paciente-sidebar-footer {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  .paciente-sidebar-overlay {
+    padding: 0;
+    border: 0;
   }
 }
 

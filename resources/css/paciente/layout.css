@@ -11,10 +11,10 @@ html {
 }
 
 body {
-  font-family: var(--font-sans);
+  font-family: var(--paciente-font-sans);
   background-color: var(--paciente-color-bg);
   color: var(--paciente-color-text);
-  line-height: 1.6;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -23,24 +23,24 @@ h1,
 h2,
 h3,
 h4 {
-  font-weight: 600;
-  line-height: 1.25;
+  font-weight: 650;
+  line-height: 1.2;
   color: var(--paciente-color-ink);
 }
 
 h1 {
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  letter-spacing: -0.02em;
+  font-size: 1.875rem;
+  letter-spacing: 0;
 }
 
 h2 {
-  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
-  letter-spacing: -0.02em;
+  font-size: 1.375rem;
+  letter-spacing: 0;
 }
 
 h3 {
-  font-size: clamp(1rem, 2vw, 1.25rem);
-  letter-spacing: -0.01em;
+  font-size: 1.125rem;
+  letter-spacing: 0;
 }
 
 p {
@@ -95,7 +95,8 @@ button {
 
 .paciente-content-area {
   flex: 1;
-  padding: 2rem;
+  min-width: 0;
+  padding: 2.5rem clamp(1.5rem, 3vw, 3.5rem);
   overflow-y: auto;
 }
 
@@ -103,17 +104,28 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 2rem;
+  gap: 2rem;
+  margin: 0 auto 2.5rem;
+  max-width: var(--paciente-max-width);
 }
 
 .paciente-header-content h1 {
-  font-size: 1.75rem;
-  margin-bottom: 0.25rem;
+  font-size: 1.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.paciente-eyebrow {
+  margin-bottom: 0.35rem;
+  color: var(--paciente-color-forest);
+  font-size: 0.75rem;
+  font-weight: 650;
+  text-transform: uppercase;
 }
 
 .paciente-header-content p {
   color: var(--paciente-color-text-muted);
-  font-size: 0.9375rem;
+  font-size: 1rem;
+  max-width: 62ch;
 }
 
 .paciente-header-actions {
@@ -121,23 +133,117 @@ button {
   gap: 0.75rem;
 }
 
+.paciente-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--paciente-color-forest);
+  border-radius: var(--paciente-radius-sm);
+  background-color: var(--paciente-color-forest);
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+  transition: var(--paciente-transition-fast);
+}
+
+.paciente-btn-primary:hover {
+  border-color: var(--paciente-color-forest-dark);
+  background-color: var(--paciente-color-forest-dark);
+}
+
+.paciente-btn-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
+  color: var(--paciente-color-forest-dark);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 0.2em;
+  transition: var(--paciente-transition-fast);
+}
+
+.paciente-btn-link:hover {
+  text-decoration-color: currentColor;
+}
+
+.paciente-content-area :is(input, select, textarea) {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--paciente-color-border);
+  border-radius: var(--paciente-radius-sm);
+  background-color: var(--paciente-color-surface);
+  color: var(--paciente-color-text);
+  font: inherit;
+}
+
+.paciente-content-area :is(input, select, textarea):focus-visible {
+  border-color: var(--paciente-color-focus);
+  outline: 3px solid rgb(39 116 81 / 0.18);
+  outline-offset: 1px;
+}
+
+.paciente-content-area table {
+  width: 100%;
+  border: 1px solid var(--paciente-color-border);
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: var(--paciente-radius);
+  background-color: var(--paciente-color-surface);
+}
+
+.paciente-content-area th {
+  padding: 0.8rem 1rem;
+  background-color: var(--paciente-color-bg-muted);
+  color: var(--paciente-color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 650;
+  text-align: left;
+}
+
+.paciente-content-area td {
+  padding: 0.85rem 1rem;
+  border-top: 1px solid var(--paciente-color-border);
+  color: var(--paciente-color-text);
+  font-size: 0.875rem;
+  vertical-align: middle;
+}
+
 .paciente-section {
-  margin-bottom: 2.5rem;
+  max-width: var(--paciente-max-width);
+  margin: 0 auto 2.25rem;
 }
 
 .paciente-section-title {
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   font-weight: 600;
   color: var(--paciente-color-ink);
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
+.paciente-section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.paciente-section-heading .paciente-section-title {
+  margin-bottom: 0;
+}
+
 .paciente-grid {
   display: grid;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 @media (min-width: 640px) {
@@ -159,7 +265,7 @@ button {
   background-color: var(--paciente-color-surface);
   border-radius: var(--paciente-radius);
   box-shadow: var(--paciente-shadow);
-  padding: 1.5rem;
+  padding: 1.25rem;
   border: 1px solid var(--paciente-color-border);
 }
 
@@ -172,6 +278,11 @@ button {
   border-radius: var(--paciente-radius-sm);
   background-color: var(--paciente-color-mint);
   color: var(--paciente-color-forest-dark);
+}
+
+:focus-visible {
+  outline: 3px solid var(--paciente-color-focus);
+  outline-offset: 3px;
 }
 
 .paciente-text-center {

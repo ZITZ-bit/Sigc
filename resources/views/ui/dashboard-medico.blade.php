@@ -4,145 +4,123 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light">
-    <title>Dashboard Médico — {{ config('app.name') }}</title>
+    <title>Panel médico — {{ config('app.name') }}</title>
     <meta name="description" content="Panel privado del médico para gestionar citas, pacientes y consultas.">
     <link rel="icon" href="/favicon.ico">
     @vite(['resources/css/medico.css', 'resources/js/app.js'])
 </head>
 <body>
-
     <div class="medico-page">
         @include('portal::medico.sidebar')
 
-        <div class="medico-main">
+        <main class="medico-main">
             <div class="medico-content-area">
-                <div class="medico-header">
+                <header class="medico-header">
                     <div class="medico-header-content">
-                        <h1>Panel del Médico</h1>
-                        <p>Bienvenido de vuelta, Dr. Médico demostrativo. Aquí gestionas tus citas y pacientes.</p>
+                        <p class="medico-eyebrow">Área clínica</p>
+                        <h1>Panel del médico</h1>
+                        <p>Bienvenido, {{ auth()->user()->name }}. Gestiona tu jornada y accede a tus herramientas clínicas.</p>
                     </div>
                     <div class="medico-header-actions">
                         <a href="{{ route('medico.agenda') }}" class="medico-btn-primary">Mi agenda</a>
                     </div>
-                </div>
+                </header>
 
-                <!-- Resumen de citas -->
-                <section class="medico-section">
-                    <h2 class="medico-section-title">Resumen de citas</h2>
-                    <div class="medico-grid medico-grid-cols-3">
-                        <div class="medico-stat-card">
-                            <span class="medico-stat-icon medico-stat-icon--forest" aria-hidden="true">&#x1F4C5;</span>
-                            <span class="medico-stat-label">Hoy</span>
-                            <span class="medico-stat-value">4</span>
-                        </div>
-                        <div class="medico-stat-card">
-                            <span class="medico-stat-icon medico-stat-icon--sage" aria-hidden="true">&#x23F3;</span>
+                <section class="medico-section" aria-labelledby="medico-summary-title">
+                    <p class="medico-eyebrow">Jornada</p>
+                    <h2 id="medico-summary-title" class="medico-section-title">Resumen de agenda</h2>
+                    <div class="medico-grid medico-dashboard-grid medico-dashboard-grid-cols-3">
+                        <article class="medico-stat-card">
+                            <span class="medico-stat-icon medico-stat-icon--forest" aria-hidden="true">AG</span>
+                            <span class="medico-stat-label">Citas de hoy</span>
+                            <span class="medico-stat-value">Sin datos</span>
+                        </article>
+                        <article class="medico-stat-card">
+                            <span class="medico-stat-icon medico-stat-icon--sage" aria-hidden="true">PE</span>
                             <span class="medico-stat-label">Pendientes</span>
-                            <span class="medico-stat-value">2</span>
-                        </div>
-                        <div class="medico-stat-card">
-                            <span class="medico-stat-icon medico-stat-icon--mint" aria-hidden="true">&#x2705;</span>
+                            <span class="medico-stat-value">Sin datos</span>
+                        </article>
+                        <article class="medico-stat-card">
+                            <span class="medico-stat-icon medico-stat-icon--mint" aria-hidden="true">FI</span>
                             <span class="medico-stat-label">Completadas</span>
-                            <span class="medico-stat-value">18</span>
-                        </div>
+                            <span class="medico-stat-value">Sin datos</span>
+                        </article>
                     </div>
                 </section>
 
-                <!-- Próxima cita -->
-                <section class="medico-section">
-                    <h2 class="medico-section-title">Próxima cita</h2>
-                    <div class="medico-appointment-card">
+                <section class="medico-section" aria-labelledby="medico-next-title">
+                    <div class="medico-section-heading">
+                        <div>
+                            <p class="medico-eyebrow">Siguiente atención</p>
+                            <h2 id="medico-next-title" class="medico-section-title">Próxima cita</h2>
+                        </div>
+                        <a href="{{ route('medico.agenda') }}" class="medico-btn-link">Abrir agenda</a>
+                    </div>
+                    <article class="medico-appointment-card">
                         <div class="medico-appointment-header">
                             <div>
-                                <span class="medico-appointment-date">26 Oct</span>
-                                <span class="medico-appointment-patient">Ana López García</span>
-                                <span class="medico-appointment-reason">Control general</span>
+                                <span class="medico-appointment-date">Próxima cita</span>
+                                <span class="medico-appointment-patient">No hay citas asignadas para mostrar</span>
+                                <span class="medico-appointment-reason">Los detalles de atención se mostrarán cuando haya registros disponibles.</span>
                             </div>
-                            <span class="medico-badge medico-badge--confirmed">Confirmada</span>
+                            <span class="medico-badge">Sin datos</span>
                         </div>
-                        <p class="medico-mb-2">Consulta de control general programada para las 10:00.</p>
-                        <a href="{{ route('medico.agenda') }}" class="medico-btn-link">Ver detalles</a>
-                    </div>
+                        <a href="{{ route('medico.agenda') }}" class="medico-btn-link">Consultar agenda</a>
+                    </article>
                 </section>
 
-                <!-- Acciones rápidas -->
-                <section class="medico-section">
-                    <h2 class="medico-section-title">Acciones rápidas</h2>
-                    <div class="medico-grid medico-actions-grid medico-grid-cols-2 medico-grid-cols-4">
+                <section class="medico-section" aria-labelledby="medico-actions-title">
+                    <p class="medico-eyebrow">Atención clínica</p>
+                    <h2 id="medico-actions-title" class="medico-section-title">Acciones rápidas</h2>
+                    <div class="medico-grid medico-actions-grid medico-actions-grid-cols-2 medico-actions-grid-cols-4">
                         <a href="{{ route('medico.agenda') }}" class="medico-action-btn">
-                            <span class="medico-action-btn-icon" aria-hidden="true">&#x1F4C5;</span>
-                            Mi agenda
+                            <span class="medico-action-btn-icon" aria-hidden="true">AG</span>
+                            <span>Mi agenda</span>
                         </a>
                         <a href="{{ route('medico.pacientes') }}" class="medico-action-btn">
-                            <span class="medico-action-btn-icon" aria-hidden="true">&#x1F464;</span>
-                            Mis pacientes
+                            <span class="medico-action-btn-icon" aria-hidden="true">PA</span>
+                            <span>Pacientes autorizados</span>
                         </a>
                         <a href="{{ route('medico.consultas') }}" class="medico-action-btn">
-                            <span class="medico-action-btn-icon" aria-hidden="true">&#x1F4E9;</span>
-                            Consultas médicas
+                            <span class="medico-action-btn-icon" aria-hidden="true">CS</span>
+                            <span>Consultas médicas</span>
                         </a>
                         <a href="{{ route('medico.historial') }}" class="medico-action-btn">
-                            <span class="medico-action-btn-icon" aria-hidden="true">&#x1F4C4;</span>
-                            Historial clínico
+                            <span class="medico-action-btn-icon" aria-hidden="true">HI</span>
+                            <span>Historial clínico</span>
+                        </a>
+                        <a href="{{ route('medico.horario') }}" class="medico-action-btn">
+                            <span class="medico-action-btn-icon" aria-hidden="true">HO</span>
+                            <span>Horarios</span>
+                        </a>
+                        <a href="{{ route('medico.notificaciones') }}" class="medico-action-btn">
+                            <span class="medico-action-btn-icon" aria-hidden="true">AV</span>
+                            <span>Notificaciones</span>
+                        </a>
+                        <a href="{{ route('medico.perfil') }}" class="medico-action-btn">
+                            <span class="medico-action-btn-icon" aria-hidden="true">PF</span>
+                            <span>Mi perfil</span>
                         </a>
                     </div>
                 </section>
 
-                <!-- Notificaciones recientes -->
-                <section class="medico-section">
-                    <h2 class="medico-section-title">Notificaciones recientes</h2>
-                    <div class="medico-notifications-list">
-                        <div class="medico-notification-item medico-notification-item--unread">
-                            <span class="medico-notification-icon" aria-hidden="true">&#x1F4E7;</span>
-                            <div class="medico-notification-content">
-                                <p class="medico-notification-title">Nueva cita solicitada</p>
-                                <p class="medico-notification-text">Juan Pérez ha solicitado una consulta para mañana.</p>
-                                <span class="medico-notification-time">Hace 30 min</span>
-                            </div>
+                <section class="medico-section" aria-labelledby="medico-notifications-title">
+                    <div class="medico-section-heading">
+                        <div>
+                            <p class="medico-eyebrow">Centro de avisos</p>
+                            <h2 id="medico-notifications-title" class="medico-section-title">Notificaciones recientes</h2>
                         </div>
-                        <div class="medico-notification-item">
-                            <span class="medico-notification-icon" aria-hidden="true">&#x1F4E7;</span>
-                            <div class="medico-notification-content">
-                                <p class="medico-notification-title">Resultado disponible</p>
-                                <p class="medico-notification-text">Los exámenes de María Rodríguez están listos.</p>
-                                <span class="medico-notification-time">Hace 2 horas</span>
-                            </div>
+                        <a href="{{ route('medico.notificaciones') }}" class="medico-btn-link">Ver todas</a>
+                    </div>
+                    <div class="medico-notifications-list">
+                        <div class="medico-empty-state">
+                            <strong>No tienes notificaciones recientes</strong>
+                            <p>Los avisos de agenda y atención aparecerán aquí cuando estén disponibles.</p>
                         </div>
                     </div>
-                    <p class="medico-disclaimer">Datos de demostración. No son notificaciones reales.</p>
                 </section>
             </div>
-        </div>
+        </main>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var toggle = document.querySelector('.medico-mobile-toggle');
-            var close = document.querySelector('.medico-mobile-close');
-            var sidebar = document.getElementById('medico-mobile-sidebar');
-            var overlay = document.querySelector('.medico-sidebar-overlay');
-
-            if (toggle && sidebar) {
-                toggle.addEventListener('click', function () {
-                    sidebar.classList.toggle('open');
-                    if (overlay) overlay.classList.toggle('open');
-                });
-            }
-
-            if (close && sidebar) {
-                close.addEventListener('click', function () {
-                    sidebar.classList.remove('open');
-                    if (overlay) overlay.classList.remove('open');
-                });
-            }
-
-            if (overlay) {
-                overlay.addEventListener('click', function () {
-                    sidebar.classList.remove('open');
-                    overlay.classList.remove('open');
-                });
-            }
-        });
-    </script>
 </body>
 </html>
