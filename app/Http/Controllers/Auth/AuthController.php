@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -72,7 +73,7 @@ class AuthController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ])->validate();
 
-        $pacienteRole = \App\Models\Role::where('slug', 'paciente')->first();
+        $pacienteRole = Role::where('slug', 'paciente')->first();
 
         $user = User::create([
             'name' => $validated['name'],

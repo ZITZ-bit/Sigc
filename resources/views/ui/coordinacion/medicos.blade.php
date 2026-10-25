@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light">
     <title>Médicos y Horarios — {{ config('app.name') }}</title>
-    <meta name="description" content="Directorio de médicos y sus horarios disponibles.">
+    <meta name="description" content="Gestión de médicos del sistema.">
     <link rel="icon" href="/favicon.ico">
     @vite(['resources/css/coordinacion.css', 'resources/js/app.js'])
 </head>
@@ -19,42 +19,141 @@
                 <div class="coordinacion-header">
                     <div class="coordinacion-header-content">
                         <h1>Médicos y horarios</h1>
-                        <p>Directorio de profesionales y su disponibilidad semanal.</p>
+                        <p>Administre el registro de médicos, sus especialidades y estado de cuenta.</p>
+                    </div>
+                    <div class="coordinacion-header-actions">
+                        <a href="{{ route('coordinacion.medicos.registrar') }}" class="coordinacion-btn-primary">Registrar médico</a>
                     </div>
                 </div>
 
+                @if (session('success'))
+                    <div class="coordinacion-card coordinacion-mb-2" style="background-color: var(--coordinacion-color-success-soft); border-color: var(--coordinacion-color-success);">
+                        <p style="color: var(--coordinacion-color-success); margin: 0; font-size: 0.9375rem;">{{ session('success') }}</p>
+                    </div>
+                @endif
+
+                @if ($errors->any())
+                    <div class="coordinacion-card coordinacion-mb-2" style="background-color: var(--coordinacion-color-error-soft); border-color: var(--coordinacion-color-error);">
+                        <ul style="color: var(--coordinacion-color-error); margin: 0; padding-left: 1rem; font-size: 0.9375rem;">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
                 <section class="coordinacion-section">
-                    <div class="coordinacion-medicos-grid">
-                        <article class="coordinacion-medico-card">
-                            <div class="coordinacion-medico-avatar" aria-hidden="true">&#x1F468;&#x200D;&#x1F3EB;</div>
-                            <h3 class="coordinacion-medico-name">Dr. Carlos Méndez</h3>
-                            <span class="coordinacion-medico-id">ID: MED-001</span>
-                            <p class="coordinacion-medico-info">Especialidad: Medicina General · Disponible: Lunes a Viernes · Citas hoy: 4</p>
-                            <div class="coordinacion-medico-actions">
-                                <button class="coordinacion-medico-btn coordinacion-medico-btn--view" disabled>Ver horario</button>
+                    <div class="coordinacion-medicos-header">
+                        <form method="GET" action="{{ route('coordinacion.medicos') }}" class="coordinacion-medicos-filters" style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: flex-end;">
+                            <div style="flex: 1; min-width: 200px;">
+                                <input type="text" name="search" class="coordinacion-configuracion-input" placeholder="Buscar por nombre, correo o documento..." value="{{ old('search', $search) }}">
                             </div>
-                        </article>
-                        <article class="coordinacion-medico-card">
-                            <div class="coordinacion-medico-avatar" aria-hidden="true">&#x1F469;&#x200D;&#x1F3EB;</div>
-                            <h3 class="coordinacion-medico-name">Dra. Laura Gómez</h3>
-                            <span class="coordinacion-medico-id">ID: MED-002</span>
-                            <p class="coordinacion-medico-info">Especialidad: Cardiología · Disponible: Martes a Sábado · Citas hoy: 3</p>
-                            <div class="coordinacion-medico-actions">
-                                <button class="coordinacion-medico-btn coordinacion-medico-btn--view" disabled>Ver horario</button>
+                            <div style="min-width: 150px;">
+                                <select name="especialidad_id" class="coordinacion-configuracion-input">
+                                    <option value="">Todas las especialidades</option>
+                                    @foreach ($especialidades as $esp)
+                                        <option value="{{ $esp->id }}" {{ $filtro_especialidad == $esp->id ? 'selected' : '' }}>{{ $esp->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                        </article>
-                        <article class="coordinacion-medico-card">
-                            <div class="coordinacion-medico-avatar" aria-hidden="true">&#x1F468;&#x200D;&#x1F3EB;</div>
-                            <h3 class="coordinacion-medico-name">Dr. Roberto Silva</h3>
-                            <span class="coordinacion-medico-id">ID: MED-003</span>
-                            <p class="coordinacion-medico-info">Especialidad: Pediatría · Disponible: Lunes a Jueves · Citas hoy: 2</p>
-                            <div class="coordinacion-medico-actions">
-                                <button class="coordinacion-medico-btn coordinacion-medico-btn--view" disabled>Ver horario</button>
+                            <div style="min-width: 150px;">
+                                <select name="departamento_id" class="coordinacion-configuracion-input">
+                                    <option value="">Todos los departamentos</option>
+                                    @foreach ($departamentos as $dep)
+                                        <option value="{{ $dep->id }}" {{ $filtro_departamento == $dep->id ? 'selected' : '' }}>{{ $dep->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                        </article>
+                            <div style="min-width: 140px;">
+                                <select name="estado" class="coordinacion-configuracion-input">
+                                    <option value="">Todos los estados</option>
+                                    <option value="pendiente" {{ $filtro_estado === 'pendiente' ? 'selected' : '' }}>Pendiente</option>
+                                    <option value="activo" {{ $filtro_estado === 'activo' ? 'selected' : '' }}>Activo</option>
+                                    <option value="inactivo" {{ $filtro_estado === 'inactivo' ? 'selected' : '' }}>Inactivo</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="coordinacion-btn-primary coordinacion-btn-sm">Filtrar</button>
+                            @if ($search || $filtro_especialidad || $filtro_departamento || $filtro_estado)
+                                <a href="{{ route('coordinacion.medicos') }}" class="coordinacion-btn-secondary coordinacion-btn-sm">Limpiar</a>
+                            @endif
+                        </form>
                     </div>
 
-                    <p class="coordinacion-disclaimer">Datos de demostración. No son profesionales reales.</p>
+                    @if ($medicos->count() > 0)
+                        <table class="coordinacion-medicos-table">
+                            <thead>
+                                <tr>
+                                    <th>Médico</th>
+                                    <th>Correo</th>
+                                    <th>Especialidad</th>
+                                    <th>Departamento</th>
+                                    <th>Teléfono</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($medicos as $medico)
+                                    <tr>
+                                        <td>
+                                            <div style="font-weight: 600; color: var(--coordinacion-color-ink);">{{ $medico->user->name }}</div>
+                                            <div style="font-size: 0.8125rem; color: var(--coordinacion-color-text-muted); font-family: monospace;">ID: {{ $medico->id }}</div>
+                                        </td>
+                                        <td>{{ $medico->user->email }}</td>
+                                        <td>{{ $medico->especialidad?->name ?? 'No asignada' }}</td>
+                                        <td>{{ $medico->departamento?->name ?? 'No asignado' }}</td>
+                                        <td>{{ $medico->telefono ?? '—' }}</td>
+                                        <td>
+                                            <span class="coordinacion-badge
+                                                {{ $medico->estado === 'activo' ? 'coordinacion-badge--confirmed' : ($medico->estado === 'pendiente' ? 'coordinacion-badge--pending' : 'coordinacion-badge--cancelled') }}
+                                            ">
+                                                {{ ucfirst($medico->estado) }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="coordinacion-medicos-actions">
+                                                @can('medico.view')
+                                                    <a href="{{ route('coordinacion.medicos.editar', $medico->id) }}" class="coordinacion-medicos-btn coordinacion-medicos-btn--view" aria-label="Ver detalles">Ver</a>
+                                                @endcan
+                                                @if (Auth::user()->role->slug === 'coordinador')
+                                                    <a href="{{ route('coordinacion.medicos.editar', $medico->id) }}" class="coordinacion-medicos-btn coordinacion-medicos-btn--edit" aria-label="Editar">Editar</a>
+                                                    @if ($medico->estado === 'activo')
+                                                        <form method="POST" action="{{ route('coordinacion.medicos.destroy', $medico->id) }}" style="display: inline;">
+                                                            @csrf
+                                                            <button type="submit" class="coordinacion-medicos-btn coordinacion-medicos-btn--deactivate" aria-label="Desactivar" onclick="return confirm('¿Está seguro de que desea desactivar a este médico?')">Desactivar</button>
+                                                        </form>
+                                                    @elseif ($medico->estado === 'inactivo')
+                                                        <form method="POST" action="{{ route('coordinacion.medicos.activate', $medico->id) }}" style="display: inline;">
+                                                            @csrf
+                                                            <button type="submit" class="coordinacion-medicos-btn coordinacion-medicos-btn--activate" aria-label="Activar">Activar</button>
+                                                        </form>
+                                                    @endif
+                                                    @if ($medico->estado === 'pendiente')
+                                                        <form method="POST" action="{{ route('coordinacion.medicos.invite', $medico->id) }}" style="display: inline;">
+                                                            @csrf
+                                                            <button type="submit" class="coordinacion-medicos-btn coordinacion-medicos-btn--invite" aria-label="Enviar invitación">Invitar</button>
+                                                        </form>
+                                                    @endif
+                                                @endcan
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+
+                        <div class="coordinacion-text-center coordinacion-mt-2">
+                            {{ $medicos->links() }}
+                        </div>
+                    @else
+                        <div class="coordinacion-medicos-empty">
+                            <span class="coordinacion-medicos-empty-icon" aria-hidden="true">&#x1F468;&#x200D;&#x1F3EB;</span>
+                            <p>No se encontraron médicos con los criterios seleccionados.</p>
+                            @if (Auth::user()->role->slug === 'coordinador')
+                                <a href="{{ route('coordinacion.medicos.registrar') }}" class="coordinacion-btn-primary">Registrar primer médico</a>
+                            @endif
+                        </div>
+                    @endif
                 </section>
             </div>
         </div>

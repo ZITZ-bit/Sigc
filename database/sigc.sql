@@ -35,6 +35,73 @@ CREATE TABLE IF NOT EXISTS `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- -----------------------------------------------------
+-- Tabla especialidades
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `especialidades` (
+    `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+    `name` varchar(255) NOT NULL,
+    `slug` varchar(255) NOT NULL UNIQUE,
+    `description` text DEFAULT NULL,
+    `created_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NULL DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- -----------------------------------------------------
+-- Tabla departamentos
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `departamentos` (
+    `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+    `name` varchar(255) NOT NULL,
+    `slug` varchar(255) NOT NULL UNIQUE,
+    `created_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NULL DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- -----------------------------------------------------
+-- Tabla medicos
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `medicos` (
+    `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+    `user_id` bigint UNSIGNED NOT NULL,
+    `especialidad_id` bigint UNSIGNED DEFAULT NULL,
+    `departamento_id` bigint UNSIGNED DEFAULT NULL,
+    `numero_licencia` varchar(100) DEFAULT NULL,
+    `telefono` varchar(50) DEFAULT NULL,
+    `direccion` varchar(255) DEFAULT NULL,
+    `fecha_incorporacion` date DEFAULT NULL,
+    `estado` enum('pendiente','activo','inactivo') NOT NULL DEFAULT 'pendiente',
+    `created_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NULL DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    KEY `medicos_user_id_foreign` (`user_id`),
+    KEY `medicos_especialidad_id_foreign` (`especialidad_id`),
+    KEY `medicos_departamento_id_foreign` (`departamento_id`),
+    CONSTRAINT `medicos_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `medicos_especialidad_id_foreign` FOREIGN KEY (`especialidad_id`) REFERENCES `especialidades` (`id`) ON DELETE SET NULL,
+    CONSTRAINT `medicos_departamento_id_foreign` FOREIGN KEY (`departamento_id`) REFERENCES `departamentos` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- -----------------------------------------------------
+-- Tabla invitaciones
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `invitaciones` (
+    `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+    `medico_id` bigint UNSIGNED NOT NULL,
+    `email` varchar(255) NOT NULL,
+    `token` varchar(255) NOT NULL UNIQUE,
+    `token_hash` varchar(255) NOT NULL,
+    `expires_at` timestamp NOT NULL,
+    `used_at` timestamp NULL DEFAULT NULL,
+    `created_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NULL DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    KEY `invitaciones_medico_id_foreign` (`medico_id`),
+    CONSTRAINT `invitaciones_medico_id_foreign` FOREIGN KEY (`medico_id`) REFERENCES `medicos` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- -----------------------------------------------------
 -- Tabla cache (Laravel)
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `cache` (
@@ -117,6 +184,23 @@ INSERT INTO `roles` (`name`, `slug`, `created_at`, `updated_at`) VALUES
 ('Paciente', 'paciente', NOW(), NOW()),
 ('Médico', 'medico', NOW(), NOW()),
 ('Coordinador', 'coordinador', NOW(), NOW());
+
+-- -----------------------------------------------------
+-- Insertar especialidades de ejemplo
+-- -----------------------------------------------------
+INSERT INTO `especialidades` (`name`, `slug`, `description`, `created_at`, `updated_at`) VALUES
+('Medicina General', 'medicina-general', 'Atención primaria y control general de salud', NOW(), NOW()),
+('Cardiología', 'cardiologia', 'Especialista en salud cardiovascular', NOW(), NOW()),
+('Pediatría', 'pediatria', 'Cuidado integral de la salud infantil', NOW(), NOW()),
+('Medicina Interna', 'medicina-interna', 'Diagnóstico y tratamiento de enfermedades en adultos', NOW(), NOW());
+
+-- -----------------------------------------------------
+-- Insertar departamentos de ejemplo
+-- -----------------------------------------------------
+INSERT INTO `departamentos` (`name`, `slug`, `created_at`, `updated_at`) VALUES
+('Consultas Externas', 'consultas-externas', NOW(), NOW()),
+('Urgencias', 'urgencias', NOW(), NOW()),
+('Hospitalización', 'hospitalizacion', NOW(), NOW());
 
 -- -----------------------------------------------------
 -- Insertar usuarios de prueba (contraseñas hasheadas con bcrypt)

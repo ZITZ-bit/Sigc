@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Coordinacion\MedicosController;
+use App\Http\Controllers\InvitacionController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'portal')->name('portal');
@@ -10,6 +12,10 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
+
+// Rutas públicas de activación de médico (sin autenticación)
+Route::get('/medico/activar/{token}', [InvitacionController::class, 'show'])->name('medico.activar');
+Route::post('/medico/activar/{token}', [InvitacionController::class, 'activate'])->name('medico.activar.post');
 
 // Rutas protegidas del paciente
 Route::middleware(['auth', 'role:paciente'])->group(function () {
@@ -91,9 +97,15 @@ Route::middleware(['auth', 'role:coordinador'])->group(function () {
         return view('ui.coordinacion.pacientes');
     })->name('coordinacion.pacientes');
 
-    Route::get('/coordinacion/medicos', function () {
-        return view('ui.coordinacion.medicos');
-    })->name('coordinacion.medicos');
+    // Gestión de médicos (bajo "Médicos y horarios")
+    Route::get('/coordinacion/medicos', [MedicosController::class, 'index'])->name('coordinacion.medicos');
+    Route::get('/coordinacion/medicos/registrar', [MedicosController::class, 'create'])->name('coordinacion.medicos.registrar');
+    Route::post('/coordinacion/medicos', [MedicosController::class, 'store'])->name('coordinacion.medicos.store');
+    Route::get('/coordinacion/medicos/{medico}/editar', [MedicosController::class, 'edit'])->name('coordinacion.medicos.editar');
+    Route::put('/coordinacion/medicos/{medico}', [MedicosController::class, 'update'])->name('coordinacion.medicos.update');
+    Route::post('/coordinacion/medicos/{medico}/desactivar', [MedicosController::class, 'destroy'])->name('coordinacion.medicos.destroy');
+    Route::post('/coordinacion/medicos/{medico}/activar', [MedicosController::class, 'activate'])->name('coordinacion.medicos.activate');
+    Route::post('/coordinacion/medicos/{medico}/invitacion', [MedicosController::class, 'sendInvitation'])->name('coordinacion.medicos.invite');
 
     Route::get('/coordinacion/recepcion', function () {
         return view('ui.coordinacion.recepcion');
