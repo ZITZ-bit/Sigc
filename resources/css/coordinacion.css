@@ -1,0 +1,14 @@
+@import './coordinacion/variables.css';
+@import './coordinacion/layout.css';
+@import './coordinacion/sidebar.css';
+@import './coordinacion/dashboard.css';
+@import './coordinacion/citas.css';
+@import './coordinacion/pacientes.css';
+@import './coordinacion/medicos.css';
+@import './coordinacion/recepcion.css';
+@import './coordinacion/reportes.css';
+@import './coordinacion/notificaciones.css';
+@import './coordinacion/perfil.css';
+@import './coordinacion/personal.css';
+@import './coordinacion/configuracion.css';
+@import './coordinacion/responsive.css';
