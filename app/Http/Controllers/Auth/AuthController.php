@@ -16,6 +16,10 @@ class AuthController extends Controller
      */
     public function showLogin()
     {
+        if (Auth::check()) {
+            return redirect()->route($this->dashboardRouteForUser(Auth::user()));
+        }
+
         return view('login');
     }
 
@@ -42,7 +46,7 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended('/');
+        return redirect()->route($this->dashboardRouteForUser(Auth::user()));
     }
 
     /**
@@ -50,6 +54,10 @@ class AuthController extends Controller
      */
     public function showRegister()
     {
+        if (Auth::check()) {
+            return redirect()->route($this->dashboardRouteForUser(Auth::user()));
+        }
+
         return view('register');
     }
 
@@ -64,17 +72,20 @@ class AuthController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ])->validate();
 
+        $pacienteRole = \App\Models\Role::where('slug', 'paciente')->first();
+
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
+            'role_id' => $pacienteRole?->id,
         ]);
 
         Auth::login($user);
 
         $request->session()->regenerate();
 
-        return redirect()->intended('/');
+        return redirect()->route('paciente.dashboard');
     }
 
     /**
@@ -88,5 +99,17 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+
+    /**
+     * Obtiene el nombre de la ruta del dashboard según el rol del usuario.
+     */
+    private function dashboardRouteForUser(User $user): string
+    {
+        return match ($user->role?->slug) {
+            'medico' => 'medico.dashboard',
+            'coordinador' => 'coordinacion.dashboard',
+            default => 'paciente.dashboard',
+        };
     }
 }

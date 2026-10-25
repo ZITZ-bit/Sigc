@@ -28,13 +28,17 @@
                 </a>
             </nav>
 
-            <form novalidate>
+            @include('portal::auth.errors', ['messages' => $errors->all()])
+
+            <form method="POST" action="{{ route('login.post') }}">
+                @csrf
+
                 @include('portal::auth.field', [
                     'name' => 'email',
                     'type' => 'email',
                     'label' => 'Correo electrónico',
                     'required' => true,
-                    'error' => null,
+                    'error' => $errors->first('email'),
                     'help' => 'Ingresa el correo electrónico registrado en la clínica.',
                     'autocomplete' => 'email',
                 ])
@@ -44,25 +48,20 @@
                     'type' => 'password',
                     'label' => 'Contraseña',
                     'required' => true,
-                    'error' => null,
+                    'error' => $errors->first('password'),
                     'help' => 'Mínimo 8 caracteres.',
                     'autocomplete' => 'current-password',
                 ])
 
                 <div class="auth-field" style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                    <input id="remember" type="checkbox" name="remember">
+                    <input id="remember" type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
                     <label for="remember" class="auth-field-label" style="margin-bottom: 0; font-weight: 500; font-size: 0.9375rem;">
                         Recordar sesión
                     </label>
                 </div>
 
-                <p class="auth-disabled-notice" style="margin-bottom: 1.5rem; font-size: 0.875rem; color: var(--auth-color-text-muted);">
-                    El envío de este formulario estará disponible próximamente.
-                </p>
-
                 @include('portal::auth.button', [
                     'label' => 'Iniciar sesión',
-                    'disabled' => true,
                 ])
             </form>
 

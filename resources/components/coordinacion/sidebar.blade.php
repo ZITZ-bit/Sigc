@@ -77,9 +77,12 @@
                 <p class="coordinacion-profile-role">Coordinación clínica</p>
             </div>
         </div>
-        <a href="#" class="coordinacion-btn-logout" aria-label="Cerrar sesión" title="Cerrar sesión">
-            &#x1F511;
-        </a>
+        <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+            @csrf
+            <button type="submit" class="coordinacion-btn-logout" aria-label="Cerrar sesión" title="Cerrar sesión">
+                &#x1F511;
+            </button>
+        </form>
     </div>
 </nav>
 
@@ -104,6 +107,11 @@
         <li><a href="{{ route('coordinacion.configuracion') }}" class="coordinacion-mobile-link{{ request()->routeIs('coordinacion.configuracion') ? ' coordinacion-mobile-link--active' : '' }}">Configuración</a></li>
     </ul>
     <div class="coordinacion-mobile-actions">
-        <a href="#" class="coordinacion-mobile-btn-logout" aria-label="Cerrar sesión">Cerrar sesión</a>
+        <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+            @csrf
+            <button type="submit" class="coordinacion-mobile-btn-logout" aria-label="Cerrar sesión">
+                Cerrar sesión
+            </button>
+        </form>
     </div>
 </div>
