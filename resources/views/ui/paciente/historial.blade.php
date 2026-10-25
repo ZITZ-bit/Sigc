@@ -25,51 +25,13 @@
 
                 <section class="paciente-section">
                     <div class="paciente-historial-list">
-                        <div class="paciente-historial-item">
-                            <div class="paciente-historial-date">
-                                <span class="paciente-historial-date-value">15 Sep 2024</span>
-                            </div>
-                            <div class="paciente-historial-info">
-                                <span class="paciente-historial-doctor">Dr. Carlos Méndez</span>
-                                <span class="paciente-historial-specialty">Medicina General · Consulta de control</span>
-                                <span class="paciente-historial-type">Consulta presencial</span>
-                            </div>
-                            <div class="paciente-historial-actions">
-                                <button class="paciente-historial-btn" aria-label="Ver detalles">Ver detalles</button>
-                                <button class="paciente-historial-btn" aria-label="Descargar reporte">Descargar</button>
-                            </div>
-                        </div>
-                        <div class="paciente-historial-item">
-                            <div class="paciente-historial-date">
-                                <span class="paciente-historial-date-value">02 Ago 2024</span>
-                            </div>
-                            <div class="paciente-historial-info">
-                                <span class="paciente-historial-doctor">Dra. Laura Gómez</span>
-                                <span class="paciente-historial-specialty">Cardiología · Revisión cardíaca</span>
-                                <span class="paciente-historial-type">Consulta presencial</span>
-                            </div>
-                            <div class="paciente-historial-actions">
-                                <button class="paciente-historial-btn" aria-label="Ver detalles">Ver detalles</button>
-                                <button class="paciente-historial-btn" aria-label="Descargar reporte">Descargar</button>
-                            </div>
-                        </div>
-                        <div class="paciente-historial-item">
-                            <div class="paciente-historial-date">
-                                <span class="paciente-historial-date-value">10 Jun 2024</span>
-                            </div>
-                            <div class="paciente-historial-info">
-                                <span class="paciente-historial-doctor">Dr. Roberto Silva</span>
-                                <span class="paciente-historial-specialty">Pediatría · Control infantil</span>
-                                <span class="paciente-historial-type">Telemedicina</span>
-                            </div>
-                            <div class="paciente-historial-actions">
-                                <button class="paciente-historial-btn" aria-label="Ver detalles">Ver detalles</button>
-                                <button class="paciente-historial-btn" aria-label="Descargar reporte">Descargar</button>
-                            </div>
+                        <div class="paciente-empty-state">
+                            <strong>No tienes historial médico registrado</strong>
+                            <p>Cuando se completen consultas, aparecerán aquí tus registros médicos anteriores.</p>
                         </div>
                     </div>
 
-                    <p class="paciente-text-center paciente-disclaimer">Datos de demostración. No son registros médicos reales.</p>
+                    <p class="paciente-text-center">El historial se completa automáticamente cuando se atienden tus consultas solicitadas.</p>
                 </section>
             </div>
         </div>

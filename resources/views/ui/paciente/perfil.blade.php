@@ -21,20 +21,16 @@
                         <h1>Mi perfil</h1>
                         <p>Administra tu información personal y preferencias de cuenta.</p>
                     </div>
-                    <div class="paciente-header-actions">
-                        <button class="paciente-btn-primary">Editar perfil</button>
-                    </div>
                 </div>
 
                 <section class="paciente-section">
                     <div class="paciente-perfil-grid">
                         <aside class="paciente-perfil-sidebar-card">
-                            <div class="paciente-perfil-avatar-wrapper">
-                                <div class="paciente-perfil-avatar" aria-hidden="true">&#x1F464;</div>
-                                <p class="paciente-perfil-name">Paciente demostrativo</p>
-                                <p class="paciente-perfil-email">paciente@ejemplo.com</p>
+<div class="paciente-perfil-avatar-wrapper">
+                                <div class="paciente-perfil-avatar" aria-hidden="true">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
+                                <p class="paciente-perfil-name">{{ auth()->user()->name }}</p>
+                                <p class="paciente-perfil-email">{{ auth()->user()->email }}</p>
                             </div>
-                            <button class="paciente-perfil-edit-btn">Editar información</button>
                         </aside>
 
                         <div class="paciente-perfil-content">
@@ -42,19 +38,19 @@
                                 <h3 class="paciente-perfil-section-title">Información personal</h3>
                                 <div class="paciente-perfil-field">
                                     <label class="paciente-perfil-field-label">Nombre completo</label>
-                                    <p class="paciente-perfil-field-value">Paciente demostrativo</p>
+                                    <p class="paciente-perfil-field-value">{{ auth()->user()->name }}</p>
                                 </div>
                                 <div class="paciente-perfil-field">
                                     <label class="paciente-perfil-field-label">Correo electrónico</label>
-                                    <p class="paciente-perfil-field-value">paciente@ejemplo.com</p>
+                                    <p class="paciente-perfil-field-value">{{ auth()->user()->email }}</p>
                                 </div>
                                 <div class="paciente-perfil-field">
                                     <label class="paciente-perfil-field-label">Teléfono</label>
-                                    <p class="paciente-perfil-field-value">+34 600 000 000</p>
+                                    <p class="paciente-perfil-field-value">No registrado</p>
                                 </div>
                                 <div class="paciente-perfil-field">
                                     <label class="paciente-perfil-field-label">Fecha de nacimiento</label>
-                                    <p class="paciente-perfil-field-value">01/01/1990</p>
+                                    <p class="paciente-perfil-field-value">No registrada</p>
                                 </div>
                             </div>
 
@@ -76,7 +72,7 @@
                         </div>
                     </div>
 
-                    <p class="paciente-text-center paciente-disclaimer">Datos de demostración. Esta vista no guarda cambios realmente.</p>
+                    <p class="paciente-text-center">Tu información proviene de tu cuenta de usuario. Los datos mostrados son los reales de tu perfil.</p>
                 </section>
             </div>
         </div>

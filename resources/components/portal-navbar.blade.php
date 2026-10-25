@@ -36,7 +36,7 @@
                 <form method="POST" action="{{ route('logout') }}" style="display: inline;" aria-label="Cerrar sesión">
                     @csrf
                     <button type="submit" class="portal-nav-btn portal-nav-btn--logout" aria-label="Cerrar sesión" title="Cerrar sesión">
-                        &#x1F6AA; Cerrar sesión
+                        <i data-lucide="log-out" aria-hidden="true"></i><span>Cerrar sesión</span>
                     </button>
                 </form>
             @else
@@ -61,7 +61,7 @@
             <form method="POST" action="{{ route('logout') }}" style="display: inline;" aria-label="Cerrar sesión">
                 @csrf
                 <button type="submit" class="portal-mobile-btn portal-mobile-btn--logout" aria-label="Cerrar sesión">
-                    &#x1F6AA; Cerrar sesión
+                    <i data-lucide="log-out" aria-hidden="true"></i><span>Cerrar sesión</span>
                 </button>
             </form>
         @else

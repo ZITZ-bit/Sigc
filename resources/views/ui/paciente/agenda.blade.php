@@ -21,9 +21,6 @@
                         <h1>Mi agenda</h1>
                         <p>Consulta y gestiona tus citas médicas programadas.</p>
                     </div>
-                    <div class="paciente-header-actions">
-                        <a href="{{ route('paciente.consulta') }}" class="paciente-btn-primary">Solicitar cita</a>
-                    </div>
                 </div>
 
                 <section class="paciente-section">
@@ -35,37 +32,13 @@
                     </div>
 
                     <div class="paciente-agenda-list">
-                        <div class="paciente-agenda-item">
-                            <div class="paciente-agenda-date-time">
-                                <span class="paciente-agenda-date">25 Oct</span>
-                                <span class="paciente-agenda-time">10:00</span>
-                            </div>
-                            <div class="paciente-agenda-info">
-                                <span class="paciente-agenda-doctor">Dr. Carlos Méndez</span>
-                                <span class="paciente-agenda-specialty">Medicina General · Control general</span>
-                            </div>
-                            <div class="paciente-agenda-actions">
-                                <button class="paciente-agenda-btn paciente-agenda-btn--view" aria-label="Ver detalles">Ver</button>
-                                <button class="paciente-agenda-btn paciente-agenda-btn--reschedule" aria-label="Reprogramar">Reprogramar</button>
-                            </div>
-                        </div>
-                        <div class="paciente-agenda-item">
-                            <div class="paciente-agenda-date-time">
-                                <span class="paciente-agenda-date">12 Nov</span>
-                                <span class="paciente-agenda-time">14:30</span>
-                            </div>
-                            <div class="paciente-agenda-info">
-                                <span class="paciente-agenda-doctor">Dra. Laura Gómez</span>
-                                <span class="paciente-agenda-specialty">Cardiología · Revisión cardíaca</span>
-                            </div>
-                            <div class="paciente-agenda-actions">
-                                <button class="paciente-agenda-btn paciente-agenda-btn--view" aria-label="Ver detalles">Ver</button>
-                                <button class="paciente-agenda-btn paciente-agenda-btn--reschedule" aria-label="Reprogramar">Reprogramar</button>
-                            </div>
+                        <div class="paciente-empty-state">
+                            <strong>No tienes citas programadas</strong>
+                            <p>Cuando se registren citas, verás aquí la fecha, el profesional y el estado.</p>
                         </div>
                     </div>
 
-                    <p class="paciente-text-center paciente-disclaimer">Datos de demostración. No son citas reales.</p>
+                    <p class="paciente-text-center">Las citas se gestionan a través de solicitudes de consulta pendientes de confirmación.</p>
                 </section>
             </div>
         </div>

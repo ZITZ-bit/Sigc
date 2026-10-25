@@ -31,33 +31,13 @@
                     </div>
 
                     <div class="paciente-notificaciones-list">
-                        <div class="paciente-notificacion-item paciente-notificacion-item--unread">
-                            <span class="paciente-notificacion-icon" aria-hidden="true">&#x1F4E7;</span>
-                            <div class="paciente-notificacion-content">
-                                <p class="paciente-notificacion-title">Recordatorio de cita</p>
-                                <p class="paciente-notificacion-text">Tienes una cita programada para mañana a las 10:00 con el Dr. Carlos Méndez.</p>
-                                <span class="paciente-notificacion-time">Hace 2 horas</span>
-                            </div>
-                        </div>
-                        <div class="paciente-notificacion-item">
-                            <span class="paciente-notificacion-icon" aria-hidden="true">&#x1F4E7;</span>
-                            <div class="paciente-notificacion-content">
-                                <p class="paciente-notificacion-title">Resultado disponible</p>
-                                <p class="paciente-notificacion-text">Los resultados de tu análisis de sangre están listos para descargar.</p>
-                                <span class="paciente-notificacion-time">Hace 1 día</span>
-                            </div>
-                        </div>
-                        <div class="paciente-notificacion-item paciente-notificacion-item--unread">
-                            <span class="paciente-notificacion-icon" aria-hidden="true">&#x1F4E7;</span>
-                            <div class="paciente-notificacion-content">
-                                <p class="paciente-notificacion-title">Cambio de horario</p>
-                                <p class="paciente-notificacion-text">Tu cita del 12 de noviembre se ha movido a las 15:00.</p>
-                                <span class="paciente-notificacion-time">Hace 3 días</span>
-                            </div>
+                        <div class="paciente-empty-state">
+                            <strong>No tienes notificaciones recientes</strong>
+                            <p>Los recordatorios y avisos sobre tu atención aparecerán aquí.</p>
                         </div>
                     </div>
 
-                    <p class="paciente-text-center paciente-disclaimer">Datos de demostración. No son notificaciones reales.</p>
+                    <p class="paciente-text-center">Las notificaciones se generan automáticamente según el estado de tus solicitudes de consulta.</p>
                 </section>
             </div>
         </div>

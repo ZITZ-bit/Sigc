@@ -30,3 +30,9 @@
   --paciente-header-height: 60px;
   --paciente-max-width: 1200px;
 }
+
+.text-error {
+  color: var(--paciente-color-error);
+  font-size: 0.8125rem;
+  margin-top: 0.25rem;
+}

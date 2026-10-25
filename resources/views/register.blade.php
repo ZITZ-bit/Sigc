@@ -11,78 +11,102 @@
 </head>
 <body>
 
-    <div class="auth-page">
-        <div class="auth-card">
-            <div class="auth-header">
-                <div class="auth-brand">
-                    <span class="auth-brand-icon" aria-hidden="true">&#x271a;</span>
+    <div class="auth-page auth-page--register">
+        <main class="auth-shell auth-shell--register">
+            <aside class="auth-aside" aria-label="Información de la clínica">
+                <a href="{{ route('portal') }}" class="auth-brand" aria-label="{{ config('app.name') }} - Inicio">
+                    <span class="auth-brand-icon" aria-hidden="true"><i data-lucide="heart-pulse"></i></span>
                     <span>{{ config('app.name') }}</span>
-                </div>
-                <h1>Crear cuenta</h1>
-                <p>Únete a {{ config('app.name') }} y accede a nuestros servicios de atención médica.</p>
-            </div>
-
-            @include('portal::auth.errors', ['messages' => $errors->all()])
-
-            <form method="POST" action="{{ route('register.post') }}">
-                @csrf
-
-                @include('portal::auth.field', [
-                    'name' => 'name',
-                    'type' => 'text',
-                    'label' => 'Nombre',
-                    'required' => true,
-                    'error' => $errors->first('name'),
-                    'help' => 'Tu nombre completo.',
-                    'autocomplete' => 'name',
-                    'placeholder' => 'Juan',
-                ])
-
-                @include('portal::auth.field', [
-                    'name' => 'email',
-                    'type' => 'email',
-                    'label' => 'Correo electrónico',
-                    'required' => true,
-                    'error' => $errors->first('email'),
-                    'help' => 'Se usará para iniciar sesión y recibir notificaciones.',
-                    'autocomplete' => 'email',
-                    'placeholder' => 'juan@ejemplo.com',
-                ])
-
-                @include('portal::auth.field', [
-                    'name' => 'password',
-                    'type' => 'password',
-                    'label' => 'Contraseña',
-                    'required' => true,
-                    'error' => $errors->first('password'),
-                    'help' => 'Mínimo 8 caracteres, al menos una letra y un número.',
-                    'autocomplete' => 'new-password',
-                    'placeholder' => '••••••••',
-                ])
-
-                @include('portal::auth.field', [
-                    'name' => 'password_confirmation',
-                    'type' => 'password',
-                    'label' => 'Confirmar contraseña',
-                    'required' => true,
-                    'error' => $errors->first('password_confirmation'),
-                    'help' => 'Repite la contraseña para confirmar.',
-                    'autocomplete' => 'new-password',
-                    'placeholder' => '••••••••',
-                ])
-
-                @include('portal::auth.button', [
-                    'label' => 'Crear cuenta',
-                ])
-            </form>
-
-            <div class="auth-switch">
-                <p>¿Ya tienes una cuenta?</p>
-                <a href="{{ route('login') }}" class="auth-button-link" style="font-weight: 600; color: var(--auth-color-forest-dark); text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 2px;">
-                    Iniciar sesión
                 </a>
-            </div>
-        </div>
+                <div class="auth-aside-content">
+                    <p class="auth-eyebrow">EMPIEZA POR TI</p>
+                    <h2>Una mejor atención comienza aquí.</h2>
+                    <p>Crea tu cuenta para mantener tu información y tus citas en un mismo lugar.</p>
+                </div>
+                <div class="auth-aside-note">
+                    <span class="auth-aside-note-icon" aria-hidden="true"><i data-lucide="shield-check"></i></span>
+                    <span>Tus datos personales se mantienen protegidos.</span>
+                </div>
+                <span class="auth-aside-index" aria-hidden="true">02 / 02</span>
+            </aside>
+
+            <section class="auth-panel" aria-labelledby="auth-title">
+                <div class="auth-panel-top">
+                    <a href="{{ route('portal') }}" class="auth-back-link"><i data-lucide="arrow-left" aria-hidden="true"></i><span>Volver al portal</span></a>
+                    <span class="auth-secure-label"><i data-lucide="lock-keyhole" aria-hidden="true"></i> Registro seguro</span>
+                </div>
+
+                <div class="auth-header">
+                    <p class="auth-eyebrow">TU ESPACIO PERSONAL</p>
+                    <h1 id="auth-title">Crear cuenta</h1>
+                    <p>Completa tus datos para empezar.</p>
+                </div>
+
+                @include('portal::auth.errors', ['messages' => $errors->all()])
+
+                <form method="POST" action="{{ route('register.post') }}" class="auth-form auth-form--register">
+                    @csrf
+
+                    <div class="auth-fields-grid">
+                        @include('portal::auth.field', [
+                            'name' => 'name',
+                            'type' => 'text',
+                            'label' => 'Nombre completo',
+                            'required' => true,
+                            'error' => $errors->first('name'),
+                            'help' => null,
+                            'autocomplete' => 'name',
+                            'placeholder' => 'Tu nombre y apellidos',
+                        ])
+
+                        @include('portal::auth.field', [
+                            'name' => 'email',
+                            'type' => 'email',
+                            'label' => 'Correo electrónico',
+                            'required' => true,
+                            'error' => $errors->first('email'),
+                            'help' => null,
+                            'autocomplete' => 'email',
+                            'placeholder' => 'nombre@correo.com',
+                        ])
+
+                        @include('portal::auth.field', [
+                            'name' => 'password',
+                            'type' => 'password',
+                            'label' => 'Contraseña',
+                            'required' => true,
+                            'error' => $errors->first('password'),
+                            'help' => 'Mínimo 8 caracteres.',
+                            'autocomplete' => 'new-password',
+                            'placeholder' => 'Crea una contraseña',
+                        ])
+
+                        @include('portal::auth.field', [
+                            'name' => 'password_confirmation',
+                            'type' => 'password',
+                            'label' => 'Confirmar contraseña',
+                            'required' => true,
+                            'error' => $errors->first('password_confirmation'),
+                            'help' => null,
+                            'autocomplete' => 'new-password',
+                            'placeholder' => 'Repite la contraseña',
+                        ])
+                    </div>
+
+                    @include('portal::auth.button', [
+                        'label' => 'Crear cuenta',
+                        'icon' => 'arrow-right',
+                    ])
+                </form>
+
+                <div class="auth-switch">
+                    <span>¿Ya tienes una cuenta?</span>
+                    <a href="{{ route('login') }}" class="auth-button-link">Iniciar sesión <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+                </div>
+
+                <p class="auth-legal-note">Al registrarte, tu cuenta quedará asociada a {{ config('app.name') }}.</p>
+            </section>
+        </main>
     </div>
 
 </body>

@@ -1,4 +1,5 @@
 :root {
+  --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
   --auth-color-ink: #1b4332;
   --auth-color-ink-soft: #2d6a4f;
   --auth-color-text: #2d4a3e;

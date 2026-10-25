@@ -338,3 +338,68 @@
     align-self: flex-end;
   }
 }
+
+.medico-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.medico-sidebar-toggle {
+  display: grid;
+  place-items: center;
+  flex: 0 0 2rem;
+  width: 2rem;
+  height: 2rem;
+  color: var(--medico-color-sidebar-text);
+  border: 1px solid rgb(255 255 255 / 0.18);
+  border-radius: var(--medico-radius-sm);
+}
+
+.medico-sidebar-toggle svg,
+.medico-brand-icon svg,
+.medico-nav-icon svg,
+.medico-sidebar-return svg,
+.medico-btn-logout svg,
+.medico-mobile-toggle svg,
+.medico-mobile-close svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex: 0 0 auto;
+}
+
+.medico-nav-icon { font-size: 0; }
+
+.medico-sidebar-return {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+@media (min-width: 1024px) {
+  body.sidebar-collapsed .medico-sidebar { width: 76px; }
+  body.sidebar-collapsed .medico-sidebar-header { justify-content: center; padding-inline: 0.75rem; }
+  body.sidebar-collapsed .medico-brand-text,
+  body.sidebar-collapsed .medico-nav-label,
+  body.sidebar-collapsed .medico-profile-info,
+  body.sidebar-collapsed .medico-sidebar-return span,
+  body.sidebar-collapsed .medico-btn-logout span { display: none; }
+  body.sidebar-collapsed .medico-sidebar-toggle {
+    position: absolute;
+    top: 1.25rem;
+    right: -2.5rem;
+    color: var(--medico-color-ink);
+    background: #fffefa;
+    border-color: var(--medico-color-border);
+    box-shadow: var(--medico-shadow);
+  }
+  body.sidebar-collapsed .medico-sidebar-toggle svg { transform: rotate(180deg); }
+  body.sidebar-collapsed .medico-nav-list { padding-inline: 0.625rem; }
+  body.sidebar-collapsed .medico-nav-link { justify-content: center; padding-inline: 0; }
+  body.sidebar-collapsed .medico-sidebar-footer { padding-inline: 0.625rem; }
+  body.sidebar-collapsed .medico-profile-summary,
+  body.sidebar-collapsed .medico-sidebar-return { justify-content: center; }
+  body.sidebar-collapsed .medico-btn-logout { padding-inline: 0; }
+  body.sidebar-collapsed .medico-content-area { margin-left: 76px; }
+}
