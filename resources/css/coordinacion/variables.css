@@ -19,6 +19,10 @@
   --coordinacion-color-warning: #b26a00;
   --coordinacion-color-warning-soft: #fff3e0;
   --coordinacion-color-focus: #277451;
+  --coordinacion-color-sidebar: #1d5949;
+  --coordinacion-color-sidebar-text: #c5d9cd;
+  --coordinacion-color-sidebar-active: #f1cd6f;
+  --coordinacion-color-sidebar-hover: rgb(255 255 255 / 0.12);
   --coordinacion-font-sans: 'Instrument Sans', 'Segoe UI', sans-serif;
   --coordinacion-radius: 6px;
   --coordinacion-radius-sm: 4px;

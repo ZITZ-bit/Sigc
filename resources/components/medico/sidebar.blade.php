@@ -65,6 +65,7 @@
                 <p class="medico-profile-role">Médico del portal</p>
             </div>
         </div>
+        <a href="{{ route('portal') }}" class="medico-sidebar-return" aria-label="Volver al portal">&#x2190; Volver al portal</a>
         <form method="POST" action="{{ route('logout') }}" style="display: inline;">
             @csrf
             <button type="submit" class="medico-btn-logout" aria-label="Cerrar sesión" title="Cerrar sesión">

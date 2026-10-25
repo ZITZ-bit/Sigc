@@ -15,6 +15,10 @@
   --paciente-color-error: #b3261e;
   --paciente-color-error-soft: #fdeceb;
   --paciente-color-focus: #277451;
+  --paciente-color-sidebar: #1d5949;
+  --paciente-color-sidebar-text: #c5d9cd;
+  --paciente-color-sidebar-active: #f1cd6f;
+  --paciente-color-sidebar-hover: rgb(255 255 255 / 0.12);
   --paciente-font-sans: 'Instrument Sans', 'Segoe UI', sans-serif;
   --paciente-radius: 6px;
   --paciente-radius-sm: 4px;

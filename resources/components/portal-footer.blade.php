@@ -1,3 +1,22 @@
+@php
+    use Illuminate\Support\Facades\Auth;
+
+    $panelRoute = null;
+    $panelLabel = 'Panel';
+    if (Auth::check() && auth()->user()->role) {
+        $panelRoute = match (auth()->user()->role->slug) {
+            'medico' => 'medico.dashboard',
+            'coordinador' => 'coordinacion.dashboard',
+            default => 'paciente.dashboard',
+        };
+        $panelLabel = match (auth()->user()->role->slug) {
+            'medico' => 'Mi panel médico',
+            'coordinador' => 'Mi panel de coordinación',
+            default => 'Mi panel de paciente',
+        };
+    }
+@endphp
+
 <footer class="portal-footer" role="contentinfo">
     <div class="portal-footer-content">
         <div class="portal-footer-brand">
@@ -16,8 +35,16 @@
                 <a href="#servicios" class="portal-footer-link">Servicios</a>
                 <a href="#presentacion" class="portal-footer-link">Presentación</a>
                 <a href="#contacto" class="portal-footer-link">Contacto</a>
-                <a href="#" class="portal-footer-link">Iniciar sesión</a>
-                <a href="#" class="portal-footer-link">Registrarse</a>
+                @if (Auth::check())
+                    <a href="{{ route($panelRoute) }}" class="portal-footer-link">{{ $panelLabel }}</a>
+                    <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                        @csrf
+                        <button type="submit" class="portal-footer-link portal-footer-link--logout" aria-label="Cerrar sesión">Cerrar sesión</button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}" class="portal-footer-link">Iniciar sesión</a>
+                    <a href="{{ route('register') }}" class="portal-footer-link">Registrarse</a>
+                @endif
             </div>
         </div>
 

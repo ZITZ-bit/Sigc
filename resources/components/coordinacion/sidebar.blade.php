@@ -77,6 +77,7 @@
                 <p class="coordinacion-profile-role">Coordinación clínica</p>
             </div>
         </div>
+        <a href="{{ route('portal') }}" class="coordinacion-sidebar-return" aria-label="Volver al portal">&#x2190; Volver al portal</a>
         <form method="POST" action="{{ route('logout') }}" style="display: inline;">
             @csrf
             <button type="submit" class="coordinacion-btn-logout" aria-label="Cerrar sesión" title="Cerrar sesión">
