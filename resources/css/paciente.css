@@ -1,0 +1,11 @@
+@import './paciente/variables.css';
+@import './paciente/layout.css';
+@import './paciente/sidebar.css';
+@import './paciente/dashboard.css';
+@import './paciente/agenda.css';
+@import './paciente/doctores.css';
+@import './paciente/consulta.css';
+@import './paciente/historial.css';
+@import './paciente/perfil.css';
+@import './paciente/notificaciones.css';
+@import './paciente/responsive.css';

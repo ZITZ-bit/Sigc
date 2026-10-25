@@ -1,0 +1,120 @@
+.portal-footer {
+  border-top: 1px solid var(--portal-color-border);
+  padding: 4rem 1rem 2rem;
+  background-color: #ffffff;
+}
+
+.portal-footer-content {
+  max-width: var(--portal-max-width);
+  margin: 0 auto;
+  padding: 0 var(--portal-container-padding);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+}
+
+@media (min-width: 768px) {
+  .portal-footer-content {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+}
+
+.portal-footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.portal-footer-brand-icon {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  background-color: var(--portal-color-forest);
+  border-radius: var(--portal-radius-sm);
+}
+
+.portal-footer-brand-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--portal-color-ink);
+  letter-spacing: -0.03em;
+}
+
+.portal-footer-description {
+  color: var(--portal-color-text-muted);
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  max-width: 320px;
+}
+
+.portal-footer-heading {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--portal-color-ink);
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.01em;
+}
+
+.portal-footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.portal-footer-link {
+  font-size: 0.9375rem;
+  color: var(--portal-color-text-muted);
+  transition: var(--portal-transition-fast);
+}
+
+.portal-footer-link:hover,
+.portal-footer-link.-focus {
+  color: var(--portal-color-forest-dark);
+}
+
+.portal-footer-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.portal-footer-bottom {
+  border-top: 1px solid var(--portal-color-border);
+  margin-top: 3rem;
+  padding-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .portal-footer-bottom {
+    flex-direction: row;
+  }
+}
+
+.portal-footer-copy {
+  font-size: 0.875rem;
+  color: var(--portal-color-text-muted);
+}
+
+.portal-footer-legal {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.875rem;
+}
+
+.portal-footer-legal a {
+  color: var(--portal-color-text-muted);
+  transition: var(--portal-transition-fast);
+}
+
+.portal-footer-legal a:hover,
+.portal-footer-legal a.-focus {
+  color: var(--portal-color-forest-dark);
+}

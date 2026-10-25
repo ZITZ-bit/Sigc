@@ -1,0 +1,130 @@
+.paciente-consulta-steps {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.paciente-consulta-step {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--paciente-color-text-muted);
+  border: 1px solid var(--paciente-color-border);
+  border-radius: var(--paciente-radius);
+  flex: 1;
+  text-align: center;
+}
+
+.paciente-consulta-step--active {
+  background-color: var(--paciente-color-mint);
+  color: var(--paciente-color-forest-dark);
+  border-color: var(--paciente-color-forest);
+}
+
+.paciente-consulta-step-number {
+  font-weight: 700;
+  color: var(--paciente-color-forest-dark);
+}
+
+.paciente-consulta-form {
+  background-color: var(--paciente-color-surface);
+  border: 1px solid var(--paciente-color-border);
+  border-radius: var(--paciente-radius);
+  padding: 2rem;
+  max-width: 600px;
+}
+
+.paciente-consulta-section {
+  margin-bottom: 2rem;
+}
+
+.paciente-consulta-section-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--paciente-color-ink);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.paciente-consulta-field {
+  margin-bottom: 1.25rem;
+}
+
+.paciente-consulta-label {
+  display: block;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--paciente-color-ink);
+  margin-bottom: 0.5rem;
+}
+
+.paciente-consulta-select,
+.paciente-consulta-input,
+.paciente-consulta-textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--paciente-color-text);
+  background-color: var(--paciente-color-bg);
+  border: 1px solid var(--paciente-color-border);
+  border-radius: var(--paciente-radius);
+  transition: var(--paciente-transition);
+}
+
+.paciente-consulta-select:focus,
+.paciente-consulta-input:focus,
+.paciente-consulta-textarea:focus {
+  outline: none;
+  border-color: var(--paciente-color-forest);
+  box-shadow: 0 0 0 3px var(--paciente-color-mint);
+}
+
+.paciente-consulta-help {
+  font-size: 0.8125rem;
+  color: var(--paciente-color-text-muted);
+  margin-top: 0.375rem;
+}
+
+.paciente-consulta-summary {
+  background-color: var(--paciente-color-bg-muted);
+  border-radius: var(--paciente-radius);
+  padding: 1.5rem;
+  margin-top: 2rem;
+}
+
+.paciente-consulta-summary-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--paciente-color-ink);
+  margin-bottom: 1rem;
+}
+
+.paciente-consulta-summary-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  font-size: 0.9375rem;
+  color: var(--paciente-color-text);
+}
+
+.paciente-consulta-summary-label {
+  color: var(--paciente-color-text-muted);
+}
+
+.paciente-consulta-summary-value {
+  font-weight: 500;
+  color: var(--paciente-color-ink);
+}
+
+.paciente-consulta-disclaimer {
+  margin-top: 2rem;
+  font-size: 0.8125rem;
+  color: var(--paciente-color-text-muted);
+  font-style: italic;
+}

@@ -1,0 +1,41 @@
+@media (max-width: 640px) {
+  .auth-card {
+    padding: 2rem 1.25rem;
+    border-radius: 0;
+  }
+
+  .auth-header {
+    margin-bottom: 2rem;
+  }
+
+  .auth-input {
+    height: 3rem;
+    font-size: 0.9375rem;
+  }
+
+  .auth-button {
+    height: 3rem;
+    font-size: 0.9375rem;
+  }
+}
+
+@media (min-width: 641px) {
+  .auth-card {
+    border-radius: var(--auth-radius);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .auth-button-loader {
+    animation: none;
+  }
+}

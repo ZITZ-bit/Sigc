@@ -1,0 +1,82 @@
+@media (max-width: 767px) {
+  .paciente-content-area {
+    padding: 1rem;
+  }
+
+  .paciente-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .paciente-header-content h1 {
+    font-size: 1.5rem;
+  }
+
+  .paciente-dashboard-grid {
+    gap: 1rem;
+  }
+
+  .paciente-agenda-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .paciente-doctores-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .paciente-doctores-search {
+    max-width: 100%;
+  }
+
+  .paciente-perfil-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .paciente-perfil-sidebar-card {
+    position: static;
+  }
+
+  .paciente-agenda-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .paciente-agenda-date-time {
+    min-width: auto;
+  }
+
+  .paciente-cita-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .paciente-cita-date {
+    min-width: auto;
+  }
+
+  .paciente-historial-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .paciente-historial-date {
+    min-width: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,64 @@
+@media (max-width: 767px) {
+  .portal-nav {
+    display: none;
+  }
+
+  .portal-nav-actions {
+    display: none;
+  }
+
+  .portal-mobile-toggle {
+    display: flex;
+  }
+
+  .portal-hero {
+    padding: 4rem 1rem 5rem;
+  }
+
+  .portal-section {
+    padding: 3rem 1rem;
+  }
+
+  .portal-hero-title {
+    font-size: 2.25rem;
+  }
+
+  .portal-services-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .portal-contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .portal-footer-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .portal-footer-bottom {
+    gap: 1.5rem;
+    text-align: center;
+  }
+}
+
+@media (min-width: 768px) {
+  .portal-mobile-toggle {
+    display: none;
+  }
+
+  .portal-mobile-menu {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
