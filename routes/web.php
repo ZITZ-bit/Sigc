@@ -12,7 +12,7 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.po
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/paciente/dashboard', function () {
-    return view('ui.dashboard');
+    return view('ui.dashboard-paciente');
 })->name('paciente.dashboard');
 
 Route::get('/paciente/agenda', function () {
@@ -38,5 +38,37 @@ Route::get('/paciente/perfil', function () {
 Route::get('/paciente/notificaciones', function () {
     return view('ui.paciente.notificaciones');
 })->name('paciente.notificaciones');
+
+Route::get('/medico/dashboard', function () {
+    return view('ui.dashboard-medico');
+})->name('medico.dashboard');
+
+Route::get('/medico/agenda', function () {
+    return view('ui.medico.agenda');
+})->name('medico.agenda');
+
+Route::get('/medico/pacientes', function () {
+    return view('ui.medico.pacientes');
+})->name('medico.pacientes');
+
+Route::get('/medico/consultas', function () {
+    return view('ui.medico.consultas');
+})->name('medico.consultas');
+
+Route::get('/medico/historial', function () {
+    return view('ui.medico.historial');
+})->name('medico.historial');
+
+Route::get('/medico/horario', function () {
+    return view('ui.medico.horario');
+})->name('medico.horario');
+
+Route::get('/medico/perfil', function () {
+    return view('ui.medico.perfil');
+})->name('medico.perfil');
+
+Route::get('/medico/notificaciones', function () {
+    return view('ui.medico.notificaciones');
+})->name('medico.notificaciones');
 
 // Rutas del proyecto sigc

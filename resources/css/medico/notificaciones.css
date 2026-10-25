@@ -1,0 +1,82 @@
+.medico-notificaciones-filters {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.medico-notificaciones-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.medico-notificacion-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.25rem;
+  background-color: var(--medico-color-surface);
+  border: 1px solid var(--medico-color-border);
+  border-radius: var(--medico-radius);
+}
+
+.medico-notificacion-item--unread {
+  border-left: 4px solid var(--medico-color-forest);
+  background-color: var(--medico-color-mint);
+}
+
+.medico-notificacion-icon {
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  background-color: var(--medico-color-forest);
+  border-radius: var(--medico-radius-sm);
+  font-size: 1.125rem;
+}
+
+.medico-notificacion-content {
+  flex: 1;
+}
+
+.medico-notificacion-title {
+  font-weight: 600;
+  color: var(--medico-color-ink);
+  font-size: 0.9375rem;
+  margin-bottom: 0.25rem;
+}
+
+.medico-notificacion-text {
+  font-size: 0.875rem;
+  color: var(--medico-color-text-muted);
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+
+.medico-notificacion-time {
+  font-size: 0.75rem;
+  color: var(--medico-color-text-muted);
+  display: block;
+}
+
+.medico-notificaciones-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--medico-color-text-muted);
+}
+
+.medico-notificaciones-empty-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.medico-notificaciones-disclaimer {
+  margin-top: 2rem;
+  font-size: 0.8125rem;
+  color: var(--medico-color-text-muted);
+  font-style: italic;
+}

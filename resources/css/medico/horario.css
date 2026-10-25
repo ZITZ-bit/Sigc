@@ -1,0 +1,94 @@
+.medico-horario-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.medico-horario-grid {
+  display: grid;
+  grid-template-columns: 120px repeat(7, 1fr);
+  gap: 0.5rem;
+  background-color: var(--medico-color-surface);
+  border: 1px solid var(--medico-color-border);
+  border-radius: var(--medico-radius);
+  overflow: hidden;
+}
+
+.medico-horario-day-header {
+  padding: 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--medico-color-text-muted);
+  background-color: var(--medico-color-bg-muted);
+  text-align: center;
+  border-bottom: 1px solid var(--medico-color-border);
+}
+
+.medico-horario-day-header--today {
+  background-color: var(--medico-color-mint);
+  color: var(--medico-color-forest-dark);
+}
+
+.medico-horario-time-slot {
+  padding: 0.75rem 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--medico-color-text-muted);
+  text-align: center;
+  border-right: 1px solid var(--medico-color-border);
+}
+
+.medico-horario-cell {
+  border-bottom: 1px solid var(--medico-color-border);
+  border-right: 1px solid var(--medico-color-border);
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--medico-transition-fast);
+  position: relative;
+}
+
+.medico-horario-cell:hover {
+  background-color: var(--medico-color-bg-muted);
+}
+
+.medico-horario-cell--available {
+  background-color: var(--medico-color-mint);
+}
+
+.medico-horario-cell--busy {
+  background-color: var(--medico-color-surface);
+}
+
+.medico-horario-cell--break {
+  background-color: var(--medico-color-bg-muted);
+  color: var(--medico-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.medico-horario-appointment {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
+  background-color: var(--medico-color-forest);
+  color: #ffffff;
+  border-radius: var(--medico-radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.5rem;
+}
+
+.medico-horario-disclaimer {
+  margin-top: 2rem;
+  font-size: 0.8125rem;
+  color: var(--medico-color-text-muted);
+  font-style: italic;
+  text-align: center;
+}

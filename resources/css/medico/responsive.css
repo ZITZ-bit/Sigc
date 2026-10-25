@@ -1,0 +1,73 @@
+@media (max-width: 767px) {
+  .medico-content-area {
+    padding: 1rem;
+  }
+
+  .medico-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .medico-header-content h1 {
+    font-size: 1.5rem;
+  }
+
+  .medico-dashboard-grid {
+    gap: 1rem;
+  }
+
+  .medico-agenda-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .medico-pacientes-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .medico-pacientes-search {
+    max-width: 100%;
+  }
+
+  .medico-consultas-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .medico-historial-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .medico-perfil-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .medico-perfil-sidebar-card {
+    position: static;
+  }
+
+  .medico-horario-grid {
+    font-size: 0.75rem;
+  }
+
+  .medico-consultas-table,
+  .medico-agenda-table {
+    font-size: 0.8125rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

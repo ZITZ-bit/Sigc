@@ -1,0 +1,117 @@
+.medico-pacientes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.medico-pacientes-search {
+  max-width: 320px;
+}
+
+.medico-pacientes-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .medico-pacientes-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .medico-pacientes-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.medico-paciente-card {
+  background-color: var(--medico-color-surface);
+  border: 1px solid var(--medico-color-border);
+  border-radius: var(--medico-radius);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.medico-paciente-avatar {
+  width: 4rem;
+  height: 4rem;
+  border-radius: var(--medico-radius);
+  background-color: var(--medico-color-bg-muted);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: var(--medico-color-forest-dark);
+}
+
+.medico-paciente-name {
+  font-weight: 600;
+  color: var(--medico-color-ink);
+  margin-bottom: 0.25rem;
+}
+
+.medico-paciente-id {
+  font-size: 0.75rem;
+  color: var(--medico-color-text-muted);
+  margin-bottom: 0.5rem;
+  display: block;
+  font-family: monospace;
+}
+
+.medico-paciente-info {
+  font-size: 0.875rem;
+  color: var(--medico-color-text-muted);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  flex: 1;
+}
+
+.medico-paciente-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.medico-paciente-btn {
+  flex: 1;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: var(--medico-radius-sm);
+  cursor: pointer;
+  transition: var(--medico-transition-fast);
+  border: 1px solid transparent;
+  text-align: center;
+  text-decoration: none;
+}
+
+.medico-paciente-btn--view {
+  background-color: var(--medico-color-mint);
+  color: var(--medico-color-forest-dark);
+}
+
+.medico-paciente-btn--view:hover {
+  background-color: var(--medico-color-pastel);
+}
+
+.medico-paciente-btn--consult {
+  background-color: var(--medico-color-surface);
+  color: var(--medico-color-ink);
+  border-color: var(--medico-color-border);
+}
+
+.medico-paciente-btn--consult:hover {
+  background-color: var(--medico-color-bg-muted);
+}
+
+.medico-paciente-disclaimer {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: var(--medico-color-mint);
+  border-radius: var(--medico-radius);
+  font-size: 0.8125rem;
+  color: var(--medico-color-forest-dark);
+}

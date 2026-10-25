@@ -1,0 +1,115 @@
+.medico-agenda-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.medico-agenda-filters {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.medico-filter-btn {
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--medico-color-text-muted);
+  background-color: var(--medico-color-surface);
+  border: 1px solid var(--medico-color-border);
+  border-radius: var(--medico-radius);
+  cursor: pointer;
+  transition: var(--medico-transition-fast);
+}
+
+.medico-filter-btn:hover,
+.medico-filter-btn--active {
+  background-color: var(--medico-color-bg-muted);
+  border-color: var(--medico-color-forest);
+  color: var(--medico-color-forest-dark);
+}
+
+.medico-agenda-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--medico-color-surface);
+  border: 1px solid var(--medico-color-border);
+  border-radius: var(--medico-radius);
+  overflow: hidden;
+}
+
+.medico-agenda-table th {
+  text-align: left;
+  padding: 0.875rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--medico-color-text-muted);
+  background-color: var(--medico-color-bg-muted);
+  border-bottom: 1px solid var(--medico-color-border);
+}
+
+.medico-agenda-table td {
+  padding: 1rem;
+  font-size: 0.9375rem;
+  color: var(--medico-color-text);
+  border-bottom: 1px solid var(--medico-color-border);
+}
+
+.medico-agenda-table tr:last-child td {
+  border-bottom: none;
+}
+
+.medico-agenda-table tr:hover {
+  background-color: var(--medico-color-bg-muted);
+}
+
+.medico-agenda-time {
+  font-weight: 600;
+  color: var(--medico-color-forest-dark);
+}
+
+.medico-agenda-patient {
+  font-weight: 500;
+  color: var(--medico-color-ink);
+}
+
+.medico-agenda-reason {
+  font-size: 0.875rem;
+  color: var(--medico-color-text-muted);
+}
+
+.medico-agenda-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.medico-agenda-btn {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  border-radius: var(--medico-radius-sm);
+  cursor: pointer;
+  transition: var(--medico-transition-fast);
+  border: 1px solid transparent;
+}
+
+.medico-agenda-btn--view {
+  background-color: var(--medico-color-mint);
+  color: var(--medico-color-forest-dark);
+}
+
+.medico-agenda-btn--view:hover {
+  background-color: var(--medico-color-pastel);
+}
+
+.medico-agenda-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--medico-color-text-muted);
+}
+
+.medico-agenda-empty-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}

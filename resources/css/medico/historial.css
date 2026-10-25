@@ -1,0 +1,127 @@
+.medico-historial-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.medico-historial-selector {
+  max-width: 320px;
+}
+
+.medico-historial-timeline {
+  position: relative;
+  padding-left: 3rem;
+  margin-bottom: 2rem;
+}
+
+.medico-historial-timeline::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 1.5rem;
+  width: 2px;
+  background-color: var(--medico-color-border);
+}
+
+.medico-historial-item {
+  position: relative;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+}
+
+.medico-historial-item::before {
+  content: "";
+  position: absolute;
+  top: 0.5rem;
+  left: -2.75rem;
+  width: 1rem;
+  height: 1rem;
+  background-color: var(--medico-color-forest);
+  border-radius: 50%;
+  border: 2px solid var(--medico-color-surface);
+}
+
+.medico-historial-item--completed::before {
+  background-color: var(--medico-color-success);
+}
+
+.medico-historial-date {
+  font-weight: 600;
+  color: var(--medico-color-forest-dark);
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.medico-historial-title {
+  font-weight: 600;
+  color: var(--medico-color-ink);
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+}
+
+.medico-historial-description {
+  font-size: 0.875rem;
+  color: var(--medico-color-text-muted);
+  line-height: 1.6;
+}
+
+.medico-historial-section {
+  background-color: var(--medico-color-surface);
+  border: 1px solid var(--medico-color-border);
+  border-radius: var(--medico-radius);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.medico-historial-section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--medico-color-ink);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.medico-historial-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .medico-historial-grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.medico-historial-field {
+  background-color: var(--medico-color-bg-muted);
+  border-radius: var(--medico-radius);
+  padding: 1rem;
+}
+
+.medico-historial-field-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--medico-color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.medico-historial-field-value {
+  font-size: 0.9375rem;
+  color: var(--medico-color-text);
+}
+
+.medico-historial-disclaimer {
+  margin-top: 2rem;
+  font-size: 0.8125rem;
+  color: var(--medico-color-text-muted);
+  font-style: italic;
+  text-align: center;
+}

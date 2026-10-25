@@ -1,0 +1,274 @@
+.medico-dashboard-grid {
+  display: grid;
+  gap: 2rem;
+}
+
+@media (min-width: 640px) {
+  .medico-dashboard-grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .medico-dashboard-grid-cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.medico-stat-card {
+  background-color: var(--medico-color-surface);
+  border-radius: var(--medico-radius);
+  box-shadow: var(--medico-shadow);
+  border: 1px solid var(--medico-color-border);
+  padding: 1.5rem;
+}
+
+.medico-stat-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--medico-color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.medico-stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--medico-color-ink);
+  line-height: 1.2;
+}
+
+.medico-stat-value--forest {
+  color: var(--medico-color-forest);
+}
+
+.medico-stat-icon {
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  background-color: var(--medico-color-forest);
+  border-radius: var(--medico-radius);
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+}
+
+.medico-stat-icon--sage {
+  background-color: var(--medico-color-sage);
+}
+
+.medico-stat-icon--mint {
+  background-color: var(--medico-color-pastel);
+  color: var(--medico-color-forest-dark);
+}
+
+.medico-welcome-card {
+  background-color: var(--medico-color-surface);
+  border-radius: var(--medico-radius);
+  box-shadow: var(--medico-shadow);
+  border: 1px solid var(--medico-color-border);
+  padding: 2rem;
+  border-left: 4px solid var(--medico-color-forest);
+}
+
+.medico-welcome-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--medico-color-ink);
+  margin-bottom: 0.5rem;
+}
+
+.medico-welcome-text {
+  color: var(--medico-color-text-muted);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.medico-actions-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .medico-actions-grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .medico-actions-grid-cols-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.medico-action-btn {
+  display: block;
+  padding: 1.5rem 1rem;
+  background-color: var(--medico-color-surface);
+  border: 1px solid var(--medico-color-border);
+  border-radius: var(--medico-radius);
+  text-align: center;
+  color: var(--medico-color-text);
+  text-decoration: none;
+  font-weight: 500;
+  transition: var(--medico-transition-fast);
+}
+
+.medico-action-btn:hover {
+  border-color: var(--medico-color-forest);
+  color: var(--medico-color-forest-dark);
+  background-color: var(--medico-color-bg-muted);
+}
+
+.medico-action-btn-icon {
+  display: block;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.medico-appointment-card {
+  background-color: var(--medico-color-surface);
+  border-radius: var(--medico-radius);
+  box-shadow: var(--medico-shadow);
+  border: 1px solid var(--medico-color-border);
+  padding: 1.5rem;
+  border-left: 4px solid var(--medico-color-forest);
+  margin-bottom: 1.5rem;
+}
+
+.medico-appointment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.medico-appointment-date {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--medico-color-forest);
+}
+
+.medico-appointment-patient {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--medico-color-ink);
+}
+
+.medico-appointment-reason {
+  font-size: 0.875rem;
+  color: var(--medico-color-text-muted);
+  margin-top: 0.25rem;
+}
+
+.medico-cita-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.medico-cita-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: var(--medico-color-surface);
+  border: 1px solid var(--medico-color-border);
+  border-radius: var(--medico-radius);
+}
+
+.medico-cita-date {
+  font-weight: 600;
+  color: var(--medico-color-ink);
+  min-width: 100px;
+}
+
+.medico-cita-info {
+  flex: 1;
+}
+
+.medico-cita-patient {
+  font-weight: 600;
+  color: var(--medico-color-forest-dark);
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.medico-cita-reason {
+  font-size: 0.875rem;
+  color: var(--medico-color-text-muted);
+  display: block;
+}
+
+.medico-cita-status {
+  margin-left: auto;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--medico-color-forest);
+}
+
+.medico-notifications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.medico-notification-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  background-color: var(--medico-color-surface);
+  border: 1px solid var(--medico-color-border);
+  border-radius: var(--medico-radius);
+}
+
+.medico-notification-icon {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  background-color: var(--medico-color-forest);
+  border-radius: var(--medico-radius-sm);
+  font-size: 1rem;
+}
+
+.medico-notification-content {
+  flex: 1;
+}
+
+.medico-notification-title {
+  font-weight: 600;
+  color: var(--medico-color-ink);
+  font-size: 0.9375rem;
+  margin-bottom: 0.25rem;
+}
+
+.medico-notification-text {
+  font-size: 0.875rem;
+  color: var(--medico-color-text-muted);
+  line-height: 1.5;
+}
+
+.medico-notification-time {
+  font-size: 0.75rem;
+  color: var(--medico-color-text-muted);
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.medico-disclaimer {
+  margin-top: 1rem;
+  font-size: 0.8125rem;
+  color: var(--medico-color-text-muted);
+  font-style: italic;
+  text-align: center;
+}
