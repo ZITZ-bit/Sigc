@@ -70,9 +70,27 @@
   transition: var(--portal-transition-fast);
 }
 
+.portal-footer-link--logout {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0.875rem;
+  font-weight: 500;
+  border: 1px solid var(--portal-color-border);
+  border-radius: var(--portal-radius-sm);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  background: transparent;
+}
+
 .portal-footer-link:hover,
-.portal-footer-link.-focus {
+.portal-footer-link--logout:hover,
+.portal-footer-link.-focus,
+.portal-footer-link--logout.-focus {
   color: var(--portal-color-forest-dark);
+  border-color: var(--portal-color-forest-dark);
+  background-color: var(--portal-color-bg-muted);
 }
 
 .portal-footer-actions {

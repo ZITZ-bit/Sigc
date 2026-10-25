@@ -19,6 +19,10 @@
   --medico-color-warning: #b26a00;
   --medico-color-warning-soft: #fff3e0;
   --medico-color-focus: #277451;
+  --medico-color-sidebar: #1d5949;
+  --medico-color-sidebar-text: #c5d9cd;
+  --medico-color-sidebar-active: #f1cd6f;
+  --medico-color-sidebar-hover: rgb(255 255 255 / 0.12);
   --medico-font-sans: 'Instrument Sans', 'Segoe UI', sans-serif;
   --medico-radius: 6px;
   --medico-radius-sm: 4px;

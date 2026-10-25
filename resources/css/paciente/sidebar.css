@@ -4,8 +4,8 @@
   left: 0;
   bottom: 0;
   width: var(--paciente-sidebar-width);
-  background-color: var(--paciente-color-surface);
-  border-right: 1px solid var(--paciente-color-border);
+  background-color: var(--paciente-color-sidebar);
+  border-right: 1px solid rgb(255 255 255 / 0.1);
   z-index: 40;
   display: flex;
   flex-direction: column;
@@ -15,7 +15,7 @@
 
 .paciente-sidebar-header {
   padding: 1.25rem 1.25rem 1rem;
-  border-bottom: 1px solid var(--paciente-color-border);
+  border-bottom: 1px solid rgb(255 255 255 / 0.12);
 }
 
 .paciente-brand {
@@ -24,7 +24,7 @@
   gap: 0.75rem;
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--paciente-color-ink);
+  color: #fffefa;
   letter-spacing: 0;
   text-decoration: none;
 }
@@ -35,9 +35,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
-  background-color: var(--paciente-color-forest);
-  border-radius: var(--paciente-radius-sm);
+  color: var(--paciente-color-sidebar);
+  background-color: #fffefa;
+  border-radius: 10px 10px 10px 3px;
 }
 
 .paciente-brand-text {
@@ -45,7 +45,7 @@
 }
 
 .paciente-nav-list {
-  padding: 1rem 0.75rem;
+  padding: 1rem 0.875rem;
   flex: 1;
   overflow-y: auto;
 }
@@ -53,12 +53,12 @@
 .paciente-nav-link {
   display: flex;
   align-items: center;
-  gap: 0.7rem;
-  min-height: 2.75rem;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.875rem;
+  gap: 0.75rem;
+  min-height: 2.625rem;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 500;
-  color: var(--paciente-color-text-muted);
+  color: var(--paciente-color-sidebar-text);
   border-radius: var(--paciente-radius);
   margin-bottom: 0.25rem;
   transition: var(--paciente-transition-fast);
@@ -66,14 +66,27 @@
 }
 
 .paciente-nav-link:hover {
-  background-color: var(--paciente-color-bg-muted);
-  color: var(--paciente-color-forest-dark);
+  background-color: var(--paciente-color-sidebar-hover);
+  color: #fffefa;
 }
 
 .paciente-nav-link--active {
-  background-color: var(--paciente-color-mint);
-  color: var(--paciente-color-forest-dark);
-  box-shadow: inset 2px 0 var(--paciente-color-forest);
+  position: relative;
+  background-color: var(--paciente-color-sidebar-hover);
+  color: #fffefa;
+  box-shadow: inset 0 -1px rgb(255 255 255 / 0.12);
+}
+
+.paciente-nav-link--active::before {
+  position: absolute;
+  top: 50%;
+  left: -0.875rem;
+  width: 3px;
+  height: 1.45rem;
+  border-radius: 0 3px 3px 0;
+  background-color: var(--paciente-color-sidebar-active);
+  content: '';
+  transform: translateY(-50%);
 }
 
 .paciente-nav-icon {
@@ -83,8 +96,8 @@
   width: 1.75rem;
   height: 1.75rem;
   border-radius: var(--paciente-radius-sm);
-  background-color: var(--paciente-color-bg-muted);
-  color: var(--paciente-color-forest-dark);
+  background-color: rgb(255 255 255 / 0.1);
+  color: #fffefa;
   font-size: 0.625rem;
   font-weight: 700;
   text-align: center;
@@ -92,7 +105,7 @@
 
 .paciente-sidebar-footer {
   padding: 1rem 1.25rem 1.25rem;
-  border-top: 1px solid var(--paciente-color-border);
+  border-top: 1px solid rgb(255 255 255 / 0.12);
 }
 
 .paciente-profile-summary {
@@ -108,9 +121,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
-  background-color: var(--paciente-color-sage);
-  border-radius: var(--paciente-radius-sm);
+  color: var(--paciente-color-sidebar);
+  background-color: #e2eee2;
+  border-radius: 50%;
   font-size: 0.75rem;
   font-weight: 700;
 }
@@ -122,12 +135,29 @@
 .paciente-profile-name {
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--paciente-color-ink);
+  color: #fffefa;
 }
 
 .paciente-profile-role {
   font-size: 0.75rem;
-  color: var(--paciente-color-text-muted);
+  color: var(--paciente-color-sidebar-text);
+}
+
+.paciente-sidebar-return {
+  display: block;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #fffefa;
+  text-decoration: none;
+  border-radius: var(--paciente-radius);
+  margin-bottom: 0.75rem;
+  transition: var(--paciente-transition-fast);
+}
+
+.paciente-sidebar-return:hover {
+  background-color: var(--paciente-color-sidebar-hover);
+  color: #fffefa;
 }
 
 .paciente-btn-logout {
@@ -138,17 +168,18 @@
   padding: 0.625rem 1rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--paciente-color-text-muted);
+  color: var(--paciente-color-sidebar-text);
   background-color: transparent;
-  border: 1px solid var(--paciente-color-border);
+  border: 1px solid rgb(255 255 255 / 0.28);
+  color: #fffefa;
   border-radius: var(--paciente-radius);
   transition: var(--paciente-transition-fast);
 }
 
 .paciente-btn-logout:hover {
-  background-color: var(--paciente-color-error-soft);
-  color: var(--paciente-color-error);
-  border-color: var(--paciente-color-error);
+  background-color: var(--paciente-color-sidebar-hover);
+  color: #fffefa;
+  border-color: rgb(255 255 255 / 0.55);
 }
 
 /* Ocultar sidebar en móvil por defecto */
@@ -161,7 +192,7 @@
   padding: 0.55rem;
   border: 1px solid var(--paciente-color-border);
   border-radius: var(--paciente-radius);
-  background-color: var(--paciente-color-surface);
+  background-color: #fffefa;
   box-shadow: var(--paciente-shadow);
 }
 
@@ -181,8 +212,8 @@
   left: 0;
   bottom: 0;
   width: min(20rem, calc(100vw - 2rem));
-  background-color: var(--paciente-color-surface);
-  border-right: 1px solid var(--paciente-color-border);
+  background-color: var(--paciente-color-sidebar);
+  border-right: 1px solid rgb(255 255 255 / 0.1);
   z-index: 60;
   transform: translateX(-100%);
   transition: transform 0.3s ease;
@@ -202,10 +233,10 @@
   background: none;
   border: none;
   padding: 0.45rem 0.65rem;
-  border: 1px solid var(--paciente-color-border);
+  border: 1px solid rgb(255 255 255 / 0.28);
   border-radius: var(--paciente-radius-sm);
   font-size: 0.8125rem;
-  color: var(--paciente-color-text-muted);
+  color: #fffefa;
   cursor: pointer;
 }
 
@@ -220,7 +251,7 @@
   padding: 0.875rem 1rem;
   font-size: 0.9375rem;
   font-weight: 500;
-  color: var(--paciente-color-text-muted);
+  color: var(--paciente-color-sidebar-text);
   border-radius: var(--paciente-radius);
   margin-bottom: 0.25rem;
   transition: var(--paciente-transition-fast);
@@ -229,17 +260,17 @@
 
 .paciente-mobile-link:hover,
 .paciente-mobile-link--active {
-  background-color: var(--paciente-color-bg-muted);
-  color: var(--paciente-color-forest-dark);
+  background-color: var(--paciente-color-sidebar-hover);
+  color: #fffefa;
 }
 
 .paciente-mobile-link--active {
-  background-color: var(--paciente-color-mint);
+  box-shadow: inset 3px 0 var(--paciente-color-sidebar-active);
 }
 
 .paciente-mobile-actions {
   padding: 1rem;
-  border-top: 1px solid var(--paciente-color-border);
+  border-top: 1px solid rgb(255 255 255 / 0.12);
 }
 
 .paciente-mobile-btn-logout {
@@ -248,14 +279,14 @@
   padding: 0.625rem 1rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--paciente-color-text-muted);
+  color: var(--paciente-color-sidebar-text);
   text-align: left;
   border: none;
   background: none;
 }
 
 .paciente-mobile-btn-logout:hover {
-  color: var(--paciente-color-error);
+  color: #fffefa;
 }
 
 .paciente-sidebar-overlay {

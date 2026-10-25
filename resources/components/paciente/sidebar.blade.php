@@ -59,6 +59,7 @@
                 <p class="paciente-profile-role">Usuario del portal</p>
             </div>
         </div>
+        <a href="{{ route('portal') }}" class="paciente-sidebar-return" aria-label="Volver al portal">&#x2190; Volver al portal</a>
         <form method="POST" action="{{ route('logout') }}" style="display: inline;">
             @csrf
             <button type="submit" class="paciente-btn-logout" aria-label="Cerrar sesión" title="Cerrar sesión">

@@ -182,3 +182,76 @@
   color: var(--portal-color-text-muted);
   font-style: italic;
 }
+
+/* Barra de sesión cuando el usuario está autenticado */
+.portal-session-bar {
+  border-bottom: 1px solid var(--portal-color-border);
+  background-color: #ffffff;
+}
+
+.portal-session-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1rem var(--portal-container-padding);
+  max-width: var(--portal-max-width);
+  margin: 0 auto;
+}
+
+.portal-session-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--portal-radius-sm);
+  background-color: var(--portal-color-forest);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.125rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.portal-session-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.portal-session-greeting {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--portal-color-ink);
+}
+
+.portal-session-role {
+  margin: 0.125rem 0 0;
+  font-size: 0.875rem;
+  color: var(--portal-color-text-muted);
+}
+
+.portal-session-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .portal-session-content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .portal-session-actions {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .portal-session-actions .portal-btn {
+    width: 100%;
+  }
+}
