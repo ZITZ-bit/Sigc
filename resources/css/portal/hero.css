@@ -1,0 +1,110 @@
+.portal-hero {
+  position: relative;
+  padding: 6rem 1rem 8rem;
+  overflow: hidden;
+}
+
+.portal-hero-content {
+  max-width: 720px;
+  text-align: center;
+  margin: 0 auto;
+  position: relative;
+  z-index: 10;
+}
+
+.portal-hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--portal-color-forest-dark);
+  margin-bottom: 1.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--portal-radius-sm);
+  background-color: var(--portal-color-pastel);
+}
+
+.portal-hero-eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--portal-radius-sm);
+  background-color: var(--portal-color-forest-dark);
+}
+
+.portal-hero-title {
+  font-size: clamp(2.75rem, 6vw, 4.5rem);
+  letter-spacing: -0.03em;
+  margin-bottom: 1.5rem;
+  line-height: 1.15;
+}
+
+.portal-hero-description {
+  font-size: 1.125rem;
+  color: var(--portal-color-text-muted);
+  margin-bottom: 2.5rem;
+  max-width: 560px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.7;
+}
+
+.portal-hero-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .portal-hero-actions {
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+.portal-hero-visual {
+  position: absolute;
+  inset: 0;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.portal-hero-visual-shape {
+  position: absolute;
+  border-radius: var(--portal-radius);
+  background-color: var(--portal-color-mint);
+  filter: blur(60px);
+  animation: portal-float 6s ease-in-out infinite;
+}
+
+.portal-hero-visual-shape-1 {
+  width: 500px;
+  height: 500px;
+  top: -100px;
+  right: -100px;
+  animation-delay: 0s;
+}
+
+.portal-hero-visual-shape-2 {
+  width: 450px;
+  height: 450px;
+  bottom: -80px;
+  left: -80px;
+  animation-delay: -2s;
+}
+
+@keyframes portal-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portal-hero-visual-shape {
+    animation: none;
+  }
+}

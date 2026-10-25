@@ -1,0 +1,94 @@
+.paciente-historial-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.paciente-historial-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  background-color: var(--paciente-color-surface);
+  border: 1px solid var(--paciente-color-border);
+  border-radius: var(--paciente-radius);
+}
+
+.paciente-historial-date {
+  flex-shrink: 0;
+  min-width: 100px;
+}
+
+.paciente-historial-date-value {
+  font-weight: 600;
+  color: var(--paciente-color-forest-dark);
+  display: block;
+}
+
+.paciente-historial-info {
+  flex: 1;
+}
+
+.paciente-historial-doctor {
+  font-weight: 600;
+  color: var(--paciente-color-ink);
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.paciente-historial-specialty {
+  font-size: 0.875rem;
+  color: var(--paciente-color-text-muted);
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.paciente-historial-type {
+  font-size: 0.8125rem;
+  color: var(--paciente-color-sage);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.paciente-historial-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.paciente-historial-btn {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--paciente-color-forest-dark);
+  background-color: transparent;
+  border: 1px solid var(--paciente-color-border);
+  border-radius: var(--paciente-radius-sm);
+  cursor: pointer;
+  transition: var(--paciente-transition-fast);
+}
+
+.paciente-historial-btn:hover {
+  background-color: var(--paciente-color-bg-muted);
+}
+
+.paciente-historial-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--paciente-color-text-muted);
+}
+
+.paciente-historial-empty-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.paciente-historial-disclaimer {
+  margin-top: 2rem;
+  font-size: 0.8125rem;
+  color: var(--paciente-color-text-muted);
+  font-style: italic;
+}

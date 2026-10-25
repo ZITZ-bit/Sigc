@@ -1,0 +1,24 @@
+:root {
+  --auth-color-ink: #1b4332;
+  --auth-color-ink-soft: #2d6a4f;
+  --auth-color-text: #2d4a3e;
+  --auth-color-text-muted: #6a8c7a;
+  --auth-color-bg: #f7faf7;
+  --auth-color-bg-muted: #eef5ee;
+  --auth-color-border: #d4e3d4;
+  --auth-color-forest: #2d6a4f;
+  --auth-color-forest-dark: #1b4332;
+  --auth-color-sage: #8fbc8f;
+  --auth-color-mint: #e8f5e9;
+  --auth-color-pastel: #c7e9c1;
+  --auth-color-error: #b3261e;
+  --auth-color-error-soft: #fdeceb;
+  --auth-radius: 3px;
+  --auth-radius-sm: 2px;
+  --auth-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+  --auth-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.06);
+  --auth-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --auth-transition-fast: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  --auth-max-width: 440px;
+  --auth-input-height: 3.25rem;
+}
