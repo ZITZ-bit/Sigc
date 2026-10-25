@@ -1,14 +1,48 @@
+@media (max-width: 1023px) {
+  .medico-content-area {
+    padding-top: 4.5rem;
+  }
+}
+
 @media (max-width: 767px) {
   .medico-content-area {
-    padding: 1rem;
+    padding: 4.25rem 1rem 1.25rem;
   }
 
   .medico-header {
     margin-bottom: 1.5rem;
+    gap: 1rem;
   }
 
   .medico-header-content h1 {
     font-size: 1.5rem;
+    overflow-wrap: anywhere;
+  }
+
+  .medico-header-actions {
+    align-self: stretch;
+  }
+
+  .medico-header-actions .medico-btn-primary {
+    width: 100%;
+  }
+
+  .medico-section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .medico-empty-state {
+    padding: 1.125rem;
+  }
+
+  .medico-grid-cols-3 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .medico-actions-grid-cols-4 {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .medico-dashboard-grid {
@@ -58,6 +92,19 @@
   .medico-consultas-table,
   .medico-agenda-table {
     font-size: 0.8125rem;
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .medico-sidebar-footer {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  .medico-sidebar-overlay {
+    padding: 0;
+    border: 0;
   }
 }
 

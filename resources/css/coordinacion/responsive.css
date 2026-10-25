@@ -1,14 +1,48 @@
+@media (max-width: 1023px) {
+  .coordinacion-content-area {
+    padding-top: 4.5rem;
+  }
+}
+
 @media (max-width: 767px) {
   .coordinacion-content-area {
-    padding: 1rem;
+    padding: 4.25rem 1rem 1.25rem;
   }
 
   .coordinacion-header {
     margin-bottom: 1.5rem;
+    gap: 1rem;
   }
 
   .coordinacion-header-content h1 {
     font-size: 1.5rem;
+    overflow-wrap: anywhere;
+  }
+
+  .coordinacion-header-actions {
+    align-self: stretch;
+  }
+
+  .coordinacion-header-actions .coordinacion-btn-primary {
+    width: 100%;
+  }
+
+  .coordinacion-section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .coordinacion-empty-state {
+    padding: 1.125rem;
+  }
+
+  .coordinacion-grid-cols-3 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .coordinacion-actions-grid-cols-4 {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .coordinacion-dashboard-grid {
@@ -67,6 +101,19 @@
   .coordinacion-recepcion-table,
   .coordinacion-personal-table {
     font-size: 0.8125rem;
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .coordinacion-sidebar-footer {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  .coordinacion-sidebar-overlay {
+    padding: 0;
+    border: 0;
   }
 }
 
