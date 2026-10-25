@@ -59,9 +59,12 @@
                 <p class="paciente-profile-role">Usuario del portal</p>
             </div>
         </div>
-        <a href="#" class="paciente-btn-logout" aria-label="Cerrar sesión" title="Cerrar sesión">
-            &#x1F511;
-        </a>
+        <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+            @csrf
+            <button type="submit" class="paciente-btn-logout" aria-label="Cerrar sesión" title="Cerrar sesión">
+                &#x1F511;
+            </button>
+        </form>
     </div>
 </nav>
 
@@ -83,6 +86,11 @@
         <li><a href="{{ route('paciente.perfil') }}" class="paciente-mobile-link{{ request()->routeIs('paciente.perfil') ? ' paciente-mobile-link--active' : '' }}">Mi perfil</a></li>
     </ul>
     <div class="paciente-mobile-actions">
-        <a href="#" class="paciente-mobile-btn-logout" aria-label="Cerrar sesión">Cerrar sesión</a>
+        <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+            @csrf
+            <button type="submit" class="paciente-mobile-btn-logout" aria-label="Cerrar sesión">
+                Cerrar sesión
+            </button>
+        </form>
     </div>
 </div>
