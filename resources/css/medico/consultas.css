@@ -1,0 +1,133 @@
+.medico-consultas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.medico-consultas-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--medico-color-surface);
+  border: 1px solid var(--medico-color-border);
+  border-radius: var(--medico-radius);
+  overflow: hidden;
+}
+
+.medico-consultas-table th {
+  text-align: left;
+  padding: 0.875rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--medico-color-text-muted);
+  background-color: var(--medico-color-bg-muted);
+  border-bottom: 1px solid var(--medico-color-border);
+}
+
+.medico-consultas-table td {
+  padding: 1rem;
+  font-size: 0.9375rem;
+  color: var(--medico-color-text);
+  border-bottom: 1px solid var(--medico-color-border);
+}
+
+.medico-consultas-table tr:last-child td {
+  border-bottom: none;
+}
+
+.medico-consultas-table tr:hover {
+  background-color: var(--medico-color-bg-muted);
+}
+
+.medico-consulta-detail {
+  background-color: var(--medico-color-surface);
+  border: 1px solid var(--medico-color-border);
+  border-radius: var(--medico-radius);
+  padding: 2rem;
+  max-width: 800px;
+}
+
+.medico-consulta-section {
+  margin-bottom: 2rem;
+}
+
+.medico-consulta-section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--medico-color-ink);
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--medico-color-border);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.medico-consulta-field {
+  margin-bottom: 1rem;
+}
+
+.medico-consulta-field-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--medico-color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.medico-consulta-field-value {
+  font-size: 0.9375rem;
+  color: var(--medico-color-text);
+}
+
+.medico-consulta-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.medico-consulta-btn {
+  flex: 1;
+  padding: 0.875rem 1.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border-radius: var(--medico-radius-sm);
+  cursor: pointer;
+  transition: var(--medico-transition-fast);
+  border: 1px solid transparent;
+  text-align: center;
+}
+
+.medico-consulta-btn--draft {
+  background-color: var(--medico-color-bg-muted);
+  color: var(--medico-color-ink);
+}
+
+.medico-consulta-btn--draft:hover {
+  background-color: var(--medico-color-border);
+}
+
+.medico-consulta-btn--finish {
+  background-color: var(--medico-color-forest);
+  color: #ffffff;
+}
+
+.medico-consulta-btn--finish:hover {
+  background-color: var(--medico-color-forest-dark);
+}
+
+.medico-consulta-btn--disabled {
+  background-color: var(--medico-color-bg-muted);
+  color: var(--medico-color-text-muted);
+  cursor: not-allowed;
+  border-color: var(--medico-color-border);
+}
+
+.medico-consulta-disclaimer {
+  margin-top: 2rem;
+  font-size: 0.8125rem;
+  color: var(--medico-color-text-muted);
+  font-style: italic;
+}

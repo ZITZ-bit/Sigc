@@ -1,0 +1,12 @@
+@import './medico/variables.css';
+@import './medico/layout.css';
+@import './medico/sidebar.css';
+@import './medico/dashboard.css';
+@import './medico/agenda.css';
+@import './medico/pacientes.css';
+@import './medico/consultas.css';
+@import './medico/historial.css';
+@import './medico/horario.css';
+@import './medico/perfil.css';
+@import './medico/notificaciones.css';
+@import './medico/responsive.css';

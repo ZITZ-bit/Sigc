@@ -1,0 +1,126 @@
+.medico-perfil-grid {
+  display: grid;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .medico-perfil-grid {
+    grid-template-columns: 280px 1fr;
+  }
+}
+
+.medico-perfil-sidebar-card {
+  background-color: var(--medico-color-surface);
+  border: 1px solid var(--medico-color-border);
+  border-radius: var(--medico-radius);
+  padding: 1.5rem;
+  position: sticky;
+  top: 1rem;
+}
+
+.medico-perfil-avatar-wrapper {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.medico-perfil-avatar {
+  width: 5rem;
+  height: 5rem;
+  border-radius: var(--medico-radius);
+  background-color: var(--medico-color-bg-muted);
+  margin: 0 auto 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: var(--medico-color-forest-dark);
+}
+
+.medico-perfil-name {
+  font-weight: 600;
+  color: var(--medico-color-ink);
+  font-size: 1.125rem;
+  margin-bottom: 0.25rem;
+}
+
+.medico-perfil-specialty {
+  font-size: 0.875rem;
+  color: var(--medico-color-forest-dark);
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.medico-perfil-email {
+  font-size: 0.875rem;
+  color: var(--medico-color-text-muted);
+  margin-bottom: 1rem;
+}
+
+.medico-perfil-edit-btn {
+  width: 100%;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--medico-color-forest-dark);
+  background-color: transparent;
+  border: 1px solid var(--medico-color-border);
+  border-radius: var(--medico-radius-sm);
+  cursor: pointer;
+  transition: var(--medico-transition-fast);
+}
+
+.medico-perfil-edit-btn:hover {
+  background-color: var(--medico-color-bg-muted);
+  border-color: var(--medico-color-forest);
+}
+
+.medico-perfil-content {
+  background-color: var(--medico-color-surface);
+  border: 1px solid var(--medico-color-border);
+  border-radius: var(--medico-radius);
+  padding: 2rem;
+}
+
+.medico-perfil-section {
+  margin-bottom: 2rem;
+}
+
+.medico-perfil-section:last-child {
+  margin-bottom: 0;
+}
+
+.medico-perfil-section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--medico-color-ink);
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--medico-color-border);
+}
+
+.medico-perfil-field {
+  margin-bottom: 1rem;
+}
+
+.medico-perfil-field-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--medico-color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.medico-perfil-field-value {
+  font-size: 0.9375rem;
+  color: var(--medico-color-text);
+}
+
+.medico-perfil-disclaimer {
+  margin-top: 2rem;
+  font-size: 0.8125rem;
+  color: var(--medico-color-text-muted);
+  font-style: italic;
+}
