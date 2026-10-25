@@ -26,6 +26,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the medic record that owns the user.
+     */
+    public function medico()
+    {
+        return $this->hasOne(Medico::class);
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
