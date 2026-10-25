@@ -1,0 +1,82 @@
+@media (max-width: 767px) {
+  .coordinacion-content-area {
+    padding: 1rem;
+  }
+
+  .coordinacion-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .coordinacion-header-content h1 {
+    font-size: 1.5rem;
+  }
+
+  .coordinacion-dashboard-grid {
+    gap: 1rem;
+  }
+
+  .coordinacion-citas-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .coordinacion-pacientes-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .coordinacion-pacientes-search {
+    max-width: 100%;
+  }
+
+  .coordinacion-medicos-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .coordinacion-recepcion-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .coordinacion-reportes-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .coordinacion-personal-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .coordinacion-perfil-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .coordinacion-perfil-sidebar-card {
+    position: static;
+  }
+
+  .coordinacion-citas-table,
+  .coordinacion-recepcion-table,
+  .coordinacion-personal-table {
+    font-size: 0.8125rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

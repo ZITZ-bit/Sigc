@@ -1,0 +1,86 @@
+.coordinacion-recepcion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.coordinacion-recepcion-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--coordinacion-color-surface);
+  border: 1px solid var(--coordinacion-color-border);
+  border-radius: var(--coordinacion-radius);
+  overflow: hidden;
+}
+
+.coordinacion-recepcion-table th {
+  text-align: left;
+  padding: 0.875rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--coordinacion-color-text-muted);
+  background-color: var(--coordinacion-color-bg-muted);
+  border-bottom: 1px solid var(--coordinacion-color-border);
+}
+
+.coordinacion-recepcion-table td {
+  padding: 1rem;
+  font-size: 0.9375rem;
+  color: var(--coordinacion-color-text);
+  border-bottom: 1px solid var(--coordinacion-color-border);
+}
+
+.coordinacion-recepcion-table tr:last-child td {
+  border-bottom: none;
+}
+
+.coordinacion-recepcion-table tr:hover {
+  background-color: var(--coordinacion-color-bg-muted);
+}
+
+.coordinacion-recepcion-time {
+  font-weight: 600;
+  color: var(--coordinacion-color-forest-dark);
+}
+
+.coordinacion-recepcion-patient {
+  font-weight: 500;
+  color: var(--coordinacion-color-ink);
+}
+
+.coordinacion-recepcion-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.coordinacion-recepcion-btn {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  border-radius: var(--coordinacion-radius-sm);
+  cursor: pointer;
+  transition: var(--coordinacion-transition-fast);
+  border: 1px solid transparent;
+}
+
+.coordinacion-recepcion-btn--arrived {
+  background-color: var(--coordinacion-color-mint);
+  color: var(--coordinacion-color-forest-dark);
+}
+
+.coordinacion-recepcion-btn--arrived:hover {
+  background-color: var(--coordinacion-color-pastel);
+}
+
+.coordinacion-recepcion-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--coordinacion-color-text-muted);
+}
+
+.coordinacion-recepcion-empty-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}

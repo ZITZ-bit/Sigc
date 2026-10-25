@@ -71,4 +71,44 @@ Route::get('/medico/notificaciones', function () {
     return view('ui.medico.notificaciones');
 })->name('medico.notificaciones');
 
+Route::get('/coordinacion/dashboard', function () {
+    return view('ui.dashboard-coordinacion');
+})->name('coordinacion.dashboard');
+
+Route::get('/coordinacion/citas', function () {
+    return view('ui.coordinacion.citas');
+})->name('coordinacion.citas');
+
+Route::get('/coordinacion/pacientes', function () {
+    return view('ui.coordinacion.pacientes');
+})->name('coordinacion.pacientes');
+
+Route::get('/coordinacion/medicos', function () {
+    return view('ui.coordinacion.medicos');
+})->name('coordinacion.medicos');
+
+Route::get('/coordinacion/recepcion', function () {
+    return view('ui.coordinacion.recepcion');
+})->name('coordinacion.recepcion');
+
+Route::get('/coordinacion/reportes', function () {
+    return view('ui.coordinacion.reportes');
+})->name('coordinacion.reportes');
+
+Route::get('/coordinacion/notificaciones', function () {
+    return view('ui.coordinacion.notificaciones');
+})->name('coordinacion.notificaciones');
+
+Route::get('/coordinacion/perfil', function () {
+    return view('ui.coordinacion.perfil');
+})->name('coordinacion.perfil');
+
+Route::get('/coordinacion/personal', function () {
+    return view('ui.coordinacion.personal');
+})->name('coordinacion.personal');
+
+Route::get('/coordinacion/configuracion', function () {
+    return view('ui.coordinacion.configuracion');
+})->name('coordinacion.configuracion');
+
 // Rutas del proyecto sigc

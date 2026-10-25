@@ -1,0 +1,72 @@
+.coordinacion-personal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.coordinacion-personal-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--coordinacion-color-surface);
+  border: 1px solid var(--coordinacion-color-border);
+  border-radius: var(--coordinacion-radius);
+  overflow: hidden;
+}
+
+.coordinacion-personal-table th {
+  text-align: left;
+  padding: 0.875rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--coordinacion-color-text-muted);
+  background-color: var(--coordinacion-color-bg-muted);
+  border-bottom: 1px solid var(--coordinacion-color-border);
+}
+
+.coordinacion-personal-table td {
+  padding: 1rem;
+  font-size: 0.9375rem;
+  color: var(--coordinacion-color-text);
+  border-bottom: 1px solid var(--coordinacion-color-border);
+}
+
+.coordinacion-personal-table tr:last-child td {
+  border-bottom: none;
+}
+
+.coordinacion-personal-table tr:hover {
+  background-color: var(--coordinacion-color-bg-muted);
+}
+
+.coordinacion-personal-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.coordinacion-personal-btn {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  border-radius: var(--coordinacion-radius-sm);
+  cursor: pointer;
+  transition: var(--coordinacion-transition-fast);
+  border: 1px solid transparent;
+}
+
+.coordinacion-personal-btn--view {
+  background-color: var(--coordinacion-color-mint);
+  color: var(--coordinacion-color-forest-dark);
+}
+
+.coordinacion-personal-btn--view:hover {
+  background-color: var(--coordinacion-color-pastel);
+}
+
+.coordinacion-personal-disclaimer {
+  margin-top: 2rem;
+  font-size: 0.8125rem;
+  color: var(--coordinacion-color-text-muted);
+  font-style: italic;
+  text-align: center;
+}

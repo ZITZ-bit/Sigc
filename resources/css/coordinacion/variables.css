@@ -1,0 +1,30 @@
+@theme {
+  --coordinacion-color-ink: #1b4332;
+  --coordinacion-color-ink-soft: #2d6a4f;
+  --coordinacion-color-text: #2d4a3e;
+  --coordinacion-color-text-muted: #6a8c7a;
+  --coordinacion-color-bg: #f7faf7;
+  --coordinacion-color-bg-muted: #eef5ee;
+  --coordinacion-color-surface: #ffffff;
+  --coordinacion-color-border: #d4e3d4;
+  --coordinacion-color-forest: #2d6a4f;
+  --coordinacion-color-forest-dark: #1b4332;
+  --coordinacion-color-sage: #8fbc8f;
+  --coordinacion-color-mint: #e8f5e9;
+  --coordinacion-color-pastel: #c7e9c1;
+  --coordinacion-color-error: #b3261e;
+  --coordinacion-color-error-soft: #fdeceb;
+  --coordinacion-color-success: #2e7d32;
+  --coordinacion-color-success-soft: #e8f5e9;
+  --coordinacion-color-warning: #b26a00;
+  --coordinacion-color-warning-soft: #fff3e0;
+  --coordinacion-radius: 3px;
+  --coordinacion-radius-sm: 2px;
+  --coordinacion-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+  --coordinacion-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.06);
+  --coordinacion-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --coordinacion-transition-fast: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  --coordinacion-sidebar-width: 260px;
+  --coordinacion-header-height: 60px;
+  --coordinacion-max-width: 1200px;
+}

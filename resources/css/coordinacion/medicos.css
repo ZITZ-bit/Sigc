@@ -1,0 +1,103 @@
+.coordinacion-medicos-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.coordinacion-medicos-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .coordinacion-medicos-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .coordinacion-medicos-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.coordinacion-medico-card {
+  background-color: var(--coordinacion-color-surface);
+  border: 1px solid var(--coordinacion-color-border);
+  border-radius: var(--coordinacion-radius);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.coordinacion-medico-avatar {
+  width: 4rem;
+  height: 4rem;
+  border-radius: var(--coordinacion-radius);
+  background-color: var(--coordinacion-color-bg-muted);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: var(--coordinacion-color-forest-dark);
+}
+
+.coordinacion-medico-name {
+  font-weight: 600;
+  color: var(--coordinacion-color-ink);
+  margin-bottom: 0.25rem;
+}
+
+.coordinacion-medico-id {
+  font-size: 0.75rem;
+  color: var(--coordinacion-color-text-muted);
+  margin-bottom: 0.5rem;
+  display: block;
+  font-family: monospace;
+}
+
+.coordinacion-medico-info {
+  font-size: 0.875rem;
+  color: var(--coordinacion-color-text-muted);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  flex: 1;
+}
+
+.coordinacion-medico-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.coordinacion-medico-btn {
+  flex: 1;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: var(--coordinacion-radius-sm);
+  cursor: pointer;
+  transition: var(--coordinacion-transition-fast);
+  border: 1px solid transparent;
+  text-align: center;
+  text-decoration: none;
+}
+
+.coordinacion-medico-btn--view {
+  background-color: var(--coordinacion-color-mint);
+  color: var(--coordinacion-color-forest-dark);
+}
+
+.coordinacion-medico-btn--view:hover {
+  background-color: var(--coordinacion-color-pastel);
+}
+
+.coordinacion-medico-disclaimer {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: var(--coordinacion-color-mint);
+  border-radius: var(--coordinacion-radius);
+  font-size: 0.8125rem;
+  color: var(--coordinacion-color-forest-dark);
+}
