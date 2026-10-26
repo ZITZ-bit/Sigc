@@ -19,17 +19,31 @@
                 <div class="coordinacion-header">
                     <div class="coordinacion-header-content">
                         <h1>Citas y agenda</h1>
-                        <p>Gestione las citas médicas programadas para hoy y los próximos días.</p>
+                        <p>Gestione las solicitudes de consulta de los pacientes.</p>
                     </div>
                 </div>
 
+                @if (session('success'))
+                    <div class="coordinacion-feedback coordinacion-feedback-success" role="status">{{ session('success') }}</div>
+                @endif
+                @if ($errors->any())
+                    <div class="coordinacion-feedback coordinacion-feedback-error" role="alert">{{ $errors->first() }}</div>
+                @endif
+
                 <section class="coordinacion-section">
                     <div class="coordinacion-citas-header">
-                        <div class="coordinacion-citas-filters">
-                            <button class="coordinacion-filter-btn coordinacion-filter-btn--active" aria-pressed="true">Hoy</button>
-                            <button class="coordinacion-filter-btn" aria-pressed="false">Esta semana</button>
-                            <button class="coordinacion-filter-btn" aria-pressed="false">Próximos 7 días</button>
-                        </div>
+                        <form method="GET" action="{{ route('coordinacion.citas') }}" class="coordinacion-citas-filters">
+                            <select name="estado" class="coordinacion-filter-select">
+                                <option value="">Todos los estados</option>
+                                @foreach ($estados as $estado)
+                                    <option value="{{ $estado }}" {{ $filtro_estado === $estado ? 'selected' : '' }}>{{ ucfirst($estado) }}</option>
+                                @endforeach
+                            </select>
+                            <input type="date" name="fecha" class="coordinacion-filter-select" value="{{ $filtro_fecha }}">
+                            <input type="search" name="search" class="coordinacion-filter-select" placeholder="Buscar paciente..." value="{{ $search }}">
+                            <button type="submit" class="coordinacion-filter-btn coordinacion-filter-btn--active">Filtrar</button>
+                            <a href="{{ route('coordinacion.citas') }}" class="coordinacion-filter-btn">Limpiar</a>
+                        </form>
                     </div>
 
                     <table class="coordinacion-citas-table">
@@ -41,75 +55,75 @@
                                 <th>Médico</th>
                                 <th>Especialidad</th>
                                 <th>Motivo</th>
-                                <th>Duración</th>
                                 <th>Estado</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>25 Oct</td>
-                                <td><span class="coordinacion-citas-time">09:00</span></td>
-                                <td><span class="coordinacion-citas-patient">Ana López García</span></td>
-                                <td>Dr. Carlos Méndez</td>
-                                <td>Medicina General</td>
-                                <td><span class="coordinacion-citas-reason">Control general</span></td>
-                                <td>30 min</td>
-                                <td><span class="coordinacion-badge coordinacion-badge--confirmed">Confirmada</span></td>
-                                <td>
-                                    <div class="coordinacion-citas-actions">
-                                        <button class="coordinacion-citas-btn coordinacion-citas-btn--view" aria-label="Ver detalles">Ver</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>25 Oct</td>
-                                <td><span class="coordinacion-citas-time">10:30</span></td>
-                                <td><span class="coordinacion-citas-patient">Carlos Ruiz</span></td>
-                                <td>Dra. Laura Gómez</td>
-                                <td>Cardiología</td>
-                                <td><span class="coordinacion-citas-reason">Seguimiento cardiológico</span></td>
-                                <td>45 min</td>
-                                <td><span class="coordinacion-badge coordinacion-badge--pending">Pendiente</span></td>
-                                <td>
-                                    <div class="coordinacion-citas-actions">
-                                        <button class="coordinacion-citas-btn coordinacion-citas-btn--view" aria-label="Ver detalles">Ver</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>25 Oct</td>
-                                <td><span class="coordinacion-citas-time">11:15</span></td>
-                                <td><span class="coordinacion-citas-patient">María Rodríguez</span></td>
-                                <td>Dr. Roberto Silva</td>
-                                <td>Pediatría</td>
-                                <td><span class="coordinacion-citas-reason">Control pediátrico</span></td>
-                                <td>30 min</td>
-                                <td><span class="coordinacion-badge coordinacion-badge--completed">Completada</span></td>
-                                <td>
-                                    <div class="coordinacion-citas-actions">
-                                        <button class="coordinacion-citas-btn coordinacion-citas-btn--view" aria-label="Ver detalles">Ver</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>25 Oct</td>
-                                <td><span class="coordinacion-citas-time">12:00</span></td>
-                                <td><span class="coordinacion-citas-patient">Luis Fernández</span></td>
-                                <td>Dr. Carlos Méndez</td>
-                                <td>Medicina General</td>
-                                <td><span class="coordinacion-citas-reason">Consulta general</span></td>
-                                <td>30 min</td>
-                                <td><span class="coordinacion-badge coordinacion-badge--cancelled">Cancelada</span></td>
-                                <td>
-                                    <div class="coordinacion-citas-actions">
-                                        <button class="coordinacion-citas-btn coordinacion-citas-btn--view" aria-label="Ver detalles">Ver</button>
-                                    </div>
-                                </td>
-                            </tr>
+                            @if ($consultas->isEmpty())
+                                <tr>
+                                    <td colspan="8">
+                                        <div class="coordinacion-empty-state">
+                                            <strong>No hay consultas registradas</strong>
+                                            <p>Cuando los pacientes registren solicitudes de consulta, aparecerán aquí.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @else
+                                @foreach ($consultas as $consulta)
+                                    <tr>
+                                        <td>{{ \Carbon\Carbon::parse($consulta->fecha)->format('d/m/Y') }}</td>
+                                        <td>{{ $consulta->hora }}</td>
+                                        <td>{{ $consulta->user->name }}</td>
+                                        <td>{{ $consulta->medico?->user?->name ?? 'Pendiente de asignación' }}</td>
+                                        <td>{{ $consulta->especialidad?->name ?: 'Sin especialidad' }}</td>
+                                        <td>{{ $consulta->motivo ?: 'Sin motivo registrado' }}</td>
+                                        <td>
+                                            <span class="coordinacion-badge coordinacion-badge--{{ $consulta->estado }}">{{ ucfirst($consulta->estado) }}</span>
+                                        </td>
+                                        <td>
+                                            <div class="coordinacion-citas-actions">
+                                                <form method="POST" action="{{ route('coordinacion.citas.estado', $consulta) }}" style="display:inline;">
+                                                    @csrf
+                                                    <select name="estado" class="coordinacion-estado-select" onchange="this.form.submit()">
+                                                        @php
+                                                            $transiciones = [
+                                                                'pendiente' => ['confirmada', 'cancelada'],
+                                                                'confirmada' => ['completada', 'cancelada'],
+                                                                'completada' => [],
+                                                                'cancelada' => [],
+                                                            ];
+                                                            $permitidas = $transiciones[$consulta->estado] ?? [];
+                                                        @endphp
+                                                        @foreach ($permitidas as $estadoDestino)
+                                                            <option value="{{ $estadoDestino }}" {{ old('estado', $consulta->estado) === $estadoDestino ? 'selected' : '' }}>{{ ucfirst($estadoDestino) }}</option>
+                                                        @endforeach
+                                                        @if (count($permitidas) === 0)
+                                                            <option disabled>Sin transiciones</option>
+                                                        @endif
+                                                    </select>
+                                                </form>
+                                                @if ($consulta->estado === 'pendiente')
+                                                    <form method="POST" action="{{ route('coordinacion.citas.asignar-medico', $consulta) }}" style="display:inline; margin-left:0.5rem;">
+                                                        @csrf
+                                                        <select name="medico_id" class="coordinacion-medico-select">
+                                                            <option value="">Asignar médico</option>
+                                                            @foreach ($medicos as $medico)
+                                                                <option value="{{ $medico->id }}" {{ old('medico_id', $consulta->medico_id) === $medico->id ? 'selected' : '' }}>{{ $medico->user->name }} ({{ $medico->especialidad?->name }})</option>
+                                                            @endforeach
+                                                        </select>
+                                                        <button type="submit" class="coordinacion-citas-btn coordinacion-citas-btn--asignar">Asignar</button>
+                                                    </form>
+                                                @endif
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endif
                         </tbody>
                     </table>
-                    <p class="coordinacion-disclaimer">Datos de demostración. No son citas reales.</p>
+
+                    {{ $consultas->appends(request()->except('page'))->links() }}
                 </section>
             </div>
         </div>

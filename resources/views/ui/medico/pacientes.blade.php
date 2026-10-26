@@ -31,39 +31,13 @@
                     </div>
 
                     <div class="medico-pacientes-grid">
-                        <article class="medico-paciente-card">
-                            <div class="medico-paciente-avatar" aria-hidden="true">&#x1F464;</div>
-                            <h3 class="medico-paciente-name">Ana López García</h3>
-                            <span class="medico-paciente-id">ID: PAC-001</span>
-                            <p class="medico-paciente-info">Edad: 34 años · Tel: +34 600 000 001</p>
-                            <div class="medico-paciente-actions">
-                                <button class="medico-paciente-btn medico-paciente-btn--view" disabled>Ver historial</button>
-                                <button class="medico-paciente-btn medico-paciente-btn--consult" disabled>Nueva consulta</button>
-                            </div>
-                        </article>
-                        <article class="medico-paciente-card">
-                            <div class="medico-paciente-avatar" aria-hidden="true">&#x1F464;</div>
-                            <h3 class="medico-paciente-name">Carlos Ruiz</h3>
-                            <span class="medico-paciente-id">ID: PAC-002</span>
-                            <p class="medico-paciente-info">Edad: 45 años · Tel: +34 600 000 002</p>
-                            <div class="medico-paciente-actions">
-                                <button class="medico-paciente-btn medico-paciente-btn--view" disabled>Ver historial</button>
-                                <button class="medico-paciente-btn medico-paciente-btn--consult" disabled>Nueva consulta</button>
-                            </div>
-                        </article>
-                        <article class="medico-paciente-card">
-                            <div class="medico-paciente-avatar" aria-hidden="true">&#x1F464;</div>
-                            <h3 class="medico-paciente-name">María Rodríguez</h3>
-                            <span class="medico-paciente-id">ID: PAC-003</span>
-                            <p class="medico-paciente-info">Edad: 28 años · Tel: +34 600 000 003</p>
-                            <div class="medico-paciente-actions">
-                                <button class="medico-paciente-btn medico-paciente-btn--view" disabled>Ver historial</button>
-                                <button class="medico-paciente-btn medico-paciente-btn--consult" disabled>Nueva consulta</button>
-                            </div>
-                        </article>
+                        <div class="medico-empty-state">
+                            <strong>No tienes pacientes asignados</strong>
+                            <p>Los pacientes vinculados a tus consultas aparecerán aquí.</p>
+                        </div>
                     </div>
 
-                    <p class="medico-disclaimer">Datos de demostración. No son pacientes reales.</p>
+                    <p class="medico-text-center">Los pacientes se asignan automáticamente cuando atiendes una solicitud de consulta.</p>
                 </section>
             </div>
         </div>

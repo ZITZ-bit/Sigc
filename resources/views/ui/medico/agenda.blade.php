@@ -23,79 +23,81 @@
                     </div>
                 </div>
 
-                <section class="medico-section">
-                    <div class="medico-agenda-header">
-                        <div class="medico-agenda-filters">
-                            <button class="medico-filter-btn medico-filter-btn--active" aria-pressed="true">Hoy</button>
-                            <button class="medico-filter-btn" aria-pressed="false">Esta semana</button>
-                            <button class="medico-filter-btn" aria-pressed="false">Próximos 7 días</button>
+                @if (!$medico)
+                    <section class="medico-section">
+                        <div class="medico-empty-state">
+                            <strong>No tiene registro de médico asociado</strong>
+                            <p>Su usuario no cuenta con un perfil médico registrado. Contacte a coordinación para asignarle una especialidad y consultorio.</p>
                         </div>
-                    </div>
+                    </section>
+                @else
+                    <section class="medico-section">
+                        <div class="medico-agenda-header">
+                            <form method="GET" action="{{ route('medico.agenda') }}" class="medico-agenda-filters">
+                                <select name="estado" class="medico-filter-select">
+                                    <option value="">Todos los estados</option>
+                                    @foreach ($estados as $estado)
+                                        <option value="{{ $estado }}" {{ $filtro_estado === $estado ? 'selected' : '' }}>{{ ucfirst($estado) }}</option>
+                                    @endforeach
+                                </select>
+                                <input type="search" name="search" class="medico-filter-select" placeholder="Buscar paciente..." value="{{ $search }}">
+                                <button type="submit" class="medico-filter-btn medico-filter-btn--active">Filtrar</button>
+                                <a href="{{ route('medico.agenda') }}" class="medico-filter-btn">Limpiar</a>
+                            </form>
+                        </div>
 
-                    <table class="medico-agenda-table">
-                        <thead>
-                            <tr>
-                                <th>Hora</th>
-                                <th>Paciente</th>
-                                <th>Motivo</th>
-                                <th>Duración</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><span class="medico-agenda-time">09:00</span></td>
-                                <td><span class="medico-agenda-patient">Ana López García</span></td>
-                                <td><span class="medico-agenda-reason">Control general</span></td>
-                                <td>30 min</td>
-                                <td><span class="medico-badge medico-badge--confirmed">Confirmada</span></td>
-                                <td>
-                                    <div class="medico-agenda-actions">
-                                        <button class="medico-agenda-btn medico-agenda-btn--view" aria-label="Ver detalles">Ver</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><span class="medico-agenda-time">09:45</span></td>
-                                <td><span class="medico-agenda-patient">Carlos Ruiz</span></td>
-                                <td><span class="medico-agenda-reason">Seguimiento cardiológico</span></td>
-                                <td>45 min</td>
-                                <td><span class="medico-badge medico-badge--pending">Pendiente</span></td>
-                                <td>
-                                    <div class="medico-agenda-actions">
-                                        <button class="medico-agenda-btn medico-agenda-btn--view" aria-label="Ver detalles">Ver</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><span class="medico-agenda-time">10:30</span></td>
-                                <td><span class="medico-agenda-patient">María Rodríguez</span></td>
-                                <td><span class="medico-agenda-reason">Control pediátrico</span></td>
-                                <td>30 min</td>
-                                <td><span class="medico-badge medico-badge--completed">Completada</span></td>
-                                <td>
-                                    <div class="medico-agenda-actions">
-                                        <button class="medico-agenda-btn medico-agenda-btn--view" aria-label="Ver detalles">Ver</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><span class="medico-agenda-time">11:15</span></td>
-                                <td><span class="medico-agenda-patient">Luis Fernández</span></td>
-                                <td><span class="medico-agenda-reason">Consulta general</span></td>
-                                <td>30 min</td>
-                                <td><span class="medico-badge medico-badge--cancelled">Cancelada</span></td>
-                                <td>
-                                    <div class="medico-agenda-actions">
-                                        <button class="medico-agenda-btn medico-agenda-btn--view" aria-label="Ver detalles">Ver</button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <p class="medico-disclaimer">Datos de demostración. No son citas reales.</p>
-                </section>
+                        <table class="medico-agenda-table">
+                            <thead>
+                                <tr>
+                                    <th>Hora</th>
+                                    <th>Paciente</th>
+                                    <th>Especialidad</th>
+                                    <th>Motivo</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if ($consultas->isEmpty())
+                                    <tr>
+                                        <td colspan="6">
+                                            <div class="medico-empty-state">
+                                                <strong>No tiene consultas asignadas</strong>
+                                                <p>Cuando los pacientes le asignen una consulta, aparecerá aquí con fecha, hora y estado.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @else
+                                    @foreach ($consultas as $consulta)
+                                        <tr>
+                                            <td>{{ $consulta->hora }}</td>
+                                            <td>{{ $consulta->user->name }}</td>
+                                            <td>{{ $consulta->especialidad?->name ?: 'Sin especialidad' }}</td>
+                                            <td>{{ $consulta->motivo ?: 'Sin motivo registrado' }}</td>
+                                            <td>
+                                                <span class="medico-badge medico-badge--{{ $consulta->estado }}">{{ ucfirst($consulta->estado) }}</span>
+                                            </td>
+                                            <td>
+                                                <div class="medico-agenda-actions">
+                                                    @if ($consulta->estado === 'confirmada')
+                                                        <form method="POST" action="{{ route('medico.consultas.completar', $consulta) }}" style="display:inline;">
+                                                            @csrf
+                                                            <button type="submit" class="medico-agenda-btn medico-agenda-btn--completar">Completar</button>
+                                                        </form>
+                                                    @endif
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
+                            </tbody>
+                        </table>
+
+                        {{ $consultas->appends(request()->except('page'))->links() }}
+                    </section>
+                @endif
+
+                <p class="medico-text-center">Las citas se gestionan a través de solicitudes de consulta pendientes de confirmación.</p>
             </div>
         </div>
     </div>

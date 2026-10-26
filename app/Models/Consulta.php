@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-#[Fillable(['fecha', 'hora', 'motivo'])]
+#[Fillable(['user_id', 'medico_id', 'especialidad_id', 'fecha', 'hora', 'motivo', 'estado'])]
 class Consulta extends Authenticatable
 {
     use HasFactory;

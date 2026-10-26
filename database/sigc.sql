@@ -84,6 +84,24 @@ CREATE TABLE IF NOT EXISTS `medicos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- -----------------------------------------------------
+-- Tabla horarios
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `horarios` (
+    `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+    `medico_id` bigint UNSIGNED NOT NULL,
+    `dia_semana` tinyint UNSIGNED NOT NULL COMMENT '0=domingo, 1=lunes, ..., 6=sábado',
+    `hora_inicio` time NOT NULL,
+    `hora_fin` time NOT NULL,
+    `activo` tinyint(1) NOT NULL DEFAULT '1',
+    `created_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NULL DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    KEY `horarios_medico_id_foreign` (`medico_id`),
+    KEY `horarios_medico_id_dia_semana_index` (`medico_id`, `dia_semana`),
+    CONSTRAINT `horarios_medico_id_foreign` FOREIGN KEY (`medico_id`) REFERENCES `medicos` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- -----------------------------------------------------
 -- Tabla invitaciones
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `invitaciones` (
@@ -232,3 +250,39 @@ INSERT INTO `users` (`name`, `email`, `password`, `role_id`, `created_at`, `upda
 ('Paciente Demo', 'paciente@sigc.test', '$2y$12$45kSmgpYTvdeiAJViw1yAudqK/C7YKC9irFtlIb2ZCF588Tj9MolO', 1, NOW(), NOW()),
 ('Medico Demo', 'medico@sigc.test', '$2y$12$RQApAkdSiFEeqYpjcmd7vOT769g3aYYkF6OXeXf17/Tx38/dUsoZu', 2, NOW(), NOW()),
 ('Coordinador Demo', 'coordinador@sigc.test', '$2y$12$gTzcv8WIvwriMxO5pUYkVOgc/Iz7zuwKmVjrAz5FfupbCVeXLv1..', 3, NOW(), NOW());
+-- -----------------------------------------------------
+-- Tabla notifications (Laravel)
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `notifications` (
+    `id` char(36) NOT NULL,
+    `type` varchar(255) NOT NULL,
+    `notifiable_type` varchar(255) NOT NULL,
+    `notifiable_id` bigint UNSIGNED NOT NULL,
+    `data` text NOT NULL,
+    `read_at` timestamp NULL DEFAULT NULL,
+    `created_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NULL DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    KEY `notifications_notifiable_type_notifiable_id_index` (`notifiable_type`,`notifiable_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- -----------------------------------------------------
+-- Tabla historial_clinico
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `historial_clinico` (
+    `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+    `consulta_id` bigint UNSIGNED NOT NULL,
+    `paciente_id` bigint UNSIGNED NOT NULL,
+    `medico_id` bigint UNSIGNED NOT NULL,
+    `nota` text DEFAULT NULL,
+    `diagnostico` text DEFAULT NULL,
+    `tratamiento` text DEFAULT NULL,
+    `created_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NULL DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `historial_clinico_consulta_id_unique` (`consulta_id`),
+    KEY `historial_clinico_paciente_id_medico_id_index` (`paciente_id`,`medico_id`),
+    CONSTRAINT `historial_clinico_consulta_id_foreign` FOREIGN KEY (`consulta_id`) REFERENCES `consultas` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `historial_clinico_paciente_id_foreign` FOREIGN KEY (`paciente_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `historial_clinico_medico_id_foreign` FOREIGN KEY (`medico_id`) REFERENCES `medicos` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

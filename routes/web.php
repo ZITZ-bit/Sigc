@@ -1,8 +1,12 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Coordinacion\CitasController;
+use App\Http\Controllers\Coordinacion\HorariosController;
 use App\Http\Controllers\Coordinacion\MedicosController;
+use App\Http\Controllers\Coordinacion\PacientesController;
 use App\Http\Controllers\InvitacionController;
+use App\Http\Controllers\Medico\CitasController as MedicoCitasController;
 use App\Models\Consulta;
 use App\Models\Especialidad;
 use Illuminate\Http\Request;
@@ -27,7 +31,13 @@ Route::middleware(['auth', 'role:paciente'])->group(function () {
     })->name('paciente.dashboard');
 
     Route::get('/paciente/agenda', function () {
-        return view('ui.paciente.agenda');
+        $consultas = \App\Models\Consulta::with(['medico', 'especialidad'])
+            ->where('user_id', auth()->id())
+            ->orderBy('fecha', 'asc')
+            ->orderBy('hora', 'asc')
+            ->get();
+
+        return view('ui.paciente.agenda', compact('consultas'));
     })->name('paciente.agenda');
 
     Route::get('/paciente/doctores', function () {
@@ -73,17 +83,31 @@ Route::middleware(['auth', 'role:paciente'])->group(function () {
             ->with('success', 'Tu solicitud de consulta ha sido registrada correctamente.');
     })->name('paciente.consulta.store');
 
-    Route::get('/paciente/historial', function () {
-        return view('ui.paciente.historial');
-    })->name('paciente.historial');
+    Route::get('/paciente/historial-clinico', function () {
+        $user = auth()->user();
+        $registros = \App\Models\HistorialClinico::with(['consulta', 'medico.user'])
+            ->where('paciente_id', $user->id)
+            ->latest()
+            ->paginate(15);
+        return view('ui.paciente.historial_clinico', compact('registros'));
+    })->name('paciente.historial.clinico');
 
     Route::get('/paciente/perfil', function () {
         return view('ui.paciente.perfil');
     })->name('paciente.perfil');
 
     Route::get('/paciente/notificaciones', function () {
-        return view('ui.paciente.notificaciones');
+        $notifications = auth()->user()->notifications()->latest()->paginate(20);
+        return view('ui.paciente.notificaciones', compact('notifications'));
     })->name('paciente.notificaciones');
+
+    Route::post('/paciente/notificaciones/{id}/leer', function ($id) {
+        $notification = auth()->user()->notifications()->findOrFail($id);
+        if (is_null($notification->read_at)) {
+            $notification->markAsRead();
+        }
+        return back()->with('success', 'Notificación marcada como leída.');
+    })->name('paciente.notificaciones.leer');
 });
 
 // Rutas protegidas del médico
@@ -92,33 +116,37 @@ Route::middleware(['auth', 'role:medico'])->group(function () {
         return view('ui.dashboard-medico');
     })->name('medico.dashboard');
 
-    Route::get('/medico/agenda', function () {
-        return view('ui.medico.agenda');
-    })->name('medico.agenda');
+    Route::get('/medico/agenda', [MedicoCitasController::class, 'index'])->name('medico.agenda');
 
     Route::get('/medico/pacientes', function () {
         return view('ui.medico.pacientes');
     })->name('medico.pacientes');
 
-    Route::get('/medico/consultas', function () {
-        return view('ui.medico.consultas');
-    })->name('medico.consultas');
+    Route::get('/medico/consultas', [MedicoCitasController::class, 'consultas'])->name('medico.consultas');
+    Route::post('/medico/consultas/{consulta}/completar', [MedicoCitasController::class, 'marcarCompletada'])->name('medico.consultas.completar');
 
-    Route::get('/medico/historial', function () {
-        return view('ui.medico.historial');
-    })->name('medico.historial');
+    Route::get('/medico/historial-clinico', [\App\Http\Controllers\Medico\HistorialClinicoController::class, 'index'])->name('medico.historial.clinico.index');
+    Route::get('/medico/consultas/{consulta}/historial-clinico/crear', [\App\Http\Controllers\Medico\HistorialClinicoController::class, 'create'])->name('medico.historial.clinico.create');
+    Route::post('/medico/consultas/{consulta}/historial-clinico', [\App\Http\Controllers\Medico\HistorialClinicoController::class, 'store'])->name('medico.historial.clinico.store');
 
-    Route::get('/medico/horario', function () {
-        return view('ui.medico.horario');
-    })->name('medico.horario');
+    Route::get('/medico/horario', [MedicoCitasController::class, 'horarios'])->name('medico.horario');
 
     Route::get('/medico/perfil', function () {
         return view('ui.medico.perfil');
     })->name('medico.perfil');
 
     Route::get('/medico/notificaciones', function () {
-        return view('ui.medico.notificaciones');
+        $notifications = auth()->user()->notifications()->latest()->paginate(20);
+        return view('ui.medico.notificaciones', compact('notifications'));
     })->name('medico.notificaciones');
+
+    Route::post('/medico/notificaciones/{id}/leer', function ($id) {
+        $notification = auth()->user()->notifications()->findOrFail($id);
+        if (is_null($notification->read_at)) {
+            $notification->markAsRead();
+        }
+        return back()->with('success', 'Notificación marcada como leída.');
+    })->name('medico.notificaciones.leer');
 });
 
 // Rutas protegidas del coordinador
@@ -127,13 +155,14 @@ Route::middleware(['auth', 'role:coordinador'])->group(function () {
         return view('ui.dashboard-coordinacion');
     })->name('coordinacion.dashboard');
 
-    Route::get('/coordinacion/citas', function () {
-        return view('ui.coordinacion.citas');
-    })->name('coordinacion.citas');
+    Route::get('/coordinacion/citas', [CitasController::class, 'index'])->name('coordinacion.citas');
 
-    Route::get('/coordinacion/pacientes', function () {
-        return view('ui.coordinacion.pacientes');
-    })->name('coordinacion.pacientes');
+    Route::post('/coordinacion/citas/{consulta}/asignar-medico', [CitasController::class, 'asignarMedico'])->name('coordinacion.citas.asignar-medico');
+
+    Route::post('/coordinacion/citas/{consulta}/estado', [CitasController::class, 'cambiarEstado'])->name('coordinacion.citas.estado');
+
+    Route::get('/coordinacion/pacientes', [PacientesController::class, 'index'])->name('coordinacion.pacientes');
+    Route::get('/coordinacion/pacientes/{paciente}', [PacientesController::class, 'show'])->name('coordinacion.pacientes.show');
 
     // Gestión de médicos (bajo "Médicos y horarios")
     Route::get('/coordinacion/medicos', [MedicosController::class, 'index'])->name('coordinacion.medicos');
@@ -145,17 +174,28 @@ Route::middleware(['auth', 'role:coordinador'])->group(function () {
     Route::post('/coordinacion/medicos/{medico}/activar', [MedicosController::class, 'activate'])->name('coordinacion.medicos.activate');
     Route::post('/coordinacion/medicos/{medico}/invitacion', [MedicosController::class, 'sendInvitation'])->name('coordinacion.medicos.invite');
 
-    Route::get('/coordinacion/recepcion', function () {
-        return view('ui.coordinacion.recepcion');
-    })->name('coordinacion.recepcion');
+    // Gestión de horarios médicos
+    Route::get('/coordinacion/medicos/{medico}/horarios', [HorariosController::class, 'index'])->name('coordinacion.medicos.horarios');
+    Route::post('/coordinacion/medicos/{medico}/horarios', [HorariosController::class, 'store'])->name('coordinacion.medicos.horarios.store');
+    Route::put('/coordinacion/medicos/{medico}/horarios/{horario}', [HorariosController::class, 'update'])->name('coordinacion.medicos.horarios.update');
+    Route::post('/coordinacion/medicos/{medico}/horarios/{horario}/desactivar', [HorariosController::class, 'destroy'])->name('coordinacion.medicos.horarios.destroy');
 
-    Route::get('/coordinacion/reportes', function () {
-        return view('ui.coordinacion.reportes');
-    })->name('coordinacion.reportes');
+    Route::get('/coordinacion/recepcion', [\App\Http\Controllers\Coordinacion\RecepcionController::class, 'index'])->name('coordinacion.recepcion');
+
+    Route::get('/coordinacion/reportes', [\App\Http\Controllers\Coordinacion\ReportesController::class, 'index'])->name('coordinacion.reportes');
 
     Route::get('/coordinacion/notificaciones', function () {
-        return view('ui.coordinacion.notificaciones');
+        $notifications = auth()->user()->notifications()->latest()->paginate(20);
+        return view('ui.coordinacion.notificaciones', compact('notifications'));
     })->name('coordinacion.notificaciones');
+
+    Route::post('/coordinacion/notificaciones/{id}/leer', function ($id) {
+        $notification = auth()->user()->notifications()->findOrFail($id);
+        if (is_null($notification->read_at)) {
+            $notification->markAsRead();
+        }
+        return back()->with('success', 'Notificación marcada como leída.');
+    })->name('coordinacion.notificaciones.leer');
 
     Route::get('/coordinacion/perfil', function () {
         return view('ui.coordinacion.perfil');

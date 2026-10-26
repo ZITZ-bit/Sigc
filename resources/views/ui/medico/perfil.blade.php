@@ -8,6 +8,9 @@
     <meta name="description" content="Administra tu información profesional y preferencias.">
     <link rel="icon" href="/favicon.ico">
     @vite(['resources/css/medico.css', 'resources/js/app.js'])
+    @php
+        $medico = auth()->user()->medico;
+    @endphp
 </head>
 <body>
 
@@ -21,21 +24,17 @@
                         <h1>Mi perfil</h1>
                         <p>Administra tu información profesional y preferencias de cuenta.</p>
                     </div>
-                    <div class="medico-header-actions">
-                        <button class="medico-btn-primary">Editar perfil</button>
-                    </div>
                 </div>
 
                 <section class="medico-section">
                     <div class="medico-perfil-grid">
                         <aside class="medico-perfil-sidebar-card">
                             <div class="medico-perfil-avatar-wrapper">
-                                <div class="medico-perfil-avatar" aria-hidden="true">&#x1F468;&#x200D;&#x1F3EB;</div>
-                                <p class="medico-perfil-name">Dr. Médico demostrativo</p>
-                                <span class="medico-perfil-specialty">Medicina General</span>
-                                <p class="medico-perfil-email">medico@ejemplo.com</p>
+                                <div class="medico-perfil-avatar" aria-hidden="true">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
+                                <p class="medico-perfil-name">{{ auth()->user()->name }}</p>
+                                <span class="medico-perfil-specialty">{{ $medico?->especialidad?->name ?? 'Sin especialidad asignada' }}</span>
+                                <p class="medico-perfil-email">{{ auth()->user()->email }}</p>
                             </div>
-                            <button class="medico-perfil-edit-btn">Editar información</button>
                         </aside>
 
                         <div class="medico-perfil-content">
@@ -43,45 +42,41 @@
                                 <h3 class="medico-perfil-section-title">Información profesional</h3>
                                 <div class="medico-perfil-field">
                                     <label class="medico-perfil-field-label">Nombre y apellidos</label>
-                                    <p class="medico-perfil-field-value">Dr. Médico demostrativo</p>
+                                    <p class="medico-perfil-field-value">{{ auth()->user()->name }}</p>
                                 </div>
                                 <div class="medico-perfil-field">
                                     <label class="medico-perfil-field-label">Especialidad</label>
-                                    <p class="medico-perfil-field-value">Medicina General</p>
+                                    <p class="medico-perfil-field-value">{{ $medico?->especialidad?->name ?? 'Sin especialidad asignada' }}</p>
                                 </div>
                                 <div class="medico-perfil-field">
                                     <label class="medico-perfil-field-label">Número de colegiado</label>
-                                    <p class="medico-perfil-field-value">COLEG-001234</p>
+                                    <p class="medico-perfil-field-value">{{ $medico?->numero_licencia ?? 'No registrado' }}</p>
                                 </div>
                                 <div class="medico-perfil-field">
                                     <label class="medico-perfil-field-label">Correo electrónico</label>
-                                    <p class="medico-perfil-field-value">medico@ejemplo.com</p>
+                                    <p class="medico-perfil-field-value">{{ auth()->user()->email }}</p>
                                 </div>
                                 <div class="medico-perfil-field">
                                     <label class="medico-perfil-field-label">Teléfono</label>
-                                    <p class="medico-perfil-field-value">+34 600 000 004</p>
+                                    <p class="medico-perfil-field-value">{{ $medico?->telefono ?? 'No registrado' }}</p>
                                 </div>
                             </div>
 
                             <div class="medico-perfil-section">
                                 <h3 class="medico-perfil-section-title">Resumen profesional</h3>
                                 <div class="medico-perfil-field">
-                                    <label class="medico-perfil-field-label">Experiencia</label>
-                                    <p class="medico-perfil-field-value">10 años en práctica clínica</p>
+                                    <label class="medico-perfil-field-label">Estado de cuenta</label>
+                                    <p class="medico-perfil-field-value">{{ $medico?->estado ?? 'Sin estado' }}</p>
                                 </div>
                                 <div class="medico-perfil-field">
-                                    <label class="medico-perfil-field-label">Centros de trabajo</label>
-                                    <p class="medico-perfil-field-value">Clínica {{ config('app.name') }}</p>
-                                </div>
-                                <div class="medico-perfil-field">
-                                    <label class="medico-perfil-field-label">Horario habitual</label>
-                                    <p class="medico-perfil-field-value">Lunes a viernes, 9:00 — 17:00</p>
+                                    <label class="medico-perfil-field-label">Fecha de incorporación</label>
+                                    <p class="medico-perfil-field-value">{{ $medico?->fecha_incorporacion ?? 'No registrada' }}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <p class="medico-disclaimer">Datos de demostración. Esta vista no guarda cambios realmente.</p>
+                    <p class="medico-text-center">Tu información proviene de tu cuenta de usuario y el registro médico asociado.</p>
                 </section>
             </div>
         </div>

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light">
     <title>Mi Horario — {{ config('app.name') }}</title>
-    <meta name="description" content="Gestiona tu disponibilidad horaria semanal.">
+    <meta name="description" content="Gestionar horarios de atención del médico.">
     <link rel="icon" href="/favicon.ico">
     @vite(['resources/css/medico.css', 'resources/js/app.js'])
 </head>
@@ -19,122 +19,113 @@
                 <div class="medico-header">
                     <div class="medico-header-content">
                         <h1>Mi horario</h1>
-                        <p>Organiza tu disponibilidad semanal para consultas.</p>
+                        <p>Consulte y gestione sus horarios de atención.</p>
                     </div>
                 </div>
 
-                <section class="medico-section">
-                    <div class="medico-horario-header">
-                        <div>
-                            <h2 class="medico-section-title">Semana laboral</h2>
-                            <p class="medico-text-muted">Lunes 21 — Domingo 27 de octubre</p>
+                @if (!$medico)
+                    <section class="medico-section">
+                        <div class="medico-empty-state">
+                            <strong>No tiene registro de médico asociado</strong>
+                            <p>Su usuario no cuenta con un perfil médico registrado. Contacte a coordinación para asignarle una especialidad y consultorio.</p>
                         </div>
-                    </div>
-
-                    <div class="medico-horario-grid">
-                        <div class="medico-horario-day-header">Hora</div>
-                        <div class="medico-horario-day-header medico-horario-day-header--today">Lun</div>
-                        <div class="medico-horario-day-header">Mar</div>
-                        <div class="medico-horario-day-header">Mié</div>
-                        <div class="medico-horario-day-header">Jue</div>
-                        <div class="medico-horario-day-header">Vie</div>
-                        <div class="medico-horario-day-header">Sáb</div>
-                        <div class="medico-horario-day-header">Dom</div>
-
-                        <div class="medico-horario-time-slot">08:00</div>
-                        <div class="medico-horario-cell medico-horario-cell--break">Descanso</div>
-                        <div class="medico-horario-cell medico-horario-cell--break">Descanso</div>
-                        <div class="medico-horario-cell medico-horario-cell--break">Descanso</div>
-                        <div class="medico-horario-cell medico-horario-cell--break">Descanso</div>
-                        <div class="medico-horario-cell medico-horario-cell--break">Descanso</div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-
-                        <div class="medico-horario-time-slot">09:00</div>
-                        <div class="medico-horario-cell">
-                            <div class="medico-horario-appointment">A. López</div>
+                    </section>
+                @else
+                    <section class="medico-section">
+                        <div class="medico-agenda-header">
+                            <div class="medico-agenda-filters">
+                                <form method="POST" action="{{ route('coordinacion.medicos.horarios.store', $medico) }}" class="medico-agenda-filters">
+                                    @csrf
+                                    <select name="dia_semana" class="medico-filter-select">
+                                        <option value="0">Domingo</option>
+                                        <option value="1">Lunes</option>
+                                        <option value="2">Martes</option>
+                                        <option value="3">Miércoles</option>
+                                        <option value="4">Jueves</option>
+                                        <option value="5">Viernes</option>
+                                        <option value="6">Sábado</option>
+                                    </select>
+                                    <input type="time" name="hora_inicio" class="medico-filter-select" required>
+                                    <input type="time" name="hora_fin" class="medico-filter-select" required>
+                                    <label class="medico-filter-checkbox">
+                                        <input type="checkbox" name="activo" value="1" checked>
+                                        Activo
+                                    </label>
+                                    <button type="submit" class="medico-filter-btn medico-filter-btn--active">Agregar horario</button>
+                                </form>
+                            </div>
                         </div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
 
-                        <div class="medico-horario-time-slot">10:00</div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
+                        <table class="medico-agenda-table">
+                            <thead>
+                                <tr>
+                                    <th>Día</th>
+                                    <th>Hora inicial</th>
+                                    <th>Hora final</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if ($horarios->isEmpty())
+                                    <tr>
+                                        <td colspan="5">
+                                            <div class="medico-empty-state">
+                                                <strong>No hay horarios registrados</strong>
+                                                <p>Cuando se registren horarios, aparecerán aquí para gestionar su disponibilidad.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @else
+                                    @foreach ($horarios as $horario)
+                                        <tr>
+                                            <td>{{ $diasSemana[$horario->dia_semana] }}</td>
+                                            <td>{{ substr($horario->hora_inicio, 0, 5) }}</td>
+                                            <td>{{ substr($horario->hora_fin, 0, 5) }}</td>
+                                            <td>
+                                                <span class="medico-badge medico-badge--{{ $horario->activo ? 'activo' : 'inactivo' }}">
+                                                    {{ $horario->activo ? 'Activo' : 'Inactivo' }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div class="medico-agenda-actions">
+                                                    <form method="POST" action="{{ route('coordinacion.medicos.horarios.update', [$medico, $horario]) }}" style="display:inline;">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <select name="dia_semana" class="medico-estado-select">
+                                                            <option value="0" {{ $horario->dia_semana == 0 ? 'selected' : '' }}>Domingo</option>
+                                                            <option value="1" {{ $horario->dia_semana == 1 ? 'selected' : '' }}>Lunes</option>
+                                                            <option value="2" {{ $horario->dia_semana == 2 ? 'selected' : '' }}>Martes</option>
+                                                            <option value="3" {{ $horario->dia_semana == 3 ? 'selected' : '' }}>Miércoles</option>
+                                                            <option value="4" {{ $horario->dia_semana == 4 ? 'selected' : '' }}>Jueves</option>
+                                                            <option value="5" {{ $horario->dia_semana == 5 ? 'selected' : '' }}>Viernes</option>
+                                                            <option value="6" {{ $horario->dia_semana == 6 ? 'selected' : '' }}>Sábado</option>
+                                                        </select>
+                                                        <input type="time" name="hora_inicio" value="{{ substr($horario->hora_inicio, 0, 5) }}" class="medico-estado-select" style="width: 80px;">
+                                                        <input type="time" name="hora_fin" value="{{ substr($horario->hora_fin, 0, 5) }}" class="medico-estado-select" style="width: 80px;">
+                                                        <label class="medico-filter-checkbox" style="margin:0;">
+                                                            <input type="checkbox" name="activo" value="1" {{ $horario->activo ? 'checked' : '' }}>
+                                                            Activo
+                                                        </label>
+                                                        <button type="submit" class="medico-agenda-btn medico-agenda-btn--view">Guardar</button>
+                                                    </form>
+                                                    <form method="POST" action="{{ route('coordinacion.medicos.horarios.destroy', [$medico, $horario]) }}" style="display:inline; margin-left:0.5rem;">
+                                                        @csrf
+                                                        @method('POST')
+                                                        <input type="hidden" name="_method" value="DELETE">
+                                                        <button type="submit" class="medico-agenda-btn coordinacion-citas-btn--view" onclick="return confirm('¿Está seguro de que desea desactivar este horario?')">Desactivar</button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
+                            </tbody>
+                        </table>
+                    </section>
+                @endif
 
-                        <div class="medico-horario-time-slot">11:00</div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-
-                        <div class="medico-horario-time-slot">12:00</div>
-                        <div class="medico-horario-cell medico-horario-cell--break">Descanso</div>
-                        <div class="medico-horario-cell medico-horario-cell--break">Descanso</div>
-                        <div class="medico-horario-cell medico-horario-cell--break">Descanso</div>
-                        <div class="medico-horario-cell medico-horario-cell--break">Descanso</div>
-                        <div class="medico-horario-cell medico-horario-cell--break">Descanso</div>
-                        <div class="medico-horario-cell medico-horario-cell--break">Descanso</div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-
-                        <div class="medico-horario-time-slot">13:00</div>
-                        <div class="medico-horario-cell medico-horario-cell--break">Descanso</div>
-                        <div class="medico-horario-cell medico-horario-cell--break">Descanso</div>
-                        <div class="medico-horario-cell medico-horario-cell--break">Descanso</div>
-                        <div class="medico-horario-cell medico-horario-cell--break">Descanso</div>
-                        <div class="medico-horario-cell medico-horario-cell--break">Descanso</div>
-                        <div class="medico-horario-cell medico-horario-cell--break">Descanso</div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-
-                        <div class="medico-horario-time-slot">14:00</div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-
-                        <div class="medico-horario-time-slot">15:00</div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-
-                        <div class="medico-horario-time-slot">16:00</div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-
-                        <div class="medico-horario-time-slot">17:00</div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                        <div class="medico-horario-cell medico-horario-cell--available"></div>
-                    </div>
-                    <p class="medico-disclaimer">Datos de demostración. No representa disponibilidad real.</p>
-                </section>
+                <p class="medico-text-center">Los horarios se gestionan desde la coordinación de la clínica.</p>
             </div>
         </div>
     </div>

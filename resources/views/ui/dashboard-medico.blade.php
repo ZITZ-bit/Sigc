@@ -65,18 +65,13 @@
                             </div>
                             <span class="medico-badge">Sin datos</span>
                         </div>
-                        <a href="{{ route('medico.agenda') }}" class="medico-btn-link">Consultar agenda</a>
                     </article>
                 </section>
 
                 <section class="medico-section" aria-labelledby="medico-actions-title">
                     <p class="medico-eyebrow">Atención clínica</p>
                     <h2 id="medico-actions-title" class="medico-section-title">Acciones rápidas</h2>
-                    <div class="medico-grid medico-actions-grid medico-actions-grid-cols-2 medico-actions-grid-cols-4">
-                        <a href="{{ route('medico.agenda') }}" class="medico-action-btn">
-                            <span class="medico-action-btn-icon" aria-hidden="true">AG</span>
-                            <span>Mi agenda</span>
-                        </a>
+                    <div class="medico-grid medico-actions-grid medico-actions-grid-cols-2 medico-actions-grid-cols-3">
                         <a href="{{ route('medico.pacientes') }}" class="medico-action-btn">
                             <span class="medico-action-btn-icon" aria-hidden="true">PA</span>
                             <span>Pacientes autorizados</span>

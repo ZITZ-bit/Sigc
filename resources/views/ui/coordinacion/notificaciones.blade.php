@@ -24,40 +24,43 @@
                 </div>
 
                 <section class="coordinacion-section">
-                    <div class="coordinacion-notificaciones-filters">
-                        <button class="coordinacion-filter-btn coordinacion-filter-btn--active" aria-pressed="true">Todas</button>
-                        <button class="coordinacion-filter-btn" aria-pressed="false">Citas</button>
-                        <button class="coordinacion-filter-btn" aria-pressed="false">Alertas clínicas</button>
-                    </div>
-
                     <div class="coordinacion-notificaciones-list">
-                        <div class="coordinacion-notificacion-item coordinacion-notificacion-item--unread">
-                            <span class="coordinacion-notificacion-icon" aria-hidden="true">&#x1F4E7;</span>
-                            <div class="coordinacion-notificacion-content">
-                                <p class="coordinacion-notificacion-title">Cita sin confirmar</p>
-                                <p class="coordinacion-notificacion-text">La cita de las 11:30 con Carlos Ruiz está pendiente de confirmación.</p>
-                                <span class="coordinacion-notificacion-time">Hace 15 min</span>
+                        @if (isset($notifications) && $notifications->isNotEmpty())
+                            @foreach ($notifications as $notification)
+                                <div class="coordinacion-notificacion-item" style="border:1px solid #e5e7eb; padding:1rem; margin-bottom:0.75rem; border-radius:8px; background: {{ is_null($notification->read_at) ? '#f0fdf4' : '#ffffff' }};">
+                                    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:1rem;">
+                                        <div>
+                                            <strong>{{ $notification->data['message'] ?? 'Notificación' }}</strong>
+                                            <p style="margin:0.25rem 0 0; color:#6b7280; font-size:0.9rem;">
+                                                {{ $notification->created_at->diffForHumans() }}
+                                                @if (!is_null($notification->read_at))
+                                                    · Leída
+                                                @else
+                                                    · Sin leer
+                                                @endif
+                                            </p>
+                                        </div>
+                                        @if (is_null($notification->read_at))
+                                            <form method="POST" action="{{ route('coordinacion.notificaciones.leer', $notification->id) }}">
+                                                @csrf
+                                                <button type="submit" class="coordinacion-filter-btn">Marcar como leída</button>
+                                            </form>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endforeach
+                            <div style="margin-top:1rem;">
+                                {{ $notifications->links() }}
                             </div>
-                        </div>
-                        <div class="coordinacion-notificacion-item">
-                            <span class="coordinacion-notificacion-icon" aria-hidden="true">&#x1F4E7;</span>
-                            <div class="coordinacion-notificacion-content">
-                                <p class="coordinacion-notificacion-title">Resultado de laboratorio</p>
-                                <p class="coordinacion-notificacion-text">Los exámenes de María Rodríguez están listos para revisar.</p>
-                                <span class="coordinacion-notificacion-time">Hace 2 horas</span>
+                        @else
+                            <div class="coordinacion-empty-state">
+                                <strong>No hay notificaciones recientes</strong>
+                                <p>Los avisos de citas y disponibilidad aparecerán aquí cuando existan registros en el sistema.</p>
                             </div>
-                        </div>
-                        <div class="coordinacion-notificacion-item coordinacion-notificacion-item--unread">
-                            <span class="coordinacion-notificacion-icon" aria-hidden="true">&#x1F4E7;</span>
-                            <div class="coordinacion-notificacion-content">
-                                <p class="coordinacion-notificacion-title">Cambio de horario</p>
-                                <p class="coordinacion-notificacion-text">La cita de las 14:00 se ha movido a las 15:30.</p>
-                                <span class="coordinacion-notificacion-time">Hace 5 horas</span>
-                            </div>
-                        </div>
+                        @endif
                     </div>
 
-                    <p class="coordinacion-disclaimer">Datos de demostración. No son notificaciones reales.</p>
+                    <p class="coordinacion-text-center">Las notificaciones se generan automáticamente según la actividad de la clínica.</p>
                 </section>
             </div>
         </div>

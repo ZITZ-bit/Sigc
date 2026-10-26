@@ -49,4 +49,12 @@ class Medico extends Authenticatable
     {
         return $this->hasOne(Invitacion::class);
     }
+
+    /**
+     * Get the schedules for this medic.
+     */
+    public function horarios()
+    {
+        return $this->hasMany(Horario::class);
+    }
 }
