@@ -32,13 +32,38 @@
                     </div>
 
                     <div class="paciente-agenda-list">
-                        <div class="paciente-empty-state">
-                            <strong>No tienes citas programadas</strong>
-                            <p>Cuando se registren citas, verás aquí la fecha, el profesional y el estado.</p>
-                        </div>
+                        @if ($consultas->isEmpty())
+                            <div class="paciente-empty-state">
+                                <strong>No tienes citas programadas</strong>
+                                <p>Cuando se registren citas, verás aquí la fecha, el profesional y el estado.</p>
+                            </div>
+                        @else
+                            @foreach ($consultas as $consulta)
+                                <div class="paciente-agenda-item">
+                                    <div class="paciente-agenda-date-time">
+                                        <span class="paciente-agenda-date">{{ \Carbon\Carbon::parse($consulta->fecha)->format('d M') }}</span>
+                                        <span class="paciente-agenda-time">{{ $consulta->hora }}</span>
+                                    </div>
+                                    <div class="paciente-agenda-info">
+                                        <span class="paciente-agenda-doctor">{{ $consulta->medico?->user?->name ?? 'Pendiente de asignación' }}</span>
+                                        <span class="paciente-agenda-specialty">{{ $consulta->especialidad?->name ?: 'Sin especialidad' }}</span>
+                                        @if ($consulta->motivo)
+                                            <span class="paciente-agenda-motivo">{{ $consulta->motivo }}</span>
+                                        @endif
+                                    </div>
+                                    <span class="paciente-badge paciente-badge--{{ $consulta->estado }}">{{ ucfirst($consulta->estado) }}</span>
+                                </div>
+                            @endforeach
+                        @endif
                     </div>
 
-                    <p class="paciente-text-center">Las citas se gestionan a través de solicitudes de consulta pendientes de confirmación.</p>
+                    @if ($consultas->isEmpty())
+                        <p class="paciente-text-center">
+                            <a href="{{ route('paciente.consulta') }}" class="paciente-btn-primary">Solicitar consulta</a>
+                        </p>
+                    @else
+                        <p class="paciente-text-center">Tus consultas se muestran ordenadas por fecha y hora.</p>
+                    @endif
                 </section>
             </div>
         </div>

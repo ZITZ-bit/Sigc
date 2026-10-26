@@ -113,3 +113,101 @@
   margin-bottom: 1rem;
   opacity: 0.5;
 }
+
+.medico-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border-radius: var(--medico-radius-sm);
+}
+
+.medico-badge--pendiente {
+  background-color: var(--medico-color-mint);
+  color: var(--medico-color-forest-dark);
+}
+
+.medico-badge--confirmada {
+  background-color: var(--medico-color-forest);
+  color: #ffffff;
+}
+
+.medico-badge--completada {
+  background-color: var(--medico-color-sage);
+  color: #ffffff;
+}
+
+.medico-badge--cancelada {
+  background-color: var(--medico-color-error-soft);
+  color: var(--medico-color-error);
+}
+
+.medico-agenda-btn--completar {
+  background-color: var(--medico-color-success);
+  color: #ffffff;
+}
+
+.medico-agenda-btn--completar:hover {
+  background-color: var(--medico-color-forest-dark);
+}
+
+.medico-badge--activo {
+  background-color: var(--medico-color-success);
+  color: #ffffff;
+}
+
+.medico-badge--inactivo {
+  background-color: var(--medico-color-error-soft);
+  color: var(--medico-color-error);
+}
+
+.medico-estado-select,
+.medico-filter-select {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid var(--medico-color-border);
+  border-radius: var(--medico-radius-sm);
+  background-color: var(--medico-color-surface);
+  color: var(--medico-color-text);
+  cursor: pointer;
+  transition: var(--medico-transition-fast);
+}
+
+.medico-estado-select:focus,
+.medico-filter-select:focus {
+  border-color: var(--medico-color-focus);
+  outline: 3px solid rgb(39 116 81 / 0.18);
+  outline-offset: 1px;
+}
+
+.medico-filter-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.875rem;
+  color: var(--medico-color-text);
+  margin-left: 0.5rem;
+}
+
+.medico-filter-checkbox input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--medico-color-forest);
+}
+
+.coordinacion-filter-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.875rem;
+  color: var(--coordinacion-color-text);
+  margin-left: 0.5rem;
+}
+
+.coordinacion-filter-checkbox input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--coordinacion-color-forest);
+}

@@ -36,88 +36,13 @@
                     </div>
 
                     <div class="medico-historial-timeline">
-                        <div class="medico-historial-item medico-historial-item--completed">
-                            <span class="medico-historial-date">15 Oct 2024</span>
-                            <span class="medico-historial-title">Consulta general</span>
-                            <span class="medico-historial-description">Control de rutina. Paciente estable.</span>
-                        </div>
-                        <div class="medico-historial-item">
-                            <span class="medico-historial-date">02 Sep 2024</span>
-                            <span class="medico-historial-title">Seguimiento cardiológico</span>
-                            <span class="medico-historial-description">Revisión de presión arterial y colesterol.</span>
-                        </div>
-                        <div class="medico-historial-item">
-                            <span class="medico-historial-date">10 Jul 2024</span>
-                            <span class="medico-historial-title">Primera consulta</span>
-                            <span class="medico-historial-description">Valoración inicial e historia clínica completa.</span>
+                        <div class="medico-empty-state">
+                            <strong>No tienes historial clínico registrado</strong>
+                            <p>Cuando atiendas consultas, aparecerán aquí los registros médicos de tus pacientes.</p>
                         </div>
                     </div>
 
-                    <div class="medico-historial-section">
-                        <h3 class="medico-historial-section-title">Antecedentes</h3>
-                        <div class="medico-historial-grid medico-historial-grid-cols-2">
-                            <div class="medico-historial-field">
-                                <span class="medico-historial-field-label">Antecedentes personales</span>
-                                <span class="medico-historial-field-value">Sin antecedentes relevantes</span>
-                            </div>
-                            <div class="medico-historial-field">
-                                <span class="medico-historial-field-label">Antecedentes familiares</span>
-                                <span class="medico-historial-field-value">Hipertensión en padre</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="medico-historial-section">
-                        <h3 class="medico-historial-section-title">Alergias</h3>
-                        <div class="medico-historial-grid medico-historial-grid-cols-2">
-                            <div class="medico-historial-field">
-                                <span class="medico-historial-field-label">Medicamentos</span>
-                                <span class="medico-historial-field-value">Ninguna registrada</span>
-                            </div>
-                            <div class="medico-historial-field">
-                                <span class="medico-historial-field-label">Alimentarias</span>
-                                <span class="medico-historial-field-value">Ninguna registrada</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="medico-historial-section">
-                        <h3 class="medico-historial-section-title">Medicamentos actuales</h3>
-                        <div class="medico-historial-grid medico-historial-grid-cols-2">
-                            <div class="medico-historial-field">
-                                <span class="medico-historial-field-label">Medicamento</span>
-                                <span class="medico-historial-field-value">No consume medicación</span>
-                            </div>
-                            <div class="medico-historial-field">
-                                <span class="medico-historial-field-label">Dosis</span>
-                                <span class="medico-historial-field-value">—</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="medico-historial-section">
-                        <h3 class="medico-historial-section-title">Diagnósticos previos</h3>
-                        <div class="medico-historial-grid medico-historial-grid-cols-2">
-                            <div class="medico-historial-field">
-                                <span class="medico-historial-field-label">Diagnóstico 1</span>
-                                <span class="medico-historial-field-value">Control de rutina</span>
-                            </div>
-                            <div class="medico-historial-field">
-                                <span class="medico-historial-field-label">Fecha</span>
-                                <span class="medico-historial-field-value">15 Oct 2024</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="medico-historial-section">
-                        <h3 class="medico-historial-section-title">Recomendaciones</h3>
-                        <div class="medico-historial-field">
-                            <span class="medico-historial-field-label">Indicaciones</span>
-                            <span class="medico-historial-field-value">Mantener hábitos saludables y control anual</span>
-                        </div>
-                    </div>
-
-                    <p class="medico-disclaimer">Datos de demostración. No son registros médicos reales.</p>
+                    <p class="medico-text-center">El historial clínico se genera automáticamente cuando registras consultas atendidas.</p>
                 </section>
             </div>
         </div>

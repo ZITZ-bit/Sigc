@@ -8,6 +8,9 @@
     <meta name="description" content="Administre su información profesional y preferencias.">
     <link rel="icon" href="/favicon.ico">
     @vite(['resources/css/coordinacion.css', 'resources/js/app.js'])
+    @php
+        $coordinador = auth()->user();
+    @endphp
 </head>
 <body>
 
@@ -21,63 +24,43 @@
                         <h1>Mi perfil</h1>
                         <p>Administre su información profesional y preferencias de cuenta.</p>
                     </div>
-                    <div class="coordinacion-header-actions">
-                        <button class="coordinacion-btn-primary">Editar perfil</button>
-                    </div>
                 </div>
 
                 <section class="coordinacion-section">
                     <div class="coordinacion-perfil-grid">
                         <aside class="coordinacion-perfil-sidebar-card">
                             <div class="coordinacion-perfil-avatar-wrapper">
-                                <div class="coordinacion-perfil-avatar" aria-hidden="true">&#x1F465;</div>
-                                <p class="coordinacion-perfil-name">Coordinador demostrativo</p>
-                                <span class="coordinacion-perfil-role">Coordinación clínica</span>
-                                <p class="coordinacion-perfil-email">coordinador@ejemplo.com</p>
+                                <div class="coordinacion-perfil-avatar" aria-hidden="true">{{ strtoupper(substr($coordinador->name, 0, 1)) }}</div>
+                                <p class="coordinacion-perfil-name">{{ $coordinador->name }}</p>
+                                <span class="coordinacion-perfil-role">{{ $coordinador->role->name ?? 'Sin rol asignado' }}</span>
+                                <p class="coordinacion-perfil-email">{{ $coordinador->email }}</p>
                             </div>
-                            <button class="coordinacion-perfil-edit-btn">Editar información</button>
                         </aside>
 
                         <div class="coordinacion-perfil-content">
                             <div class="coordinacion-perfil-section">
-                                <h3 class="coordinacion-perfil-section-title">Información profesional</h3>
+                                <h3 class="coordinacion-perfil-section-title">Información de cuenta</h3>
                                 <div class="coordinacion-perfil-field">
                                     <label class="coordinacion-perfil-field-label">Nombre y apellidos</label>
-                                    <p class="coordinacion-perfil-field-value">Coordinador demostrativo</p>
-                                </div>
-                                <div class="coordinacion-perfil-field">
-                                    <label class="coordinacion-perfil-field-label">Cargo</label>
-                                    <p class="coordinacion-perfil-field-value">Coordinador clínico</p>
+                                    <p class="coordinacion-perfil-field-value">{{ $coordinador->name }}</p>
                                 </div>
                                 <div class="coordinacion-perfil-field">
                                     <label class="coordinacion-perfil-field-label">Correo electrónico</label>
-                                    <p class="coordinacion-perfil-field-value">coordinador@ejemplo.com</p>
+                                    <p class="coordinacion-perfil-field-value">{{ $coordinador->email }}</p>
                                 </div>
                                 <div class="coordinacion-perfil-field">
-                                    <label class="coordinacion-perfil-field-label">Teléfono</label>
-                                    <p class="coordinacion-perfil-field-value">+34 600 000 005</p>
-                                </div>
-                            </div>
-
-                            <div class="coordinacion-perfil-section">
-                                <h3 class="coordinacion-perfil-section-title">Responsabilidades</h3>
-                                <div class="coordinacion-perfil-field">
-                                    <label class="coordinacion-perfil-field-label">Área principal</label>
-                                    <p class="coordinacion-perfil-field-value">Coordinación de citas y agenda</p>
+                                    <label class="coordinacion-perfil-field-label">Rol</label>
+                                    <p class="coordinacion-perfil-field-value">{{ $coordinador->role->name ?? 'Sin rol asignado' }}</p>
                                 </div>
                                 <div class="coordinacion-perfil-field">
-                                    <label class="coordinacion-perfil-field-label">Horario habitual</label>
-                                    <p class="coordinacion-perfil-field-value">Lunes a viernes, 9:00 — 17:00</p>
-                                </div>
-                                <div class="coordinacion-perfil-field">
-                                    <label class="coordinacion-perfil-field-label">Departamento</label>
-                                    <p class="coordinacion-perfil-field-value">Administración clínica</p>
+                                    <label class="coordinacion-perfil-field-label">Fecha de registro</label>
+                                    <p class="coordinacion-perfil-field-value">{{ $coordinador->created_at?->format('d/m/Y') ?? 'No registrada' }}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <p class="coordinacion-disclaimer">Datos de demostración. Esta vista no guarda cambios realmente.</p>
+                    <p class="coordinacion-text-center">Tu información proviene de tu cuenta de usuario en el sistema.</p>
                 </section>
             </div>
         </div>

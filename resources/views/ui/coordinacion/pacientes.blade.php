@@ -23,44 +23,60 @@
                     </div>
                 </div>
 
+                @if (session('success'))
+                    <div class="coordinacion-feedback coordinacion-feedback-success" role="status">{{ session('success') }}</div>
+                @endif
+                @if ($errors->any())
+                    <div class="coordinacion-feedback coordinacion-feedback-error" role="alert">{{ $errors->first() }}</div>
+                @endif
+
                 <section class="coordinacion-section">
                     <div class="coordinacion-pacientes-header">
-                        <div class="coordinacion-pacientes-search">
-                            <input type="text" class="coordinacion-configuracion-input" placeholder="Buscar por nombre o ID..." aria-label="Buscar pacientes">
-                        </div>
+                        <form method="GET" action="{{ route('coordinacion.pacientes') }}" class="coordinacion-pacientes-search-form">
+                            <input type="search" name="search" class="coordinacion-configuracion-input" placeholder="Buscar por nombre o correo..." aria-label="Buscar pacientes" value="{{ $search }}">
+                            <button type="submit" class="coordinacion-filter-btn coordinacion-filter-btn--active">Buscar</button>
+                            <a href="{{ route('coordinacion.pacientes') }}" class="coordinacion-filter-btn">Limpiar</a>
+                        </form>
                     </div>
 
                     <div class="coordinacion-pacientes-grid">
-                        <article class="coordinacion-paciente-card">
-                            <div class="coordinacion-paciente-avatar" aria-hidden="true">&#x1F464;</div>
-                            <h3 class="coordinacion-paciente-name">Ana López García</h3>
-                            <span class="coordinacion-paciente-id">ID: PAC-001</span>
-                            <p class="coordinacion-paciente-info">Edad: 34 años · Tel: +34 600 000 001</p>
-                            <div class="coordinacion-paciente-actions">
-                                <button class="coordinacion-paciente-btn coordinacion-paciente-btn--view" disabled>Ver expediente</button>
+                        @if ($pacientes->isEmpty())
+                            <div class="coordinacion-empty-state">
+                                @if ($search)
+                                    <strong>No se encontraron pacientes</strong>
+                                    <p>No se encontraron pacientes que coincidan con "{{ $search }}".</p>
+                                @else
+                                    <strong>No hay pacientes registrados</strong>
+                                    <p>Los pacientes aparecerán aquí cuando se registren solicitudes de consulta.</p>
+                                @endif
                             </div>
-                        </article>
-                        <article class="coordinacion-paciente-card">
-                            <div class="coordinacion-paciente-avatar" aria-hidden="true">&#x1F464;</div>
-                            <h3 class="coordinacion-paciente-name">Carlos Ruiz</h3>
-                            <span class="coordinacion-paciente-id">ID: PAC-002</span>
-                            <p class="coordinacion-paciente-info">Edad: 45 años · Tel: +34 600 000 002</p>
-                            <div class="coordinacion-paciente-actions">
-                                <button class="coordinacion-paciente-btn coordinacion-paciente-btn--view" disabled>Ver expediente</button>
-                            </div>
-                        </article>
-                        <article class="coordinacion-paciente-card">
-                            <div class="coordinacion-paciente-avatar" aria-hidden="true">&#x1F464;</div>
-                            <h3 class="coordinacion-paciente-name">María Rodríguez</h3>
-                            <span class="coordinacion-paciente-id">ID: PAC-003</span>
-                            <p class="coordinacion-paciente-info">Edad: 28 años · Tel: +34 600 000 003</p>
-                            <div class="coordinacion-paciente-actions">
-                                <button class="coordinacion-paciente-btn coordinacion-paciente-btn--view" disabled>Ver expediente</button>
-                            </div>
-                        </article>
-                    </div>
+                        @else
+                            <table class="coordinacion-pacientes-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Correo electrónico</th>
+                                        <th>Fecha de registro</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($pacientes as $paciente)
+                                        <tr>
+                                            <td>{{ $paciente->name }}</td>
+                                            <td>{{ $paciente->email }}</td>
+                                            <td>{{ $paciente->created_at->format('d/m/Y') }}</td>
+                                            <td>
+                                                <a href="{{ route('coordinacion.pacientes.show', $paciente) }}" class="coordinacion-paciente-btn coordinacion-paciente-btn--ver">Ver detalle</a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
 
-                    <p class="coordinacion-disclaimer">Datos de demostración. No son pacientes reales.</p>
+                            {{ $pacientes->appends(request()->except('page'))->links() }}
+                        @endif
+                    </div>
                 </section>
             </div>
         </div>

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light">
     <title>Consultas Médicas — {{ config('app.name') }}</title>
-    <meta name="description" content="Interfaz para registrar y gestionar consultas médicas.">
+    <meta name="description" content="Gestione sus consultas médicas asignadas.">
     <link rel="icon" href="/favicon.ico">
     @vite(['resources/css/medico.css', 'resources/js/app.js'])
 </head>
@@ -19,123 +19,83 @@
                 <div class="medico-header">
                     <div class="medico-header-content">
                         <h1>Consultas médicas</h1>
-                        <p>Registra la información de las consultas de tus pacientes.</p>
+                        <p>Registre y gestione las consultas asignadas a su consultorio.</p>
                     </div>
                 </div>
 
-                <section class="medico-section">
-                    <div class="medico-consultas-table">
-                        <thead>
-                            <tr>
-                                <th>Paciente</th>
-                                <th>Fecha</th>
-                                <th>Tipo</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><span class="medico-agenda-patient">Ana López García</span></td>
-                                <td>25 Oct 2024</td>
-                                <td>Presencial</td>
-                                <td><span class="medico-badge medico-badge--completed">Completada</span></td>
-                                <td><button class="medico-agenda-btn medico-agenda-btn--view" disabled>Ver</button></td>
-                            </tr>
-                            <tr>
-                                <td><span class="medico-agenda-patient">Carlos Ruiz</span></td>
-                                <td>24 Oct 2024</td>
-                                <td>Presencial</td>
-                                <td><span class="medico-badge medico-badge--completed">Completada</span></td>
-                                <td><button class="medico-agenda-btn medico-agenda-btn--view" disabled>Ver</button></td>
-                            </tr>
-                            <tr>
-                                <td><span class="medico-agenda-patient">María Rodríguez</span></td>
-                                <td>23 Oct 2024</td>
-                                <td>Telemedicina</td>
-                                <td><span class="medico-badge medico-badge--pending">Pendiente</span></td>
-                                <td><button class="medico-agenda-btn medico-agenda-btn--view" disabled>Ver</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </section>
-
-                <section class="medico-section">
-                    <div class="medico-consulta-detail">
-                        <h2 class="medico-section-title">Registro de consulta (demostración)</h2>
-
-                        <div class="medico-consulta-section">
-                            <h3 class="medico-consulta-section-title">Paciente</h3>
-                            <div class="medico-consulta-field">
-                                <label class="medico-consulta-field-label">Nombre</label>
-                                <p class="medico-consulta-field-value">Ana López García</p>
-                            </div>
-                            <div class="medico-consulta-field">
-                                <label class="medico-consulta-field-label">ID</label>
-                                <p class="medico-consulta-field-value">PAC-001</p>
-                            </div>
+                @if (!$medico)
+                    <section class="medico-section">
+                        <div class="medico-empty-state">
+                            <strong>No tiene registro de médico asociado</strong>
+                            <p>Su usuario no cuenta con un perfil médico registrado. Contacte a coordinación para asignarle una especialidad y consultorio.</p>
                         </div>
+                    </section>
+                @else
+                    <section class="medico-section">
+                        <form method="GET" action="{{ route('medico.consultas') }}" class="medico-agenda-filters">
+                            <select name="estado" class="medico-filter-select">
+                                <option value="">Todos los estados</option>
+                                @foreach ($estados as $estado)
+                                    <option value="{{ $estado }}" {{ $filtro_estado === $estado ? 'selected' : '' }}>{{ ucfirst($estado) }}</option>
+                                @endforeach
+                            </select>
+                            <input type="search" name="search" class="medico-filter-select" placeholder="Buscar paciente..." value="{{ $search }}">
+                            <button type="submit" class="medico-filter-btn medico-filter-btn--active">Filtrar</button>
+                            <a href="{{ route('medico.consultas') }}" class="medico-filter-btn">Limpiar</a>
+                        </form>
 
-                        <div class="medico-consulta-section">
-                            <h3 class="medico-consulta-section-title">Motivo y síntomas</h3>
-                            <div class="medico-consulta-field">
-                                <label class="medico-consulta-field-label">Motivo de consulta</label>
-                                <p class="medico-consulta-field-value">Control general de salud</p>
-                            </div>
-                            <div class="medico-consulta-field">
-                                <label class="medico-consulta-field-label">Síntomas reportados</label>
-                                <p class="medico-consulta-field-value">Cefalea leve, fatiga ocasional</p>
-                            </div>
-                        </div>
+                        <table class="medico-agenda-table">
+                            <thead>
+                                <tr>
+                                    <th>Paciente</th>
+                                    <th>Fecha</th>
+                                    <th>Hora</th>
+                                    <th>Especialidad</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if ($consultas->isEmpty())
+                                    <tr>
+                                        <td colspan="6">
+                                            <div class="medico-empty-state">
+                                                <strong>No tiene consultas asignadas</strong>
+                                                <p>Cuando los pacientes le asignen una consulta, aparecerá aquí con fecha, hora y estado.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @else
+                                    @foreach ($consultas as $consulta)
+                                        <tr>
+                                            <td>{{ $consulta->user->name }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($consulta->fecha)->format('d/m/Y') }}</td>
+                                            <td>{{ $consulta->hora }}</td>
+                                            <td>{{ $consulta->especialidad?->name ?: 'Sin especialidad' }}</td>
+                                            <td>
+                                                <span class="medico-badge medico-badge--{{ $consulta->estado }}">{{ ucfirst($consulta->estado) }}</span>
+                                            </td>
+                                            <td>
+                                                <div class="medico-agenda-actions">
+                                                    @if ($consulta->estado === 'confirmada')
+                                                        <form method="POST" action="{{ route('medico.consultas.completar', $consulta) }}" style="display:inline;">
+                                                            @csrf
+                                                            <button type="submit" class="medico-agenda-btn medico-agenda-btn--completar">Completar</button>
+                                                        </form>
+                                                    @endif
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
+                            </tbody>
+                        </table>
 
-                        <div class="medico-consulta-section">
-                            <h3 class="medico-consulta-section-title">Signos vitales</h3>
-                            <div class="medico-consulta-field">
-                                <label class="medico-consulta-field-label">Presión arterial</label>
-                                <p class="medico-consulta-field-value">120/80 mmHg</p>
-                            </div>
-                            <div class="medico-consulta-field">
-                                <label class="medico-consulta-field-label">Frecuencia cardíaca</label>
-                                <p class="medico-consulta-field-value">72 bpm</p>
-                            </div>
-                            <div class="medico-consulta-field">
-                                <label class="medico-consulta-field-label">Temperatura</label>
-                                <p class="medico-consulta-field-value">36.6 °C</p>
-                            </div>
-                        </div>
+                        {{ $consultas->appends(request()->except('page'))->links() }}
+                    </section>
+                @endif
 
-                        <div class="medico-consulta-section">
-                            <h3 class="medico-consulta-section-title">Evaluación y diagnóstico</h3>
-                            <div class="medico-consulta-field">
-                                <label class="medico-consulta-field-label">Evaluación clínica</label>
-                                <p class="medico-consulta-field-value">Paciente estable, sin hallazgos relevantes</p>
-                            </div>
-                            <div class="medico-consulta-field">
-                                <label class="medico-consulta-field-label">Diagnóstico presuntivo</label>
-                                <p class="medico-consulta-field-value">Control rutinario sin patología</p>
-                            </div>
-                        </div>
-
-                        <div class="medico-consulta-section">
-                            <h3 class="medico-consulta-section-title">Plan e indicaciones</h3>
-                            <div class="medico-consulta-field">
-                                <label class="medico-consulta-field-label">Tratamiento</label>
-                                <p class="medico-consulta-field-value">No requiere tratamiento farmacológico</p>
-                            </div>
-                            <div class="medico-consulta-field">
-                                <label class="medico-consulta-field-label">Recomendaciones</label>
-                                <p class="medico-consulta-field-value">Control en 6 meses, hábitos saludables</p>
-                            </div>
-                        </div>
-
-                        <div class="medico-consulta-actions">
-                            <button class="medico-consulta-btn medico-consulta-btn--draft medico-consulta-btn--disabled" disabled>Guardar borrador</button>
-                            <button class="medico-consulta-btn medico-consulta-btn--finish medico-consulta-btn--disabled" disabled>Finalizar consulta</button>
-                        </div>
-
-                        <p class="medico-disclaimer">Este formulario es una demostración visual. No guarda datos realmente.</p>
-                    </div>
-                </section>
+                <p class="medico-text-center">Las consultas se crean a partir de las solicitudes de los pacientes.</p>
             </div>
         </div>
     </div>

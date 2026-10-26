@@ -122,3 +122,90 @@
   margin-bottom: 1rem;
   opacity: 0.5;
 }
+
+.coordinacion-citas-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.coordinacion-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border-radius: var(--coordinacion-radius-sm);
+}
+
+.coordinacion-badge--pendiente {
+  background-color: var(--coordinacion-color-mint);
+  color: var(--coordinacion-color-forest-dark);
+}
+
+.coordinacion-badge--confirmada {
+  background-color: var(--coordinacion-color-forest);
+  color: #ffffff;
+}
+
+.coordinacion-badge--completada {
+  background-color: var(--coordinacion-color-sage);
+  color: #ffffff;
+}
+
+.coordinacion-badge--cancelada {
+  background-color: var(--coordinacion-color-error-soft);
+  color: var(--coordinacion-color-error);
+}
+
+.coordinacion-estado-select,
+.coordinacion-medico-select,
+.coordinacion-filter-select {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid var(--coordinacion-color-border);
+  border-radius: var(--coordinacion-radius-sm);
+  background-color: var(--coordinacion-color-surface);
+  color: var(--coordinacion-color-text);
+  cursor: pointer;
+  transition: var(--coordinacion-transition-fast);
+}
+
+.coordinacion-estado-select:focus,
+.coordinacion-medico-select:focus,
+.coordinacion-filter-select:focus {
+  border-color: var(--coordinacion-color-focus);
+  outline: 3px solid rgb(39 116 81 / 0.18);
+  outline-offset: 1px;
+}
+
+.coordinacion-citas-btn--asignar {
+  background-color: var(--coordinacion-color-forest);
+  color: #ffffff;
+}
+
+.coordinacion-citas-btn--asignar:hover {
+  background-color: var(--coordinacion-color-forest-dark);
+}
+
+.coordinacion-feedback {
+  margin: 0 0 1rem 0;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--coordinacion-color-border);
+  border-radius: var(--coordinacion-radius);
+  font-size: 0.875rem;
+}
+
+.coordinacion-feedback-success {
+  color: var(--coordinacion-color-success);
+  background-color: var(--coordinacion-color-success-soft);
+  border-color: var(--coordinacion-color-success);
+}
+
+.coordinacion-feedback-error {
+  color: var(--coordinacion-color-error);
+  background-color: var(--coordinacion-color-error-soft);
+  border-color: var(--coordinacion-color-error);
+}

@@ -127,3 +127,30 @@
   margin-bottom: 1rem;
   opacity: 0.5;
 }
+
+.paciente-agenda-motivo {
+  font-size: 0.8125rem;
+  color: var(--paciente-color-text-muted);
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.paciente-badge--pendiente {
+  background-color: var(--paciente-color-mint);
+  color: var(--paciente-color-forest-dark);
+}
+
+.paciente-badge--confirmada {
+  background-color: var(--paciente-color-forest);
+  color: #ffffff;
+}
+
+.paciente-badge--completada {
+  background-color: var(--paciente-color-sage);
+  color: #ffffff;
+}
+
+.paciente-badge--cancelada {
+  background-color: var(--paciente-color-error-soft);
+  color: var(--paciente-color-error);
+}

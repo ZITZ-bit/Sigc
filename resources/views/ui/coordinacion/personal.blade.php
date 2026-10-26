@@ -44,60 +44,16 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td><span class="coordinacion-citas-patient">Ana López García</span></td>
-                                <td>PAC-001</td>
-                                <td>Paciente</td>
-                                <td>Medicina General</td>
-                                <td><span class="coordinacion-badge coordinacion-badge--confirmed">Activo</span></td>
-                                <td>+34 600 000 001</td>
-                                <td>
-                                    <div class="coordinacion-personal-actions">
-                                        <button class="coordinacion-personal-btn coordinacion-personal-btn--view" disabled>Ver</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><span class="coordinacion-citas-patient">Dr. Carlos Méndez</span></td>
-                                <td>MED-001</td>
-                                <td>Médico</td>
-                                <td>Medicina General</td>
-                                <td><span class="coordinacion-badge coordinacion-badge--confirmed">Activo</span></td>
-                                <td>+34 600 000 002</td>
-                                <td>
-                                    <div class="coordinacion-personal-actions">
-                                        <button class="coordinacion-personal-btn coordinacion-personal-btn--view" disabled>Ver</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><span class="coordinacion-citas-patient">Dra. Laura Gómez</span></td>
-                                <td>MED-002</td>
-                                <td>Médico</td>
-                                <td>Cardiología</td>
-                                <td><span class="coordinacion-badge coordinacion-badge--confirmed">Activo</span></td>
-                                <td>+34 600 000 003</td>
-                                <td>
-                                    <div class="coordinacion-personal-actions">
-                                        <button class="coordinacion-personal-btn coordinacion-personal-btn--view" disabled>Ver</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><span class="coordinacion-citas-patient">Coordinador demostrativo</span></td>
-                                <td>COO-001</td>
-                                <td>Coordinador</td>
-                                <td>Administración</td>
-                                <td><span class="coordinacion-badge coordinacion-badge--confirmed">Activo</span></td>
-                                <td>+34 600 000 004</td>
-                                <td>
-                                    <div class="coordinacion-personal-actions">
-                                        <button class="coordinacion-personal-btn coordinacion-personal-btn--view" disabled>Ver</button>
+                                <td colspan="8">
+                                    <div class="coordinacion-empty-state">
+                                        <strong>No hay personal registrado</strong>
+                                        <p>Los usuarios del sistema aparecerán aquí cuando se creen cuentas de personal.</p>
                                     </div>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                    <p class="coordinacion-disclaimer">Datos de demostración. No son usuarios reales.</p>
+                    <p class="coordinacion-text-center">El personal se gestiona a través del módulo de Médicos y horarios para el personal clínico, y del registro de usuarios para el personal administrativo.</p>
                 </section>
             </div>
         </div>

@@ -24,40 +24,43 @@
                 </div>
 
                 <section class="medico-section">
-                    <div class="medico-notificaciones-filters">
-                        <button class="medico-filter-btn medico-filter-btn--active" aria-pressed="true">Todas</button>
-                        <button class="medico-filter-btn" aria-pressed="false">Citas</button>
-                        <button class="medico-filter-btn" aria-pressed="false">Alertas clínicas</button>
-                    </div>
-
                     <div class="medico-notificaciones-list">
-                        <div class="medico-notificacion-item medico-notificacion-item--unread">
-                            <span class="medico-notificacion-icon" aria-hidden="true">&#x1F4E7;</span>
-                            <div class="medico-notificacion-content">
-                                <p class="medico-notificacion-title">Nueva cita solicitada</p>
-                                <p class="medico-notificacion-text">Juan Pérez ha solicitado una consulta para mañana a las 10:00.</p>
-                                <span class="medico-notificacion-time">Hace 30 min</span>
+                        @if (isset($notifications) && $notifications->isNotEmpty())
+                            @foreach ($notifications as $notification)
+                                <div class="medico-notificacion-item" style="border:1px solid #e5e7eb; padding:1rem; margin-bottom:0.75rem; border-radius:8px; background: {{ is_null($notification->read_at) ? '#f0fdf4' : '#ffffff' }};">
+                                    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:1rem;">
+                                        <div>
+                                            <strong>{{ $notification->data['message'] ?? 'Notificación' }}</strong>
+                                            <p style="margin:0.25rem 0 0; color:#6b7280; font-size:0.9rem;">
+                                                {{ $notification->created_at->diffForHumans() }}
+                                                @if (!is_null($notification->read_at))
+                                                    · Leída
+                                                @else
+                                                    · Sin leer
+                                                @endif
+                                            </p>
+                                        </div>
+                                        @if (is_null($notification->read_at))
+                                            <form method="POST" action="{{ route('medico.notificaciones.leer', $notification->id) }}">
+                                                @csrf
+                                                <button type="submit" class="medico-filter-btn">Marcar como leída</button>
+                                            </form>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endforeach
+                            <div style="margin-top:1rem;">
+                                {{ $notifications->links() }}
                             </div>
-                        </div>
-                        <div class="medico-notificacion-item">
-                            <span class="medico-notificacion-icon" aria-hidden="true">&#x1F4E7;</span>
-                            <div class="medico-notificacion-content">
-                                <p class="medico-notificacion-title">Resultado de laboratorio</p>
-                                <p class="medico-notificacion-text">Los exámenes de María Rodríguez están listos para revisar.</p>
-                                <span class="medico-notificacion-time">Hace 2 horas</span>
+                        @else
+                            <div class="medico-empty-state">
+                                <strong>No tienes notificaciones recientes</strong>
+                                <p>Los avisos de agenda y atención aparecerán aquí cuando estén disponibles.</p>
                             </div>
-                        </div>
-                        <div class="medico-notificacion-item medico-notificacion-item--unread">
-                            <span class="medico-notificacion-icon" aria-hidden="true">&#x1F4E7;</span>
-                            <div class="medico-notificacion-content">
-                                <p class="medico-notificacion-title">Cambio de horario</p>
-                                <p class="medico-notificacion-text">La cita de las 14:00 se ha movido a las 15:30.</p>
-                                <span class="medico-notificacion-time">Hace 5 horas</span>
-                            </div>
-                        </div>
+                        @endif
                     </div>
 
-                    <p class="medico-disclaimer">Datos de demostración. No son notificaciones reales.</p>
+                    <p class="medico-text-center">Las notificaciones se generan automáticamente según la actividad de tu consultorio.</p>
                 </section>
             </div>
         </div>

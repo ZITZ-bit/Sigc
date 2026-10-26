@@ -26,66 +26,49 @@
                 <section class="coordinacion-section">
                     <div class="coordinacion-recepcion-header">
                         <div class="coordinacion-recepcion-filters">
-                            <button class="coordinacion-filter-btn coordinacion-filter-btn--active" aria-pressed="true">Hoy</button>
-                            <button class="coordinacion-filter-btn" aria-pressed="false">Esta semana</button>
+                            <a href="{{ route('coordinacion.recepcion', ['filtro' => 'hoy']) }}" class="coordinacion-filter-btn {{ ($filtro ?? 'hoy') === 'hoy' ? 'coordinacion-filter-btn--active' : '' }}" aria-pressed="{{ ($filtro ?? 'hoy') === 'hoy' ? 'true' : 'false' }}">Hoy</a>
+                            <a href="{{ route('coordinacion.recepcion', ['filtro' => 'semana']) }}" class="coordinacion-filter-btn {{ ($filtro ?? '') === 'semana' ? 'coordinacion-filter-btn--active' : '' }}" aria-pressed="{{ ($filtro ?? '') === 'semana' ? 'true' : 'false' }}">Esta semana</a>
                         </div>
                     </div>
 
                     <table class="coordinacion-recepcion-table">
                         <thead>
                             <tr>
+                                <th>Fecha</th>
                                 <th>Hora</th>
                                 <th>Paciente</th>
-                                <th>Médico</th>
-                                <th>Hora prevista</th>
-                                <th>Tiempo de espera</th>
+                                <th>Especialidad</th>
+                                <th>Médico asignado</th>
                                 <th>Estado</th>
-                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td><span class="coordinacion-recepcion-time">09:00</span></td>
-                                <td><span class="coordinacion-recepcion-patient">Ana López García</span></td>
-                                <td>Dr. Carlos Méndez</td>
-                                <td>09:00</td>
-                                <td>0 min</td>
-                                <td><span class="coordinacion-badge coordinacion-badge--completed">Atendido</span></td>
-                                <td>
-                                    <div class="coordinacion-recepcion-actions">
-                                        <button class="coordinacion-recepcion-btn coordinacion-recepcion-btn--arrived" disabled>Marcar llegado</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><span class="coordinacion-recepcion-time">10:30</span></td>
-                                <td><span class="coordinacion-recepcion-patient">Carlos Ruiz</span></td>
-                                <td>Dra. Laura Gómez</td>
-                                <td>10:30</td>
-                                <td>5 min</td>
-                                <td><span class="coordinacion-badge coordinacion-badge--pending">En espera</span></td>
-                                <td>
-                                    <div class="coordinacion-recepcion-actions">
-                                        <button class="coordinacion-recepcion-btn coordinacion-recepcion-btn--arrived" disabled>Marcar llegado</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><span class="coordinacion-recepcion-time">11:15</span></td>
-                                <td><span class="coordinacion-recepcion-patient">María Rodríguez</span></td>
-                                <td>Dr. Roberto Silva</td>
-                                <td>11:15</td>
-                                <td>10 min</td>
-                                <td><span class="coordinacion-badge coordinacion-badge--pending">Llegó</span></td>
-                                <td>
-                                    <div class="coordinacion-recepcion-actions">
-                                        <button class="coordinacion-recepcion-btn coordinacion-recepcion-btn--arrived" disabled>Marcar en atención</button>
-                                    </div>
-                                </td>
-                            </tr>
+                            @if (isset($consultas) && $consultas->isNotEmpty())
+                                @foreach ($consultas as $consulta)
+                                    <tr>
+                                        <td>{{ \Carbon\Carbon::parse($consulta->fecha)->format('d/m/Y') }}</td>
+                                        <td>{{ $consulta->hora }}</td>
+                                        <td>{{ $consulta->user->name ?? 'N/A' }}</td>
+                                        <td>{{ $consulta->especialidad?->name ?: 'Sin especialidad' }}</td>
+                                        <td>{{ $consulta->medico?->user?->name ?? 'Pendiente de asignación' }}</td>
+                                        <td>
+                                            <span class="coordinacion-badge coordinacion-badge--{{ $consulta->estado }}">{{ ucfirst($consulta->estado) }}</span>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="6">
+                                        <div class="coordinacion-empty-state">
+                                            <strong>No hay pacientes en recepción</strong>
+                                            <p>Cuando haya citas programadas para el periodo seleccionado, aparecerán aquí.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endif
                         </tbody>
                     </table>
-                    <p class="coordinacion-disclaimer">Datos de demostración. No son registros reales.</p>
+                    <p class="coordinacion-text-center">La recepción se actualiza a partir de las consultas registradas en el sistema.</p>
                 </section>
             </div>
         </div>
