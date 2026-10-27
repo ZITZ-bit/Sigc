@@ -51,10 +51,9 @@
                                 <label class="paciente-consulta-label" for="especialidad">Selecciona una especialidad</label>
                                 <select class="paciente-consulta-select" id="especialidad" name="especialidad" required>
                                     <option value="">Seleccionar...</option>
-                                    <option value="medicina-general">Medicina General</option>
-                                    <option value="cardiologia">Cardiología</option>
-                                    <option value="pediatria">Pediatría</option>
-                                    <option value="medicina-interna">Medicina Interna</option>
+                                    @foreach ($especialidades as $especialidad)
+                                        <option value="{{ $especialidad->slug }}" {{ old('especialidad') === $especialidad->slug ? 'selected' : '' }}>{{ $especialidad->name }}</option>
+                                    @endforeach
                                 </select>
                                 @error('especialidad')
                                     <p class="paciente-consulta-help text-error">{{ $message }}</p>
@@ -66,11 +65,7 @@
                         <div class="paciente-consulta-section">
                             <h3 class="paciente-consulta-section-title">2. Profesional</h3>
                             <div class="paciente-consulta-field">
-                                <label class="paciente-consulta-label" for="doctor">Selecciona un doctor</label>
-                                <select class="paciente-consulta-select" id="doctor" name="doctor" disabled>
-                                    <option value="">Selecciona primero una especialidad</option>
-                                </select>
-                                <p class="paciente-consulta-help">Los doctores disponibles se mostrarán según la especialidad elegida.</p>
+                                <p class="paciente-consulta-help">La coordinación clínica asignará un profesional disponible según la especialidad y el horario seleccionados.</p>
                             </div>
                         </div>
 
@@ -78,7 +73,7 @@
                             <h3 class="paciente-consulta-section-title">3. Fecha y hora</h3>
                             <div class="paciente-consulta-field">
                                 <label class="paciente-consulta-label" for="fecha">Fecha de la cita</label>
-                                <input type="date" class="paciente-consulta-input" id="fecha" name="fecha" required>
+                                <input type="date" class="paciente-consulta-input" id="fecha" name="fecha" value="{{ old('fecha') }}" min="{{ now()->toDateString() }}" required>
                                 <p class="paciente-consulta-help">Selecciona una fecha disponible.</p>
                                 @error('fecha')
                                     <p class="paciente-consulta-help text-error">{{ $message }}</p>
@@ -88,13 +83,9 @@
                                 <label class="paciente-consulta-label" for="hora">Hora de la cita</label>
                                 <select class="paciente-consulta-select" id="hora" name="hora" required>
                                     <option value="">Seleccionar hora...</option>
-                                    <option value="09:00">09:00</option>
-                                    <option value="10:00">10:00</option>
-                                    <option value="11:00">11:00</option>
-                                    <option value="12:00">12:00</option>
-                                    <option value="14:00">14:00</option>
-                                    <option value="15:00">15:00</option>
-                                    <option value="16:00">16:00</option>
+                                    @foreach (['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00'] as $hora)
+                                        <option value="{{ $hora }}" {{ old('hora') === $hora ? 'selected' : '' }}>{{ $hora }}</option>
+                                    @endforeach
                                 </select>
                                 @error('hora')
                                     <p class="paciente-consulta-help text-error">{{ $message }}</p>
@@ -107,7 +98,7 @@
                             <h3 class="paciente-consulta-section-title">4. Motivo de la consulta</h3>
                             <div class="paciente-consulta-field">
                                 <label class="paciente-consulta-label" for="motivo">Motivo general (opcional)</label>
-                                <textarea class="paciente-consulta-textarea" id="motivo" name="motivo" rows="3" placeholder="Describe brevemente el motivo de tu visita..."></textarea>
+                                <textarea class="paciente-consulta-textarea" id="motivo" name="motivo" rows="3" placeholder="Describe brevemente el motivo de tu visita...">{{ old('motivo') }}</textarea>
                                 <p class="paciente-consulta-help">Este campo es opcional y ayuda al doctor a prepararse.</p>
                             </div>
                         </div>
@@ -116,23 +107,25 @@
                             <h3 class="paciente-consulta-summary-title">Resumen de tu solicitud</h3>
                             <div class="paciente-consulta-summary-item">
                                 <span class="paciente-consulta-summary-label">Especialidad:</span>
-                                <span class="paciente-consulta-summary-value">—</span>
+                                <span class="paciente-consulta-summary-value" id="summary-especialidad">—</span>
                             </div>
                             <div class="paciente-consulta-summary-item">
                                 <span class="paciente-consulta-summary-label">Doctor:</span>
-                                <span class="paciente-consulta-summary-value">—</span>
+                                <span class="paciente-consulta-summary-value">Asignado por coordinación</span>
                             </div>
                             <div class="paciente-consulta-summary-item">
                                 <span class="paciente-consulta-summary-label">Fecha:</span>
-                                <span class="paciente-consulta-summary-value">—</span>
+                                <span class="paciente-consulta-summary-value" id="summary-fecha">—</span>
                             </div>
                             <div class="paciente-consulta-summary-item">
                                 <span class="paciente-consulta-summary-label">Hora:</span>
-                                <span class="paciente-consulta-summary-value">—</span>
+                                <span class="paciente-consulta-summary-value" id="summary-hora">—</span>
                             </div>
                         </div>
 
                         <p class="paciente-consulta-help">Tu solicitud será procesada y asignada a un profesional disponible.</p>
+
+                        <button type="submit" class="paciente-btn-primary">Solicitar consulta</button>
                     </form>
                 </section>
             </div>
@@ -168,18 +161,30 @@
             }
 
             var especialidadSelect = document.getElementById('especialidad');
-            var doctorSelect = document.getElementById('doctor');
+            var fechaInput = document.getElementById('fecha');
+            var horaSelect = document.getElementById('hora');
+            var summaryEspecialidad = document.getElementById('summary-especialidad');
+            var summaryFecha = document.getElementById('summary-fecha');
+            var summaryHora = document.getElementById('summary-hora');
 
-            if (especialidadSelect && doctorSelect) {
-                especialidadSelect.addEventListener('change', function () {
-                    doctorSelect.disabled = this.value === '';
-                    if (this.value === '') {
-                        doctorSelect.innerHTML = '<option value="">Selecciona primero una especialidad</option>';
-                    } else {
-                        doctorSelect.innerHTML = '<option value="">Seleccionar doctor...</option>';
-                    }
-                });
+            function actualizarResumen() {
+                if (summaryEspecialidad) {
+                    summaryEspecialidad.textContent = especialidadSelect && especialidadSelect.value
+                        ? especialidadSelect.options[especialidadSelect.selectedIndex].text
+                        : '—';
+                }
+                if (summaryFecha) {
+                    summaryFecha.textContent = fechaInput && fechaInput.value ? fechaInput.value : '—';
+                }
+                if (summaryHora) {
+                    summaryHora.textContent = horaSelect && horaSelect.value ? horaSelect.value : '—';
+                }
             }
+
+            if (especialidadSelect) especialidadSelect.addEventListener('change', actualizarResumen);
+            if (fechaInput) fechaInput.addEventListener('change', actualizarResumen);
+            if (horaSelect) horaSelect.addEventListener('change', actualizarResumen);
+            actualizarResumen();
         });
     </script>
 </body>

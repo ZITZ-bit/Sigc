@@ -28,7 +28,7 @@ class CitasController extends Controller
             ]);
         }
 
-        $query = Consulta::with(['user', 'especialidad'])
+        $query = Consulta::with(['user', 'especialidad', 'historialClinico'])
             ->where('medico_id', $medico->id)
             ->orderBy('fecha', 'asc')
             ->orderBy('hora', 'asc');
@@ -76,7 +76,7 @@ class CitasController extends Controller
             ]);
         }
 
-        $query = Consulta::with(['user', 'especialidad'])
+        $query = Consulta::with(['user', 'especialidad', 'historialClinico'])
             ->where('medico_id', $medico->id)
             ->orderBy('fecha', 'desc')
             ->orderBy('hora', 'desc');

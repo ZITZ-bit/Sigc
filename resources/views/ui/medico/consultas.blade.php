@@ -82,6 +82,8 @@
                                                             @csrf
                                                             <button type="submit" class="medico-agenda-btn medico-agenda-btn--completar">Completar</button>
                                                         </form>
+                                                    @elseif ($consulta->estado === 'completada' && ! $consulta->historialClinico)
+                                                        <a href="{{ route('medico.historial.clinico.create', $consulta) }}" class="medico-agenda-btn medico-agenda-btn--completar">Registrar nota</a>
                                                     @endif
                                                 </div>
                                             </td>

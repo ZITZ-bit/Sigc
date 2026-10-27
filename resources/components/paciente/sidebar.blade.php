@@ -33,7 +33,7 @@
             </a>
         </li>
         <li>
-            <a href="{{ route('paciente.historial') }}" class="paciente-nav-link{{ request()->routeIs('paciente.historial') ? ' paciente-nav-link--active' : '' }}" aria-label="Historial médico">
+            <a href="{{ route('paciente.historial.clinico') }}" class="paciente-nav-link{{ request()->routeIs('paciente.historial.clinico') ? ' paciente-nav-link--active' : '' }}" aria-label="Historial médico">
                 <span class="paciente-nav-icon" aria-hidden="true"><i data-lucide="file-heart"></i></span>
                 <span class="paciente-nav-label">Historial médico</span>
             </a>
@@ -81,7 +81,7 @@
         <li><a href="{{ route('paciente.agenda') }}" class="paciente-mobile-link{{ request()->routeIs('paciente.agenda') ? ' paciente-mobile-link--active' : '' }}">Mi agenda</a></li>
         <li><a href="{{ route('paciente.doctores') }}" class="paciente-mobile-link{{ request()->routeIs('paciente.doctores') ? ' paciente-mobile-link--active' : '' }}">Buscar doctores</a></li>
         <li><a href="{{ route('paciente.consulta') }}" class="paciente-mobile-link{{ request()->routeIs('paciente.consulta') ? ' paciente-mobile-link--active' : '' }}">Solicitar consulta</a></li>
-        <li><a href="{{ route('paciente.historial') }}" class="paciente-mobile-link{{ request()->routeIs('paciente.historial') ? ' paciente-mobile-link--active' : '' }}">Historial médico</a></li>
+        <li><a href="{{ route('paciente.historial.clinico') }}" class="paciente-mobile-link{{ request()->routeIs('paciente.historial.clinico') ? ' paciente-mobile-link--active' : '' }}">Historial médico</a></li>
         <li><a href="{{ route('paciente.notificaciones') }}" class="paciente-mobile-link{{ request()->routeIs('paciente.notificaciones') ? ' paciente-mobile-link--active' : '' }}">Notificaciones</a></li>
         <li><a href="{{ route('paciente.perfil') }}" class="paciente-mobile-link{{ request()->routeIs('paciente.perfil') ? ' paciente-mobile-link--active' : '' }}">Mi perfil</a></li>
     </ul>

@@ -33,7 +33,7 @@
             </a>
         </li>
         <li>
-            <a href="{{ route('medico.historial') }}" class="medico-nav-link{{ request()->routeIs('medico.historial') ? ' medico-nav-link--active' : '' }}" aria-label="Historial clínico">
+            <a href="{{ route('medico.historial.clinico.index') }}" class="medico-nav-link{{ request()->routeIs('medico.historial.clinico.*') ? ' medico-nav-link--active' : '' }}" aria-label="Historial clínico">
                 <span class="medico-nav-icon" aria-hidden="true"><i data-lucide="file-heart"></i></span>
                 <span class="medico-nav-label">Historial clínico</span>
             </a>
@@ -87,7 +87,7 @@
         <li><a href="{{ route('medico.agenda') }}" class="medico-mobile-link{{ request()->routeIs('medico.agenda') ? ' medico-mobile-link--active' : '' }}">Mi agenda</a></li>
         <li><a href="{{ route('medico.pacientes') }}" class="medico-mobile-link{{ request()->routeIs('medico.pacientes') ? ' medico-mobile-link--active' : '' }}">Mis pacientes</a></li>
         <li><a href="{{ route('medico.consultas') }}" class="medico-mobile-link{{ request()->routeIs('medico.consultas') ? ' medico-mobile-link--active' : '' }}">Consultas médicas</a></li>
-        <li><a href="{{ route('medico.historial') }}" class="medico-mobile-link{{ request()->routeIs('medico.historial') ? ' medico-mobile-link--active' : '' }}">Historial clínico</a></li>
+        <li><a href="{{ route('medico.historial.clinico.index') }}" class="medico-mobile-link{{ request()->routeIs('medico.historial.clinico.*') ? ' medico-mobile-link--active' : '' }}">Historial clínico</a></li>
         <li><a href="{{ route('medico.horario') }}" class="medico-mobile-link{{ request()->routeIs('medico.horario') ? ' medico-mobile-link--active' : '' }}">Mi horario</a></li>
         <li><a href="{{ route('medico.notificaciones') }}" class="medico-mobile-link{{ request()->routeIs('medico.notificaciones') ? ' medico-mobile-link--active' : '' }}">Notificaciones</a></li>
         <li><a href="{{ route('medico.perfil') }}" class="medico-mobile-link{{ request()->routeIs('medico.perfil') ? ' medico-mobile-link--active' : '' }}">Mi perfil</a></li>

@@ -30,17 +30,17 @@
                         <article class="paciente-stat-card">
                             <span class="paciente-stat-icon paciente-stat-icon--forest" aria-hidden="true">AG</span>
                             <span class="paciente-stat-label">Próxima cita</span>
-                            <span class="paciente-stat-value">Sin datos</span>
+                            <span class="paciente-stat-value">{{ $proxima ? \Carbon\Carbon::parse($proxima->fecha)->format('d/m') . ' · ' . substr($proxima->hora, 0, 5) : 'Sin citas' }}</span>
                         </article>
                         <article class="paciente-stat-card">
                             <span class="paciente-stat-icon paciente-stat-icon--sage" aria-hidden="true">PE</span>
                             <span class="paciente-stat-label">Pendientes</span>
-                            <span class="paciente-stat-value">Sin datos</span>
+                            <span class="paciente-stat-value">{{ $pendientes }}</span>
                         </article>
                         <article class="paciente-stat-card">
                             <span class="paciente-stat-icon paciente-stat-icon--mint" aria-hidden="true">CO</span>
                             <span class="paciente-stat-label">Confirmadas</span>
-                            <span class="paciente-stat-value">Sin datos</span>
+                            <span class="paciente-stat-value">{{ $confirmadas }}</span>
                         </article>
                     </div>
                 </section>
@@ -50,12 +50,21 @@
                     <h2 id="paciente-next-title" class="paciente-section-title">Tu próxima cita</h2>
                     <article class="paciente-appointment-card">
                         <div class="paciente-appointment-header">
-                            <div>
-                                <span class="paciente-appointment-date">Próxima cita</span>
-                                <span class="paciente-appointment-doctor">Aún no hay una cita registrada</span>
-                                <span class="paciente-appointment-specialty">Los detalles aparecerán aquí cuando haya una cita disponible.</span>
-                            </div>
-                            <span class="paciente-appointment-badge paciente-badge">Sin datos</span>
+                            @if ($proxima)
+                                <div>
+                                    <span class="paciente-appointment-date">{{ \Carbon\Carbon::parse($proxima->fecha)->translatedFormat('l d \d\e F') }} · {{ substr($proxima->hora, 0, 5) }}</span>
+                                    <span class="paciente-appointment-doctor">{{ $proxima->medico?->user?->name ?? 'Pendiente de asignación' }}</span>
+                                    <span class="paciente-appointment-specialty">{{ $proxima->especialidad?->name ?? 'Sin especialidad' }}@if ($proxima->motivo) · {{ $proxima->motivo }}@endif</span>
+                                </div>
+                                <span class="paciente-appointment-badge paciente-badge paciente-badge--{{ $proxima->estado }}">{{ ucfirst($proxima->estado) }}</span>
+                            @else
+                                <div>
+                                    <span class="paciente-appointment-date">Próxima cita</span>
+                                    <span class="paciente-appointment-doctor">Aún no hay una cita registrada</span>
+                                    <span class="paciente-appointment-specialty">Los detalles aparecerán aquí cuando haya una cita disponible.</span>
+                                </div>
+                                <span class="paciente-appointment-badge paciente-badge">Sin datos</span>
+                            @endif
                         </div>
                     </article>
                 </section>
@@ -72,7 +81,7 @@
                             <span class="paciente-action-btn-icon" aria-hidden="true">AG</span>
                             <span>Ver agenda</span>
                         </a>
-                        <a href="{{ route('paciente.historial') }}" class="paciente-action-btn">
+                        <a href="{{ route('paciente.historial.clinico') }}" class="paciente-action-btn">
                             <span class="paciente-action-btn-icon" aria-hidden="true">HI</span>
                             <span>Historial médico</span>
                         </a>
@@ -87,10 +96,24 @@
                         </div>
                     </div>
                     <div class="paciente-cita-list">
-                        <div class="paciente-empty-state">
-                            <strong>No hay próximas citas para mostrar</strong>
-                            <p>Cuando se registren citas, verás aquí la fecha, el profesional y el estado.</p>
-                        </div>
+                        @forelse ($proximas as $consulta)
+                            <div class="paciente-agenda-item">
+                                <div class="paciente-agenda-date-time">
+                                    <span class="paciente-agenda-date">{{ \Carbon\Carbon::parse($consulta->fecha)->format('d M') }}</span>
+                                    <span class="paciente-agenda-time">{{ substr($consulta->hora, 0, 5) }}</span>
+                                </div>
+                                <div class="paciente-agenda-info">
+                                    <span class="paciente-agenda-doctor">{{ $consulta->medico?->user?->name ?? 'Pendiente de asignación' }}</span>
+                                    <span class="paciente-agenda-specialty">{{ $consulta->especialidad?->name ?? 'Sin especialidad' }}</span>
+                                </div>
+                                <span class="paciente-badge paciente-badge--{{ $consulta->estado }}">{{ ucfirst($consulta->estado) }}</span>
+                            </div>
+                        @empty
+                            <div class="paciente-empty-state">
+                                <strong>No hay próximas citas para mostrar</strong>
+                                <p>Cuando se registren citas, verás aquí la fecha, el profesional y el estado.</p>
+                            </div>
+                        @endforelse
                     </div>
                 </section>
 
@@ -103,10 +126,19 @@
                         <a href="{{ route('paciente.notificaciones') }}" class="paciente-btn-link">Ver todas</a>
                     </div>
                     <div class="paciente-notifications-list">
-                        <div class="paciente-empty-state">
-                            <strong>No tienes notificaciones recientes</strong>
-                            <p>Los recordatorios y avisos sobre tu atención aparecerán aquí.</p>
-                        </div>
+                        @forelse ($notificaciones as $notification)
+                            <div class="paciente-notificacion-item" style="border:1px solid #e5e7eb; padding:1rem; margin-bottom:0.75rem; border-radius:8px; background: {{ is_null($notification->read_at) ? '#f0fdf4' : '#ffffff' }};">
+                                <strong>{{ $notification->data['message'] ?? 'Notificación' }}</strong>
+                                <p style="margin:0.25rem 0 0; color:#6b7280; font-size:0.9rem;">
+                                    {{ $notification->created_at->diffForHumans() }} · {{ is_null($notification->read_at) ? 'Sin leer' : 'Leída' }}
+                                </p>
+                            </div>
+                        @empty
+                            <div class="paciente-empty-state">
+                                <strong>No tienes notificaciones recientes</strong>
+                                <p>Los recordatorios y avisos sobre tu atención aparecerán aquí.</p>
+                            </div>
+                        @endforelse
                     </div>
                 </section>
             </div>

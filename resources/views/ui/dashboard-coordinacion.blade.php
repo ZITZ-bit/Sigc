@@ -33,32 +33,32 @@
                         <article class="coordinacion-stat-card">
                             <span class="coordinacion-stat-icon coordinacion-stat-icon--forest" aria-hidden="true">AG</span>
                             <span class="coordinacion-stat-label">Citas hoy</span>
-                            <span class="coordinacion-stat-value">Sin datos</span>
+                            <span class="coordinacion-stat-value">{{ $citasHoy ?? 0 }}</span>
                         </article>
                         <article class="coordinacion-stat-card">
                             <span class="coordinacion-stat-icon coordinacion-stat-icon--sage" aria-hidden="true">PE</span>
                             <span class="coordinacion-stat-label">Pendientes de confirmación</span>
-                            <span class="coordinacion-stat-value">Sin datos</span>
+                            <span class="coordinacion-stat-value">{{ $pendientes ?? 0 }}</span>
                         </article>
                         <article class="coordinacion-stat-card">
                             <span class="coordinacion-stat-icon coordinacion-stat-icon--mint" aria-hidden="true">CO</span>
                             <span class="coordinacion-stat-label">Citas completadas</span>
-                            <span class="coordinacion-stat-value">Sin datos</span>
+                            <span class="coordinacion-stat-value">{{ $completadas ?? 0 }}</span>
                         </article>
                         <article class="coordinacion-stat-card">
                             <span class="coordinacion-stat-icon coordinacion-stat-icon--forest" aria-hidden="true">PA</span>
                             <span class="coordinacion-stat-label">Pacientes programados</span>
-                            <span class="coordinacion-stat-value">Sin datos</span>
+                            <span class="coordinacion-stat-value">{{ $pacientesProgramados ?? 0 }}</span>
                         </article>
                         <article class="coordinacion-stat-card">
                             <span class="coordinacion-stat-icon coordinacion-stat-icon--sage" aria-hidden="true">ME</span>
                             <span class="coordinacion-stat-label">Médicos disponibles</span>
-                            <span class="coordinacion-stat-value">Sin datos</span>
+                            <span class="coordinacion-stat-value">{{ $medicosDisponibles ?? 0 }}</span>
                         </article>
                         <article class="coordinacion-stat-card">
                             <span class="coordinacion-stat-icon coordinacion-stat-icon--mint" aria-hidden="true">AU</span>
                             <span class="coordinacion-stat-label">Ausencias</span>
-                            <span class="coordinacion-stat-value">Sin datos</span>
+                            <span class="coordinacion-stat-value">{{ $ausencias ?? 0 }}</span>
                         </article>
                     </div>
                 </section>
@@ -72,10 +72,33 @@
                         <a href="{{ route('coordinacion.citas') }}" class="coordinacion-btn-link">Abrir agenda</a>
                     </div>
                     <div class="coordinacion-cita-list">
-                        <div class="coordinacion-empty-state">
-                            <strong>No hay citas para mostrar</strong>
-                            <p>Las citas registradas aparecerán aquí con horario, paciente, profesional y estado.</p>
-                        </div>
+                        @if (isset($proximas) && $proximas->isNotEmpty())
+                            <table class="coordinacion-citas-table">
+                                <thead>
+                                    <tr>
+                                        <th>Hora</th>
+                                        <th>Paciente</th>
+                                        <th>Médico</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($proximas as $consulta)
+                                        <tr>
+                                            <td>{{ $consulta->hora }}</td>
+                                            <td>{{ $consulta->user->name ?? 'N/A' }}</td>
+                                            <td>{{ $consulta->medico?->user?->name ?? 'Pendiente de asignación' }}</td>
+                                            <td>{{ ucfirst($consulta->estado) }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @else
+                            <div class="coordinacion-empty-state">
+                                <strong>No hay citas para mostrar</strong>
+                                <p>Las citas registradas para hoy aparecerán aquí con horario, paciente, profesional y estado.</p>
+                            </div>
+                        @endif
                     </div>
                 </section>
 
@@ -88,10 +111,19 @@
                         <a href="{{ route('coordinacion.notificaciones') }}" class="coordinacion-btn-link">Ver notificaciones</a>
                     </div>
                     <div class="coordinacion-notifications-list">
-                        <div class="coordinacion-empty-state">
-                            <strong>No hay alertas recientes</strong>
-                            <p>Las notificaciones de citas y disponibilidad aparecerán aquí cuando existan registros.</p>
-                        </div>
+                        @forelse ($notificaciones as $notification)
+                            <div class="coordinacion-notification-item">
+                                <div class="coordinacion-notification-content">
+                                    <p class="coordinacion-notification-title">{{ $notification->data['message'] ?? 'Notificación' }}</p>
+                                    <p class="coordinacion-notification-text">{{ is_null($notification->read_at) ? 'Sin leer' : 'Leída' }} · {{ $notification->created_at->diffForHumans() }}</p>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="coordinacion-empty-state">
+                                <strong>No hay alertas recientes</strong>
+                                <p>Las notificaciones de citas y disponibilidad aparecerán aquí cuando existan registros.</p>
+                            </div>
+                        @endforelse
                     </div>
                 </section>
 

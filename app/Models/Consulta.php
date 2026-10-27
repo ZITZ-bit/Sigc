@@ -28,6 +28,14 @@ class Consulta extends Authenticatable
     }
 
     /**
+     * Get the clinical record associated with the consultation.
+     */
+    public function historialClinico()
+    {
+        return $this->hasOne(HistorialClinico::class);
+    }
+
+    /**
      * Get the specialty of the consultation.
      */
     public function especialidad()

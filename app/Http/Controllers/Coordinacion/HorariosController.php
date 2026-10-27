@@ -7,7 +7,6 @@ use App\Models\Consulta;
 use App\Models\Horario;
 use App\Models\Medico;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class HorariosController extends Controller
@@ -76,7 +75,7 @@ class HorariosController extends Controller
             'dia_semana' => $validated['dia_semana'],
             'hora_inicio' => $validated['hora_inicio'],
             'hora_fin' => $validated['hora_fin'],
-            'activo' => $validated['activo'] ?? true,
+            'activo' => $request->boolean('activo'),
         ]);
 
         return redirect()
@@ -122,31 +121,40 @@ class HorariosController extends Controller
         }
 
         // Verificar consultas futuras que quedarían fuera del nuevo horario si se reduce o desactiva
-        $diaNombre = [
-            0 => 'Domingo',
-            1 => 'Lunes',
-            2 => 'Martes',
-            3 => 'Miércoles',
-            4 => 'Jueves',
-            5 => 'Viernes',
-            6 => 'Sábado',
-        ][$validated['dia_semana']];
+        $consultasAfectadas = 0;
 
-        $consultasAfectadas = Consulta::where('medico_id', $medico->id)
-            ->where('estado', 'confirmada')
-            ->whereRaw('DAYOFWEEK(fecha) = ?', [($validated['dia_semana'] + 1) % 7])
-            ->where(function ($q) use ($validated) {
-                $q->where(function ($inner) use ($validated) {
-                    $inner->where('hora', '<', $validated['hora_inicio'])
+        if (! $request->boolean('activo')) {
+            // Al desactivar, todas las consultas confirmadas dentro del rango actual quedan sin cobertura.
+            $consultasAfectadas = Consulta::where('medico_id', $medico->id)
+                ->where('estado', 'confirmada')
+                ->whereDate('fecha', '>=', today())
+                ->whereRaw('DAYOFWEEK(fecha) = ?', [$horario->dia_semana + 1])
+                ->where('hora', '>=', $horario->hora_inicio)
+                ->where('hora', '<', $horario->hora_fin)
+                ->count();
+        } else {
+            // Al cambiar día u horas, solo peligran las consultas del rango anterior que queden fuera del nuevo.
+            $consultasQuery = Consulta::where('medico_id', $medico->id)
+                ->where('estado', 'confirmada')
+                ->whereDate('fecha', '>=', today())
+                ->whereRaw('DAYOFWEEK(fecha) = ?', [$horario->dia_semana + 1])
+                ->where('hora', '>=', $horario->hora_inicio)
+                ->where('hora', '<', $horario->hora_fin);
+
+            if ((int) $validated['dia_semana'] === (int) $horario->dia_semana) {
+                $consultasQuery->where(function ($q) use ($validated) {
+                    $q->where('hora', '<', $validated['hora_inicio'])
                         ->orWhere('hora', '>=', $validated['hora_fin']);
                 });
-            })
-            ->count();
+            }
 
-        if ($consultasAfectadas > 0 && !$validated['activo'] ?? false) {
+            $consultasAfectadas = $consultasQuery->count();
+        }
+
+        if ($consultasAfectadas > 0) {
             return back()
                 ->withErrors([
-                    'horario' => "No se puede desactivar este horario porque hay {$consultasAfectadas} consulta(s) confirmada(s) en ese rango horario.",
+                    'horario' => "No se puede modificar o desactivar este horario porque hay {$consultasAfectadas} consulta(s) confirmada(s) que quedarían sin cobertura.",
                 ])
                 ->withInput();
         }
@@ -155,7 +163,7 @@ class HorariosController extends Controller
             'dia_semana' => $validated['dia_semana'],
             'hora_inicio' => $validated['hora_inicio'],
             'hora_fin' => $validated['hora_fin'],
-            'activo' => $validated['activo'] ?? true,
+            'activo' => $request->boolean('activo'),
         ]);
 
         return redirect()
@@ -175,25 +183,12 @@ class HorariosController extends Controller
         }
 
         // Verificar consultas futuras confirmadas que quedarían sin horario
-        $diaNombre = [
-            0 => 'Domingo',
-            1 => 'Lunes',
-            2 => 'Martes',
-            3 => 'Miércoles',
-            4 => 'Jueves',
-            5 => 'Viernes',
-            6 => 'Sábado',
-        ][$horario->dia_semana];
-
         $consultasAfectadas = Consulta::where('medico_id', $medico->id)
             ->where('estado', 'confirmada')
-            ->whereRaw('DAYOFWEEK(fecha) = ?', [($horario->dia_semana + 1) % 7])
-            ->where(function ($q) use ($horario) {
-                $q->where(function ($inner) use ($horario) {
-                    $inner->where('hora', '<', $horario->hora_inicio)
-                        ->orWhere('hora', '>=', $horario->hora_fin);
-                });
-            })
+            ->whereDate('fecha', '>=', today())
+            ->whereRaw('DAYOFWEEK(fecha) = ?', [$horario->dia_semana + 1])
+            ->where('hora', '>=', $horario->hora_inicio)
+            ->where('hora', '<', $horario->hora_fin)
             ->count();
 
         if ($consultasAfectadas > 0) {
