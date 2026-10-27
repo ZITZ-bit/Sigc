@@ -27,7 +27,23 @@ Route::post('/medico/activar/{token}', [InvitacionController::class, 'activate']
 // Rutas protegidas del paciente
 Route::middleware(['auth', 'role:paciente'])->group(function () {
     Route::get('/paciente/dashboard', function () {
-        return view('ui.dashboard-paciente');
+        $user = auth()->user();
+        $consultas = \App\Models\Consulta::with(['medico.user', 'especialidad'])
+            ->where('user_id', $user->id)
+            ->orderBy('fecha', 'asc')
+            ->orderBy('hora', 'asc')
+            ->get();
+
+        $proxima = $consultas->first(function ($c) {
+            return in_array($c->estado, ['pendiente', 'confirmada'], true);
+        }) ?? $consultas->first();
+
+        $proximas = $consultas->take(5);
+        $pendientes = $consultas->where('estado', 'pendiente')->count();
+        $confirmadas = $consultas->where('estado', 'confirmada')->count();
+        $notificaciones = $user->notifications()->latest()->limit(5)->get();
+
+        return view('ui.dashboard-paciente', compact('consultas', 'proxima', 'proximas', 'pendientes', 'confirmadas', 'notificaciones'));
     })->name('paciente.dashboard');
 
     Route::get('/paciente/agenda', function () {
@@ -113,7 +129,37 @@ Route::middleware(['auth', 'role:paciente'])->group(function () {
 // Rutas protegidas del médico
 Route::middleware(['auth', 'role:medico'])->group(function () {
     Route::get('/medico/dashboard', function () {
-        return view('ui.dashboard-medico');
+        $user = auth()->user();
+        $medico = $user->medico;
+        $hoy = today()->toDateString();
+
+        $citasHoy = $medico
+            ? \App\Models\Consulta::where('medico_id', $medico->id)->whereDate('fecha', $hoy)->count()
+            : 0;
+        $pendientes = $medico
+            ? \App\Models\Consulta::where('medico_id', $medico->id)->whereDate('fecha', $hoy)->where('estado', 'pendiente')->count()
+            : 0;
+        $completadas = $medico
+            ? \App\Models\Consulta::where('medico_id', $medico->id)->whereDate('fecha', $hoy)->where('estado', 'completada')->count()
+            : 0;
+        $proxima = $medico
+            ? \App\Models\Consulta::with(['user', 'especialidad'])
+                ->where('medico_id', $medico->id)
+                ->whereIn('estado', ['pendiente', 'confirmada'])
+                ->orderBy('fecha')
+                ->orderBy('hora')
+                ->first()
+            : null;
+
+        $notificaciones = $user->notifications()->latest()->limit(5)->get();
+
+        return view('ui.dashboard-medico', [
+            'citasHoy' => $citasHoy,
+            'pendientes' => $pendientes,
+            'completadas' => $completadas,
+            'proxima' => $proxima,
+            'notificaciones' => $notificaciones,
+        ]);
     })->name('medico.dashboard');
 
     Route::get('/medico/agenda', [MedicoCitasController::class, 'index'])->name('medico.agenda');
@@ -152,7 +198,32 @@ Route::middleware(['auth', 'role:medico'])->group(function () {
 // Rutas protegidas del coordinador
 Route::middleware(['auth', 'role:coordinador'])->group(function () {
     Route::get('/coordinacion/dashboard', function () {
-        return view('ui.dashboard-coordinacion');
+        $today = today()->toDateString();
+        $citasHoy = \App\Models\Consulta::whereDate('fecha', $today)->count();
+        $pendientes = \App\Models\Consulta::whereDate('fecha', $today)->where('estado', 'pendiente')->count();
+        $completadas = \App\Models\Consulta::whereDate('fecha', $today)->where('estado', 'completada')->count();
+        $pacientesProgramados = \App\Models\Consulta::whereDate('fecha', $today)->distinct('user_id')->count('user_id');
+        $medicosDisponibles = \App\Models\Medico::where('estado', 'activo')->count();
+        $ausencias = \App\Models\Consulta::whereDate('fecha', $today)->where('estado', 'cancelada')->count();
+
+        $proximas = \App\Models\Consulta::with(['user', 'medico.user'])
+            ->whereDate('fecha', $today)
+            ->orderBy('hora', 'asc')
+            ->limit(10)
+            ->get();
+
+        $notificaciones = auth()->user()->notifications()->latest()->limit(10)->get();
+
+        return view('ui.dashboard-coordinacion', [
+            'citasHoy' => $citasHoy,
+            'pendientes' => $pendientes,
+            'completadas' => $completadas,
+            'pacientesProgramados' => $pacientesProgramados,
+            'medicosDisponibles' => $medicosDisponibles,
+            'ausencias' => $ausencias,
+            'proximas' => $proximas,
+            'notificaciones' => $notificaciones,
+        ]);
     })->name('coordinacion.dashboard');
 
     Route::get('/coordinacion/citas', [CitasController::class, 'index'])->name('coordinacion.citas');

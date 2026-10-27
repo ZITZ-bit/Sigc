@@ -45,6 +45,16 @@ class AuthController extends Controller
                 ->withErrors(['password' => 'Credenciales incorrectas. Inténtalo de nuevo.']);
         }
 
+        if (! $this->hasActiveMedicoAccount(Auth::user())) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return back()
+                ->withInput($request->only('email'))
+                ->withErrors(['email' => 'La cuenta médica no está activa. Contacte con coordinación para activarla.']);
+        }
+
         $request->session()->regenerate();
 
         return redirect()->route($this->dashboardRouteForUser(Auth::user()));
@@ -100,6 +110,18 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+
+    /**
+     * Determina si el usuario puede acceder según el estado de su ficha médica.
+     */
+    private function hasActiveMedicoAccount(User $user): bool
+    {
+        if ($user->role?->slug !== 'medico') {
+            return true;
+        }
+
+        return $user->medico?->estado === 'activo';
     }
 
     /**

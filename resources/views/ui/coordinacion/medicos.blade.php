@@ -32,6 +32,14 @@
                     </div>
                 @endif
 
+                @if (session('invitacion_url'))
+                    <div class="coordinacion-card coordinacion-mb-2" style="background-color: var(--coordinacion-color-warning-soft, #fff8e1); border-color: var(--coordinacion-color-warning, #f0ad4e);">
+                        <p style="margin: 0 0 0.5rem; font-size: 0.9375rem;"><strong>Enlace de activación (visible solo una vez):</strong></p>
+                        <a href="{{ session('invitacion_url') }}" style="word-break: break-all; font-size: 0.875rem;">{{ session('invitacion_url') }}</a>
+                        <p style="margin: 0.5rem 0 0; font-size: 0.8125rem;">Compártalo con el médico para que establezca su contraseña. Caduca en 7 días.</p>
+                    </div>
+                @endif
+
                 @if ($errors->any())
                     <div class="coordinacion-card coordinacion-mb-2" style="background-color: var(--coordinacion-color-error-soft); border-color: var(--coordinacion-color-error);">
                         <ul style="color: var(--coordinacion-color-error); margin: 0; padding-left: 1rem; font-size: 0.9375rem;">
@@ -112,10 +120,7 @@
                                         </td>
                                         <td>
                                             <div class="coordinacion-medicos-actions">
-                                                @can('medico.view')
-                                                    <a href="{{ route('coordinacion.medicos.editar', $medico->id) }}" class="coordinacion-medicos-btn coordinacion-medicos-btn--view" aria-label="Ver detalles">Ver</a>
-                                                @endcan
-                                                @if (Auth::user()->role->slug === 'coordinador')
+                                                @if (Auth::user()->role?->slug === 'coordinador')
                                                     <a href="{{ route('coordinacion.medicos.editar', $medico->id) }}" class="coordinacion-medicos-btn coordinacion-medicos-btn--edit" aria-label="Editar">Editar</a>
                                                     @if ($medico->estado === 'activo')
                                                         <form method="POST" action="{{ route('coordinacion.medicos.destroy', $medico->id) }}" style="display: inline;">
@@ -134,7 +139,7 @@
                                                             <button type="submit" class="coordinacion-medicos-btn coordinacion-medicos-btn--invite" aria-label="Enviar invitación">Invitar</button>
                                                         </form>
                                                     @endif
-                                                @endcan
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>

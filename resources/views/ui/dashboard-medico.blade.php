@@ -33,17 +33,17 @@
                         <article class="medico-stat-card">
                             <span class="medico-stat-icon medico-stat-icon--forest" aria-hidden="true">AG</span>
                             <span class="medico-stat-label">Citas de hoy</span>
-                            <span class="medico-stat-value">Sin datos</span>
+                            <span class="medico-stat-value">{{ $citasHoy }}</span>
                         </article>
                         <article class="medico-stat-card">
                             <span class="medico-stat-icon medico-stat-icon--sage" aria-hidden="true">PE</span>
                             <span class="medico-stat-label">Pendientes</span>
-                            <span class="medico-stat-value">Sin datos</span>
+                            <span class="medico-stat-value">{{ $pendientes }}</span>
                         </article>
                         <article class="medico-stat-card">
                             <span class="medico-stat-icon medico-stat-icon--mint" aria-hidden="true">FI</span>
                             <span class="medico-stat-label">Completadas</span>
-                            <span class="medico-stat-value">Sin datos</span>
+                            <span class="medico-stat-value">{{ $completadas }}</span>
                         </article>
                     </div>
                 </section>
@@ -58,12 +58,21 @@
                     </div>
                     <article class="medico-appointment-card">
                         <div class="medico-appointment-header">
-                            <div>
-                                <span class="medico-appointment-date">Próxima cita</span>
-                                <span class="medico-appointment-patient">No hay citas asignadas para mostrar</span>
-                                <span class="medico-appointment-reason">Los detalles de atención se mostrarán cuando haya registros disponibles.</span>
-                            </div>
-                            <span class="medico-badge">Sin datos</span>
+                            @if ($proxima)
+                                <div>
+                                    <span class="medico-appointment-date">{{ \Carbon\Carbon::parse($proxima->fecha)->translatedFormat('l d \d\e F') }} · {{ substr($proxima->hora, 0, 5) }}</span>
+                                    <span class="medico-appointment-patient">{{ $proxima->user?->name ?? 'Paciente no disponible' }}</span>
+                                    <span class="medico-appointment-reason">{{ $proxima->especialidad?->name ?? 'Sin especialidad' }}@if ($proxima->motivo) · {{ $proxima->motivo }}@endif</span>
+                                </div>
+                                <span class="medico-badge medico-badge--{{ $proxima->estado }}">{{ ucfirst($proxima->estado) }}</span>
+                            @else
+                                <div>
+                                    <span class="medico-appointment-date">Próxima cita</span>
+                                    <span class="medico-appointment-patient">No hay citas asignadas para mostrar</span>
+                                    <span class="medico-appointment-reason">Los detalles de atención se mostrarán cuando haya registros disponibles.</span>
+                                </div>
+                                <span class="medico-badge">Sin datos</span>
+                            @endif
                         </div>
                     </article>
                 </section>
@@ -80,7 +89,7 @@
                             <span class="medico-action-btn-icon" aria-hidden="true">CS</span>
                             <span>Consultas médicas</span>
                         </a>
-                        <a href="{{ route('medico.historial') }}" class="medico-action-btn">
+                        <a href="{{ route('medico.historial.clinico.index') }}" class="medico-action-btn">
                             <span class="medico-action-btn-icon" aria-hidden="true">HI</span>
                             <span>Historial clínico</span>
                         </a>
@@ -108,10 +117,19 @@
                         <a href="{{ route('medico.notificaciones') }}" class="medico-btn-link">Ver todas</a>
                     </div>
                     <div class="medico-notifications-list">
-                        <div class="medico-empty-state">
-                            <strong>No tienes notificaciones recientes</strong>
-                            <p>Los avisos de agenda y atención aparecerán aquí cuando estén disponibles.</p>
-                        </div>
+                        @forelse ($notificaciones as $notification)
+                            <div class="medico-notification-item">
+                                <div class="medico-notification-content">
+                                    <p class="medico-notification-title">{{ $notification->data['message'] ?? 'Notificación' }}</p>
+                                    <p class="medico-notification-text">{{ is_null($notification->read_at) ? 'Sin leer' : 'Leída' }} · {{ $notification->created_at->diffForHumans() }}</p>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="medico-empty-state">
+                                <strong>No tienes notificaciones recientes</strong>
+                                <p>Los avisos de agenda y atención aparecerán aquí cuando estén disponibles.</p>
+                            </div>
+                        @endforelse
                     </div>
                 </section>
             </div>

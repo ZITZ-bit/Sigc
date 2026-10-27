@@ -21,6 +21,18 @@ class Authenticate
             return redirect()->route('login');
         }
 
+        $user = Auth::user();
+
+        if ($user->role?->slug === 'medico' && $user->medico?->estado !== 'activo') {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect()
+                ->route('login')
+                ->withErrors(['email' => 'La cuenta médica no está activa. Contacte con coordinación para activarla.']);
+        }
+
         return $next($request);
     }
 }

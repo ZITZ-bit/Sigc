@@ -109,8 +109,6 @@
                                                 </form>
                                                 <form method="POST" action="{{ route('coordinacion.medicos.horarios.destroy', [$medico, $horario]) }}" style="display:inline; margin-left:0.5rem;">
                                                     @csrf
-                                                    @method('POST')
-                                                    <input type="hidden" name="_method" value="DELETE">
                                                     <button type="submit" class="coordinacion-citas-btn coordinacion-citas-btn--view" onclick="return confirm('¿Está seguro de que desea desactivar este horario?')">Desactivar</button>
                                                 </form>
                                             </div>

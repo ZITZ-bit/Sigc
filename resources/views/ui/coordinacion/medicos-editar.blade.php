@@ -51,17 +51,8 @@
                             <h3 class="coordinacion-section-title">Datos personales</h3>
                             <div class="coordinacion-grid coordinacion-grid-cols-2">
                                 <div class="coordinacion-form-field coordinacion-mb-2">
-                                    <label class="coordinacion-form-label">Nombre</label>
+                                    <label class="coordinacion-form-label">Nombre completo</label>
                                     <input type="text" name="name" class="coordinacion-configuracion-input" value="{{ old('name', $medico->user->name) }}" required>
-                                </div>
-                                <div class="coordinacion-form-field coordinacion-mb-2">
-                                    <label class="coordinacion-form-label">Apellido</label>
-                                    <input type="text" name="apellido" class="coordinacion-configuracion-input" value="{{ old('apellido', $medico->user->name) }}" required>
-                                </div>
-                                <div class="coordinacion-form-field coordinacion-mb-2">
-                                    <label class="coordinacion-form-label">Documento de identidad</label>
-                                    <input type="text" name="documento_identidad" class="coordinacion-configuracion-input" value="{{ old('documento_identidad') }}">
-                                    <p class="coordinacion-configuracion-help">Identificador único del médico.</p>
                                 </div>
                                 <div class="coordinacion-form-field coordinacion-mb-2">
                                     <label class="coordinacion-form-label">Correo electrónico</label>
@@ -70,10 +61,6 @@
                                 <div class="coordinacion-form-field coordinacion-mb-2">
                                     <label class="coordinacion-form-label">Teléfono</label>
                                     <input type="tel" name="telefono" class="coordinacion-configuracion-input" value="{{ old('telefono', $medico->telefono) }}">
-                                </div>
-                                <div class="coordinacion-form-field coordinacion-mb-2">
-                                    <label class="coordinacion-form-label">Dirección</label>
-                                    <input type="text" name="direccion" class="coordinacion-configuracion-input" value="{{ old('direccion', $medico->direccion) }}">
                                 </div>
                             </div>
                         </div>

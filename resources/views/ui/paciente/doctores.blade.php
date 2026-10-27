@@ -24,17 +24,28 @@
                 </div>
 
                 <section class="paciente-section">
-                    <div class="paciente-doctores-header">
+                    <form method="GET" action="{{ route('paciente.doctores') }}" class="paciente-doctores-header">
                         <div class="paciente-doctores-search">
-                            <input type="text" class="paciente-consulta-input" placeholder="Buscar por nombre o especialidad..." aria-label="Buscar doctores">
+                            <input type="search" name="search" class="paciente-consulta-input" placeholder="Buscar por nombre o especialidad..." aria-label="Buscar doctores" value="{{ $search }}">
                         </div>
-                    </div>
+                        <button type="submit" class="paciente-btn-primary">Buscar</button>
+                    </form>
 
                     <div class="paciente-doctores-grid">
-                        <div class="paciente-empty-state">
-                            <strong>No hay profesionales disponibles</strong>
-                            <p>Los médicos asociados a tu especialidad aparecerán aquí cuando estén disponibles.</p>
-                        </div>
+                        @forelse ($medicos as $medico)
+                            <article class="paciente-doctor-card">
+                                <div class="paciente-doctor-avatar" aria-hidden="true">{{ strtoupper(substr($medico->user->name ?? 'M', 0, 1)) }}</div>
+                                <p class="paciente-doctor-name">{{ $medico->user->name ?? 'Médico sin nombre' }}</p>
+                                <span class="paciente-doctor-specialty">{{ $medico->especialidad?->name ?? 'Sin especialidad asignada' }}</span>
+                                <p class="paciente-doctor-bio">{{ $medico->departamento?->name ?? 'Departamento no asignado' }}</p>
+                                <a href="{{ route('paciente.consulta') }}" class="paciente-doctor-btn">Solicitar consulta</a>
+                            </article>
+                        @empty
+                            <div class="paciente-empty-state">
+                                <strong>No hay profesionales disponibles</strong>
+                                <p>Los médicos activos aparecerán aquí cuando estén disponibles.</p>
+                            </div>
+                        @endforelse
                     </div>
 
                     <p class="paciente-text-center">Utiliza "Solicitar consulta" para iniciar una solicitud de atención médica.</p>

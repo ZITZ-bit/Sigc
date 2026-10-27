@@ -11,7 +11,6 @@ use App\Models\User;
 use App\Notifications\ConsultaAsignada;
 use App\Notifications\ConsultaEstadoActualizado;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class CitasController extends Controller
@@ -65,6 +64,12 @@ class CitasController extends Controller
      */
     public function asignarMedico(Request $request, Consulta $consulta)
     {
+        if (! in_array($consulta->estado, ['pendiente', 'confirmada'], true)) {
+            return back()
+                ->withErrors(['medico_id' => 'Solo se puede asignar un médico a consultas pendientes o confirmadas.'])
+                ->withInput();
+        }
+
         $validated = Validator::make($request->all(), [
             'medico_id' => ['required', 'exists:medicos,id'],
         ])->validate();
@@ -108,7 +113,6 @@ class CitasController extends Controller
                 ->withInput();
         }
 
-        $consultaAnteriorMedico = $consulta->medico_id;
         $consulta->update(['medico_id' => $medico->id]);
         $consulta->load('medico.user');
 

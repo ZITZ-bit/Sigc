@@ -85,10 +85,8 @@ class MedicosController extends Controller
         $validated = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
             'apellido' => ['required', 'string', 'max:255'],
-            'documento_identidad' => ['nullable', 'string', 'max:50'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'telefono' => ['nullable', 'string', 'max:50'],
-            'direccion' => ['nullable', 'string', 'max:255'],
             'numero_licencia' => ['nullable', 'string', 'max:100'],
             'especialidad_id' => ['nullable', 'exists:especialidades,id'],
             'departamento_id' => ['nullable', 'exists:departamentos,id'],
@@ -118,31 +116,33 @@ class MedicosController extends Controller
                 'departamento_id' => $validated['departamento_id'] ?? null,
                 'numero_licencia' => $validated['numero_licencia'] ?? null,
                 'telefono' => $validated['telefono'] ?? null,
-                'direccion' => $validated['direccion'] ?? null,
                 'fecha_incorporacion' => $validated['fecha_incorporacion'] ?? null,
                 'estado' => $validated['estado_inicial'],
             ]);
 
-            // Create invitation if estado is pendiente
-            if ($validated['estado_inicial'] === 'pendiente') {
-                $token = Str::random(60);
-                $tokenHash = hash('sha256', $token);
+            // Toda cuenta nueva necesita establecer su contraseña mediante invitación.
+            $token = Str::random(60);
+            $tokenHash = hash('sha256', $token);
 
-                Invitacion::create([
-                    'medico_id' => $medico->id,
-                    'email' => $validated['email'],
-                    'token' => $token,
-                    'token_hash' => $tokenHash,
-                    'expires_at' => now()->addDays(7),
-                ]);
-            }
+            Invitacion::create([
+                'medico_id' => $medico->id,
+                'email' => $validated['email'],
+                'token' => $tokenHash,
+                'token_hash' => $tokenHash,
+                'expires_at' => now()->addDays(7),
+            ]);
 
-            return ['user' => $user, 'medico' => $medico];
+            return [
+                'user' => $user,
+                'medico' => $medico,
+                'activation_url' => route('medico.activar', ['token' => $token]),
+            ];
         });
 
         return redirect()
             ->route('coordinacion.medicos')
-            ->with('success', 'Médico registrado correctamente. Se ha creado su cuenta de usuario.');
+            ->with('success', 'Médico registrado correctamente. Comparta el enlace de activación para que establezca su contraseña.')
+            ->with('invitacion_url', $result['activation_url']);
     }
 
     /**
@@ -168,11 +168,8 @@ class MedicosController extends Controller
     {
         $validated = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
-            'apellido' => ['required', 'string', 'max:255'],
-            'documento_identidad' => ['nullable', 'string', 'max:50'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email,'.$medico->user_id],
             'telefono' => ['nullable', 'string', 'max:50'],
-            'direccion' => ['nullable', 'string', 'max:255'],
             'numero_licencia' => ['nullable', 'string', 'max:100'],
             'especialidad_id' => ['nullable', 'exists:especialidades,id'],
             'departamento_id' => ['nullable', 'exists:departamentos,id'],
@@ -181,7 +178,7 @@ class MedicosController extends Controller
         ])->validate();
 
         $medico->user->update([
-            'name' => trim($validated['name'].' '.$validated['apellido']),
+            'name' => $validated['name'],
             'email' => $validated['email'],
         ]);
 
@@ -240,17 +237,17 @@ class MedicosController extends Controller
         Invitacion::create([
             'medico_id' => $medico->id,
             'email' => $medico->user->email,
-            'token' => $token,
+            'token' => $tokenHash,
             'token_hash' => $tokenHash,
             'expires_at' => now()->addDays(7),
         ]);
 
-        // Note: In a production environment with SMTP configured,
-        // the invitation email would be sent here using Mail facade.
-        // Currently MAIL_MAILER=log, so emails are logged to storage/logs/laravel.log
+        // TODO: enviar la invitación por correo cuando el correo saliente esté configurado.
+        // Mientras tanto, el enlace se muestra una sola vez al coordinador que la genera.
 
         return redirect()
             ->route('coordinacion.medicos')
-            ->with('success', 'Invitación generada para '.$medico->user->email.'. Revise los registros del sistema para el token de activación.');
+            ->with('success', 'Invitación generada para '.$medico->user->email.'. Comparta el enlace de activación.')
+            ->with('invitacion_url', route('medico.activar', ['token' => $token]));
     }
 }
