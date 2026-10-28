@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\ConsultaSyncController;
 use App\Http\Controllers\Coordinacion\CitasController;
 use App\Http\Controllers\Coordinacion\HorariosController;
 use App\Http\Controllers\Coordinacion\MedicosController;
@@ -93,7 +94,7 @@ Route::middleware(['auth', 'role:paciente'])->group(function () {
 
     Route::get('/paciente/historial-clinico', function () {
         $user = auth()->user();
-        $registros = HistorialClinico::with(['consulta', 'medico.user'])
+        $registros = HistorialClinico::with(['consulta.especialidad', 'medico.user'])
             ->where('paciente_id', $user->id)
             ->latest()
             ->paginate(15);
@@ -300,3 +301,7 @@ Route::middleware(['auth', 'role:coordinador'])->group(function () {
 });
 
 // Rutas del proyecto sigc
+Route::middleware(['auth'])->group(function () {
+    Route::get('/consultas/sincronizar', ConsultaSyncController::class)
+        ->name('consultas.sincronizar');
+});

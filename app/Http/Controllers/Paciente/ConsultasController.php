@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Paciente;
 
 use App\Http\Controllers\Controller;
 use App\Models\Consulta;
+use App\Models\User;
+use App\Notifications\ConsultaEstadoActualizado;
 use Illuminate\Http\RedirectResponse;
 
 class ConsultasController extends Controller
@@ -21,6 +23,12 @@ class ConsultasController extends Controller
         }
 
         $consulta->update(['estado' => 'cancelada']);
+
+        // Avisar a coordinación de que el paciente canceló la cita.
+        User::query()
+            ->whereHas('role', fn ($query) => $query->where('slug', 'coordinador'))
+            ->get()
+            ->each(fn (User $coordinador) => $coordinador->notify(new ConsultaEstadoActualizado($consulta)));
 
         return redirect()
             ->route('paciente.agenda')

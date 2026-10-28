@@ -99,6 +99,58 @@ class CitasControllerTest extends TestCase
             ->assertSee('Eliminar cita');
     }
 
+    public function test_coordinador_puede_completar_cita_con_boton_directo_y_ve_acciones_en_orden(): void
+    {
+        $roles = $this->crearRoles();
+        $coordinador = User::factory()->coordinador()->create(['role_id' => $roles['coordinador']->id]);
+        $paciente = User::factory()->paciente()->create(['role_id' => $roles['paciente']->id]);
+        $this->crearConsulta($paciente, 'confirmada');
+
+        $response = $this->withoutVite()
+            ->actingAs($coordinador)
+            ->get(route('coordinacion.citas'));
+
+        $response->assertOk()
+            ->assertSeeInOrder(['Completar', 'Cancelar cita', 'Eliminar cita'])
+            ->assertDontSee('Marcar completada')
+            ->assertDontSee('Actualizar')
+            ->assertSee('name="estado" value="completada"', false);
+    }
+
+    public function test_coordinador_ve_boton_directo_para_confirmar_cita_pendiente(): void
+    {
+        $roles = $this->crearRoles();
+        $coordinador = User::factory()->coordinador()->create(['role_id' => $roles['coordinador']->id]);
+        $paciente = User::factory()->paciente()->create(['role_id' => $roles['paciente']->id]);
+        $this->crearConsulta($paciente);
+
+        $response = $this->withoutVite()
+            ->actingAs($coordinador)
+            ->get(route('coordinacion.citas'));
+
+        $response->assertOk()
+            ->assertSee('Confirmar cita')
+            ->assertDontSee('Actualizar')
+            ->assertSee('name="estado" value="confirmada"', false);
+    }
+
+    public function test_coordinador_completa_cita_confirmada_con_accion_directa(): void
+    {
+        $roles = $this->crearRoles();
+        $coordinador = User::factory()->coordinador()->create(['role_id' => $roles['coordinador']->id]);
+        $paciente = User::factory()->paciente()->create(['role_id' => $roles['paciente']->id]);
+        $consulta = $this->crearConsulta($paciente, 'confirmada');
+
+        $response = $this->actingAs($coordinador)
+            ->post(route('coordinacion.citas.estado', $consulta), ['estado' => 'completada']);
+
+        $response->assertRedirectToRoute('coordinacion.citas');
+        $this->assertDatabaseHas('consultas', [
+            'id' => $consulta->id,
+            'estado' => 'completada',
+        ]);
+    }
+
     public function test_coordinador_puede_asignar_medico_en_el_inicio_del_horario_activo(): void
     {
         $roles = $this->crearRoles();

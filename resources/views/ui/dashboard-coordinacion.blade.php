@@ -155,14 +155,6 @@
                             <span class="coordinacion-action-btn-icon" aria-hidden="true">AV</span>
                             <span>Notificaciones</span>
                         </a>
-                        <a href="{{ route('coordinacion.personal') }}" class="coordinacion-action-btn">
-                            <span class="coordinacion-action-btn-icon" aria-hidden="true">PE</span>
-                            <span>Personal y usuarios</span>
-                        </a>
-                        <a href="{{ route('coordinacion.configuracion') }}" class="coordinacion-action-btn">
-                            <span class="coordinacion-action-btn-icon" aria-hidden="true">CF</span>
-                            <span>Configuración de la clínica</span>
-                        </a>
                         <a href="{{ route('coordinacion.perfil') }}" class="coordinacion-action-btn">
                             <span class="coordinacion-action-btn-icon" aria-hidden="true">PF</span>
                             <span>Mi perfil</span>

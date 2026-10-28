@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Medico;
 
 use App\Http\Controllers\Controller;
 use App\Models\Consulta;
+use App\Models\User;
+use App\Notifications\ConsultaEstadoActualizado;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -124,6 +126,16 @@ class CitasController extends Controller
         }
 
         $consulta->update(['estado' => 'completada']);
+        $consulta->load(['user', 'medico.user', 'especialidad']);
+
+        // Avisar al paciente y a coordinación de que la consulta se completó.
+        if ($consulta->user) {
+            $consulta->user->notify(new ConsultaEstadoActualizado($consulta));
+        }
+        User::query()
+            ->whereHas('role', fn ($query) => $query->where('slug', 'coordinador'))
+            ->get()
+            ->each(fn (User $coordinador) => $coordinador->notify(new ConsultaEstadoActualizado($consulta)));
 
         return redirect()
             ->route('medico.consultas')

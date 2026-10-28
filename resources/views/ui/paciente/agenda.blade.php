@@ -39,7 +39,7 @@
                         <a href="{{ route('paciente.consulta') }}" class="paciente-btn-primary">Solicitar consulta</a>
                     </div>
 
-                    <div class="paciente-agenda-list">
+                    <div class="paciente-agenda-list" data-sync-list="paciente-agenda">
                         @if ($consultas->isEmpty())
                             <div class="paciente-empty-state">
                                 <strong>No tienes citas programadas</strong>
@@ -47,7 +47,7 @@
                             </div>
                         @else
                             @foreach ($consultas as $consulta)
-                                <article class="paciente-agenda-item">
+                                <article class="paciente-agenda-item" data-consulta-id="{{ $consulta->id }}" data-consulta-estado="{{ $consulta->estado }}">
                                     <div class="paciente-agenda-date-time" aria-label="Fecha y hora de la consulta">
                                         <span class="paciente-agenda-month">{{ \Carbon\Carbon::parse($consulta->fecha)->locale('es')->translatedFormat('M') }}</span>
                                         <span class="paciente-agenda-date">{{ \Carbon\Carbon::parse($consulta->fecha)->format('d') }}</span>

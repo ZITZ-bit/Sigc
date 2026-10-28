@@ -56,18 +56,6 @@
                 <span class="coordinacion-nav-label">Mi perfil</span>
             </a>
         </li>
-        <li>
-            <a href="{{ route('coordinacion.personal') }}" class="coordinacion-nav-link{{ request()->routeIs('coordinacion.personal') ? ' coordinacion-nav-link--active' : '' }}" aria-label="Personal y usuarios">
-                <span class="coordinacion-nav-icon" aria-hidden="true"><i data-lucide="users-round"></i></span>
-                <span class="coordinacion-nav-label">Personal y usuarios</span>
-            </a>
-        </li>
-        <li>
-            <a href="{{ route('coordinacion.configuracion') }}" class="coordinacion-nav-link{{ request()->routeIs('coordinacion.configuracion') ? ' coordinacion-nav-link--active' : '' }}" aria-label="Configuración de la clínica">
-                <span class="coordinacion-nav-icon" aria-hidden="true"><i data-lucide="settings-2"></i></span>
-                <span class="coordinacion-nav-label">Configuración de la clínica</span>
-            </a>
-        </li>
     </ul>
 
     <div class="coordinacion-sidebar-footer">
@@ -103,8 +91,6 @@
         <li><a href="{{ route('coordinacion.reportes') }}" class="coordinacion-mobile-link{{ request()->routeIs('coordinacion.reportes') ? ' coordinacion-mobile-link--active' : '' }}">Reportes y estadísticas</a></li>
         <li><a href="{{ route('coordinacion.notificaciones') }}" class="coordinacion-mobile-link{{ request()->routeIs('coordinacion.notificaciones') ? ' coordinacion-mobile-link--active' : '' }}">Notificaciones</a></li>
         <li><a href="{{ route('coordinacion.perfil') }}" class="coordinacion-mobile-link{{ request()->routeIs('coordinacion.perfil') ? ' coordinacion-mobile-link--active' : '' }}">Mi perfil</a></li>
-        <li><a href="{{ route('coordinacion.personal') }}" class="coordinacion-mobile-link{{ request()->routeIs('coordinacion.personal') ? ' coordinacion-mobile-link--active' : '' }}">Personal y usuarios</a></li>
-        <li><a href="{{ route('coordinacion.configuracion') }}" class="coordinacion-mobile-link{{ request()->routeIs('coordinacion.configuracion') ? ' coordinacion-mobile-link--active' : '' }}">Configuración</a></li>
     </ul>
     <div class="coordinacion-mobile-actions">
         <form method="POST" action="{{ route('logout') }}" style="display: inline;">

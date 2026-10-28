@@ -44,9 +44,9 @@
                         </form>
                     </div>
 
-                    <div class="coordinacion-citas-list">
+                    <div class="coordinacion-citas-list" data-sync-list="coordinacion-citas">
                         @forelse ($consultas as $consulta)
-                            <article class="coordinacion-cita-card">
+                            <article class="coordinacion-cita-card" data-consulta-id="{{ $consulta->id }}" data-consulta-estado="{{ $consulta->estado }}">
                                 <div class="coordinacion-cita-card__header">
                                     <div class="coordinacion-cita-card__when">
                                         <span class="coordinacion-cita-card__date">{{ \Carbon\Carbon::parse($consulta->fecha)->format('d/m/Y') }}</span>
@@ -73,29 +73,6 @@
                                 </div>
 
                                 <div class="coordinacion-cita-card__actions">
-                                    @if (in_array($consulta->estado, ['pendiente', 'confirmada'], true))
-                                        <form method="POST" action="{{ route('coordinacion.citas.estado', $consulta) }}" onsubmit="return confirm('¿Cancelar esta cita?')">
-                                            @csrf
-                                            <input type="hidden" name="estado" value="cancelada">
-                                            <button type="submit" class="coordinacion-citas-btn coordinacion-citas-btn--cancel">Cancelar cita</button>
-                                        </form>
-                                    @endif
-
-                                    @if (in_array($consulta->estado, ['pendiente', 'confirmada'], true))
-                                        <form method="POST" action="{{ route('coordinacion.citas.estado', $consulta) }}" class="coordinacion-cita-card__status-form">
-                                            @csrf
-                                            <label class="visually-hidden" for="estado-{{ $consulta->id }}">Cambiar estado</label>
-                                            <select id="estado-{{ $consulta->id }}" name="estado" class="coordinacion-estado-select">
-                                                @if ($consulta->estado === 'pendiente')
-                                                    <option value="confirmada">Confirmar</option>
-                                                @else
-                                                    <option value="completada">Marcar completada</option>
-                                                @endif
-                                            </select>
-                                            <button type="submit" class="coordinacion-citas-btn coordinacion-citas-btn--asignar">Actualizar</button>
-                                        </form>
-                                    @endif
-
                                     @if ($consulta->estado === 'pendiente')
                                         <form method="POST" action="{{ route('coordinacion.citas.asignar-medico', $consulta) }}" class="coordinacion-cita-card__assign-form">
                                             @csrf
@@ -107,6 +84,28 @@
                                                 @endforeach
                                             </select>
                                             <button type="submit" class="coordinacion-citas-btn coordinacion-citas-btn--asignar">Asignar</button>
+                                        </form>
+                                    @endif
+
+                                    @if ($consulta->estado === 'confirmada')
+                                        <form method="POST" action="{{ route('coordinacion.citas.estado', $consulta) }}">
+                                            @csrf
+                                            <input type="hidden" name="estado" value="completada">
+                                            <button type="submit" class="coordinacion-citas-btn coordinacion-citas-btn--complete">Completar</button>
+                                        </form>
+                                    @elseif ($consulta->estado === 'pendiente')
+                                        <form method="POST" action="{{ route('coordinacion.citas.estado', $consulta) }}">
+                                            @csrf
+                                            <input type="hidden" name="estado" value="confirmada">
+                                            <button type="submit" class="coordinacion-citas-btn coordinacion-citas-btn--confirm">Confirmar cita</button>
+                                        </form>
+                                    @endif
+
+                                    @if (in_array($consulta->estado, ['pendiente', 'confirmada'], true))
+                                        <form method="POST" action="{{ route('coordinacion.citas.estado', $consulta) }}" onsubmit="return confirm('¿Cancelar esta cita?')">
+                                            @csrf
+                                            <input type="hidden" name="estado" value="cancelada">
+                                            <button type="submit" class="coordinacion-citas-btn coordinacion-citas-btn--cancel">Cancelar cita</button>
                                         </form>
                                     @endif
 

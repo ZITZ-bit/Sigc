@@ -243,11 +243,6 @@
   gap: 0.4rem;
 }
 
-.coordinacion-cita-card__status-form {
-  flex: 1 1 13rem;
-}
-
-.coordinacion-cita-card__status-form select,
 .coordinacion-cita-card__assign-form select {
   min-width: 0;
 }
@@ -291,7 +286,6 @@
   color: var(--coordinacion-color-error);
 }
 
-.coordinacion-estado-select,
 .coordinacion-medico-select,
 .coordinacion-filter-select {
   padding: 0.5rem 0.75rem;
@@ -305,7 +299,6 @@
   transition: var(--coordinacion-transition-fast);
 }
 
-.coordinacion-estado-select:focus,
 .coordinacion-medico-select:focus,
 .coordinacion-filter-select:focus {
   border-color: var(--coordinacion-color-focus);
@@ -319,6 +312,24 @@
 }
 
 .coordinacion-citas-btn--asignar:hover {
+  background-color: var(--coordinacion-color-forest-dark);
+}
+
+.coordinacion-citas-btn--confirm {
+  background-color: var(--coordinacion-color-forest-dark);
+  color: #ffffff;
+}
+
+.coordinacion-citas-btn--confirm:hover {
+  background-color: var(--coordinacion-color-forest);
+}
+
+.coordinacion-citas-btn--complete {
+  background-color: var(--coordinacion-color-success);
+  color: #ffffff;
+}
+
+.coordinacion-citas-btn--complete:hover {
   background-color: var(--coordinacion-color-forest-dark);
 }
 

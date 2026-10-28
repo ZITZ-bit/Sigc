@@ -55,7 +55,7 @@
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody data-sync-list="medico-consultas">
                                 @if ($consultas->isEmpty())
                                     <tr>
                                         <td colspan="6">
@@ -67,7 +67,7 @@
                                     </tr>
                                 @else
                                     @foreach ($consultas as $consulta)
-                                        <tr>
+                                        <tr data-consulta-id="{{ $consulta->id }}" data-consulta-estado="{{ $consulta->estado }}">
                                             <td>{{ $consulta->user->name }}</td>
                                             <td>{{ \Carbon\Carbon::parse($consulta->fecha)->format('d/m/Y') }}</td>
                                             <td>{{ $consulta->hora }}</td>
