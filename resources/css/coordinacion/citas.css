@@ -130,6 +130,138 @@
   align-items: center;
 }
 
+.coordinacion-citas-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.coordinacion-cita-card {
+  padding: 1.25rem;
+  border: 1px solid var(--coordinacion-color-border);
+  border-radius: 14px;
+  background: linear-gradient(145deg, #ffffff 0%, #fbfdfb 100%);
+  box-shadow: var(--coordinacion-shadow);
+  transition: var(--coordinacion-transition);
+}
+
+.coordinacion-cita-card:hover {
+  border-color: #c6d9cc;
+  box-shadow: var(--coordinacion-shadow-md);
+  transform: translateY(-2px);
+}
+
+.coordinacion-cita-card__header,
+.coordinacion-cita-card__when,
+.coordinacion-cita-card__actions {
+  display: flex;
+  align-items: center;
+}
+
+.coordinacion-cita-card__header {
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--coordinacion-color-border);
+}
+
+.coordinacion-cita-card__when {
+  gap: 0.65rem;
+}
+
+.coordinacion-cita-card__date {
+  color: var(--coordinacion-color-ink);
+  font-size: 1.05rem;
+  font-weight: 750;
+}
+
+.coordinacion-cita-card__time {
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background-color: var(--coordinacion-color-bg-muted);
+  color: var(--coordinacion-color-forest-dark);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.coordinacion-cita-card__details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.5rem;
+  padding: 1rem 0;
+}
+
+.coordinacion-cita-card__details > div {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 0.15rem;
+}
+
+.coordinacion-cita-card__details strong {
+  color: var(--coordinacion-color-ink);
+  font-size: 0.95rem;
+  overflow-wrap: anywhere;
+}
+
+.coordinacion-cita-card__label {
+  color: var(--coordinacion-color-text-muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.coordinacion-cita-card__muted {
+  color: var(--coordinacion-color-text-muted);
+  font-size: 0.82rem;
+  overflow-wrap: anywhere;
+}
+
+.coordinacion-cita-card__reason {
+  grid-column: 1 / -1;
+  padding: 0.75rem 0.85rem;
+  border-radius: 9px;
+  background-color: var(--coordinacion-color-bg-muted);
+}
+
+.coordinacion-cita-card__reason p {
+  color: var(--coordinacion-color-text);
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+}
+
+.coordinacion-cita-card__actions {
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--coordinacion-color-border);
+}
+
+.coordinacion-cita-card__actions form {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.coordinacion-cita-card__status-form {
+  flex: 1 1 13rem;
+}
+
+.coordinacion-cita-card__status-form select,
+.coordinacion-cita-card__assign-form select {
+  min-width: 0;
+}
+
+.coordinacion-cita-card__assign-form {
+  flex: 2 1 20rem;
+}
+
+.coordinacion-cita-card__protected {
+  color: var(--coordinacion-color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
 .coordinacion-badge {
   display: inline-flex;
   align-items: center;
@@ -188,6 +320,24 @@
 
 .coordinacion-citas-btn--asignar:hover {
   background-color: var(--coordinacion-color-forest-dark);
+}
+
+.coordinacion-citas-btn--cancel,
+.coordinacion-citas-btn--delete {
+  min-height: 2.5rem;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid #f1d0cc;
+  border-radius: 8px;
+  background-color: var(--coordinacion-color-error-soft);
+  color: var(--coordinacion-color-error);
+  font-weight: 650;
+}
+
+.coordinacion-citas-btn--cancel:hover,
+.coordinacion-citas-btn--delete:hover {
+  border-color: var(--coordinacion-color-error);
+  background-color: var(--coordinacion-color-error);
+  color: #ffffff;
 }
 
 .coordinacion-feedback {

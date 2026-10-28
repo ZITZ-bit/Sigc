@@ -117,3 +117,8 @@
 </div>
 
 <button class="coordinacion-sidebar-overlay" type="button" aria-label="Cerrar menú de navegación" data-mobile-nav-close="coordinacion-mobile-sidebar" tabindex="-1"></button>
+
+@include('portal::toast', [
+    'notifications' => $toastNotifications,
+    'pollUrl' => route('coordinacion.notificaciones.nuevas'),
+])

@@ -28,6 +28,38 @@
   transform: translateY(0);
 }
 
+.auth-button--activation {
+  min-height: 3.25rem;
+  border: 1px solid #1c5949;
+  border-radius: 8px;
+  background: linear-gradient(110deg, #1c5949, #347b59);
+  box-shadow: 0 8px 18px rgb(45 106 79 / 0.2);
+  letter-spacing: 0.01em;
+}
+
+.auth-button--activation:hover,
+.auth-button--activation:focus-visible {
+  border-color: #17493c;
+  background: linear-gradient(110deg, #17493c, #1c5949);
+  box-shadow: 0 10px 22px rgb(27 67 50 / 0.26);
+  transform: translateY(-1px);
+}
+
+.auth-button--activation:active {
+  box-shadow: 0 4px 10px rgb(27 67 50 / 0.18);
+  transform: translateY(0);
+}
+
+.auth-button--activation svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  transition: transform var(--auth-transition-fast);
+}
+
+.auth-button--activation:hover svg {
+  transform: translateX(3px);
+}
+
 .auth-button:disabled {
   background-color: var(--auth-color-sage);
   cursor: not-allowed;

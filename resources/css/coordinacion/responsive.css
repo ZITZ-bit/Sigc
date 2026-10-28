@@ -55,6 +55,32 @@
     gap: 1rem;
   }
 
+  .coordinacion-cita-card {
+    padding: 1rem;
+  }
+
+  .coordinacion-cita-card__details {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .coordinacion-cita-card__reason {
+    grid-column: auto;
+  }
+
+  .coordinacion-cita-card__actions {
+    align-items: stretch;
+  }
+
+  .coordinacion-cita-card__actions form,
+  .coordinacion-cita-card__status-form,
+  .coordinacion-cita-card__assign-form {
+    width: 100%;
+  }
+
+  .coordinacion-cita-card__actions form > :is(select, button) {
+    flex: 1;
+  }
+
   .coordinacion-pacientes-header {
     flex-direction: column;
     align-items: flex-start;

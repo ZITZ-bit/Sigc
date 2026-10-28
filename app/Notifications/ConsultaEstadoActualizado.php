@@ -10,9 +10,7 @@ class ConsultaEstadoActualizado extends Notification
 {
     use Queueable;
 
-    public function __construct(protected Consulta $consulta, protected string $estadoAnterior = '')
-    {
-    }
+    public function __construct(protected Consulta $consulta) {}
 
     public function via(object $notifiable): array
     {
@@ -21,24 +19,14 @@ class ConsultaEstadoActualizado extends Notification
 
     public function toArray(object $notifiable): array
     {
-        $estado = $this->consulta->estado;
-
-        if ($estado === 'confirmada') {
-            $message = 'Tu consulta ha sido confirmada';
-        } elseif ($estado === 'cancelada') {
-            $message = 'Tu consulta ha sido cancelada';
-        } elseif ($estado === 'completada') {
-            $message = 'Tu consulta ha sido completada';
-        } else {
-            $message = 'El estado de tu consulta ha sido actualizado';
-        }
-
         return [
-            'message' => $message,
+            'message' => 'Tu consulta ha sido aceptada.',
             'consulta_id' => $this->consulta->id,
             'fecha' => $this->consulta->fecha,
             'hora' => $this->consulta->hora,
-            'estado' => $estado,
+            'estado' => $this->consulta->estado,
+            'medico' => $this->consulta->medico?->user?->name,
+            'especialidad' => $this->consulta->especialidad?->name,
         ];
     }
 }

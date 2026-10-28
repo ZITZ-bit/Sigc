@@ -10,7 +10,6 @@
     @vite(['resources/css/coordinacion.css', 'resources/js/app.js'])
 </head>
 <body>
-
     <div class="coordinacion-page">
         @include('portal::coordinacion.sidebar')
 
@@ -18,106 +17,155 @@
             <div class="coordinacion-content-area">
                 <div class="coordinacion-header">
                     <div class="coordinacion-header-content">
-                        <h1>Horarios de {{ $medico->user->name }}</h1>
-                        <p>Gestione los horarios de atención de {{ $medico->user->name }} ({{ $medico->especialidad?->name ?? 'Sin especialidad' }}).</p>
+                        <h1>Horarios de atención</h1>
+                        <p>{{ $medico->user->name }} · {{ $medico->especialidad?->name ?? 'Sin especialidad' }}</p>
                     </div>
-                    <a href="{{ route('coordinacion.medicos') }}" class="coordinacion-btn-link">Volver a médicos</a>
+                    <div class="coordinacion-header-actions">
+                        <a href="{{ route('coordinacion.medicos.editar', $medico) }}" class="coordinacion-btn-secondary">Editar médico</a>
+                        <a href="{{ route('coordinacion.medicos') }}" class="coordinacion-btn-link">Volver a médicos</a>
+                    </div>
                 </div>
 
                 @if (session('success'))
-                    <div class="coordinacion-feedback coordinacion-feedback-success" role="status">{{ session('success') }}</div>
-                @endif
-                @if ($errors->any())
-                    <div class="coordinacion-feedback coordinacion-feedback-error" role="alert">{{ $errors->first() }}</div>
+                    <div class="coordinacion-horario-feedback coordinacion-horario-feedback--success coordinacion-mb-2" role="status">
+                        {{ session('success') }}
+                    </div>
                 @endif
 
-                <section class="coordinacion-section">
-                    <div class="coordinacion-citas-header">
-                        <form method="POST" action="{{ route('coordinacion.medicos.horarios.store', $medico) }}" class="coordinacion-citas-filters">
-                            @csrf
-                            <select name="dia_semana" class="coordinacion-filter-select">
-                                <option value="0">Domingo</option>
-                                <option value="1">Lunes</option>
-                                <option value="2">Martes</option>
-                                <option value="3">Miércoles</option>
-                                <option value="4">Jueves</option>
-                                <option value="5">Viernes</option>
-                                <option value="6">Sábado</option>
-                            </select>
-                            <input type="time" name="hora_inicio" class="coordinacion-filter-select" required>
-                            <input type="time" name="hora_fin" class="coordinacion-filter-select" required>
-                            <label class="coordinacion-filter-checkbox">
-                                <input type="checkbox" name="activo" value="1" checked>
-                                Activo
-                            </label>
-                            <button type="submit" class="coordinacion-filter-btn coordinacion-filter-btn--active">Agregar horario</button>
-                        </form>
+                @if ($errors->any())
+                    <div class="coordinacion-horario-feedback coordinacion-horario-feedback--error coordinacion-mb-2" role="alert">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <section class="coordinacion-horarios-panel" aria-labelledby="horarios-heading">
+                    <div class="coordinacion-horarios-heading">
+                        <div>
+                            <span class="coordinacion-horarios-eyebrow">Disponibilidad semanal</span>
+                            <h2 id="horarios-heading" class="coordinacion-section-title">Horario de atención</h2>
+                            <p>Organiza los días y rangos en que {{ $medico->user->name }} puede recibir consultas.</p>
+                        </div>
+                        <div class="coordinacion-horarios-count" aria-label="{{ $horarios->where('activo', true)->count() }} horarios activos">
+                            <strong>{{ $horarios->where('activo', true)->count() }}</strong>
+                            <span>activos</span>
+                        </div>
                     </div>
 
-                    <table class="coordinacion-citas-table">
-                        <thead>
-                            <tr>
-                                <th>Día</th>
-                                <th>Hora inicial</th>
-                                <th>Hora final</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if ($horarios->isEmpty())
-                                <tr>
-                                    <td colspan="5">
-                                        <div class="coordinacion-empty-state">
-                                            <strong>No hay horarios registrados</strong>
-                                            <p>Cuando se registren horarios, aparecerán aquí para gestionar la disponibilidad del médico.</p>
+                    <form method="POST" action="{{ route('coordinacion.medicos.horarios.store', $medico) }}" class="coordinacion-horario-create">
+                        @csrf
+                        <div class="coordinacion-horario-create-heading">
+                            <span class="coordinacion-horario-create-icon" aria-hidden="true">+</span>
+                            <div>
+                                <h3>Agregar disponibilidad</h3>
+                                <p>Los horarios del mismo día pueden ser consecutivos, pero no cruzarse.</p>
+                            </div>
+                        </div>
+                        <div class="coordinacion-horario-form-grid">
+                            <div class="coordinacion-form-field">
+                                <label for="dia_semana" class="coordinacion-form-label">Día de atención</label>
+                                <select id="dia_semana" name="dia_semana" class="coordinacion-configuracion-input" required>
+                                    @foreach ($diasSemana as $numeroDia => $nombreDia)
+                                        <option value="{{ $numeroDia }}" {{ (string) old('dia_semana', now()->dayOfWeek) === (string) $numeroDia ? 'selected' : '' }}>{{ $nombreDia }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="coordinacion-form-field">
+                                <label for="hora_inicio" class="coordinacion-form-label">Desde</label>
+                                <input id="hora_inicio" type="time" name="hora_inicio" class="coordinacion-configuracion-input" value="{{ old('hora_inicio') }}" required>
+                            </div>
+                            <div class="coordinacion-form-field">
+                                <label for="hora_fin" class="coordinacion-form-label">Hasta</label>
+                                <input id="hora_fin" type="time" name="hora_fin" class="coordinacion-configuracion-input" value="{{ old('hora_fin') }}" required>
+                            </div>
+                            <label class="coordinacion-horario-switch">
+                                <input type="hidden" name="activo" value="0">
+                                <input type="checkbox" name="activo" value="1" {{ old('activo', true) ? 'checked' : '' }}>
+                                <span class="coordinacion-horario-switch-track" aria-hidden="true"></span>
+                                <span>Dejar activo</span>
+                            </label>
+                            <button type="submit" class="coordinacion-horario-button coordinacion-horario-button--primary">Agregar horario</button>
+                        </div>
+                        <p class="coordinacion-horario-note">La hora de fin marca el cierre y no se considera disponible para citas.</p>
+                    </form>
+
+                    <div class="coordinacion-horarios-list-heading">
+                        <div>
+                            <h3>Horarios asignados</h3>
+                            <p>{{ $horarios->count() }} {{ $horarios->count() === 1 ? 'rango configurado' : 'rangos configurados' }}</p>
+                        </div>
+                    </div>
+
+                    @if ($horarios->isEmpty())
+                        <div class="coordinacion-horarios-empty">
+                            <span class="coordinacion-horarios-empty-icon" aria-hidden="true">◷</span>
+                            <strong>Aún no hay horarios</strong>
+                            <p>Agrega una disponibilidad para que puedan asignarse citas a este médico.</p>
+                        </div>
+                    @else
+                        <div class="coordinacion-horarios-grid">
+                            @foreach ($horarios as $horario)
+                                <article class="coordinacion-horario-card {{ $horario->activo ? 'is-active' : 'is-inactive' }}">
+                                    <div class="coordinacion-horario-card-heading">
+                                        <div>
+                                            <span class="coordinacion-horario-day">{{ $diasSemana[$horario->dia_semana] }}</span>
+                                            <span class="coordinacion-horario-range">{{ substr($horario->hora_inicio, 0, 5) }} <span aria-hidden="true">—</span> {{ substr($horario->hora_fin, 0, 5) }}</span>
                                         </div>
-                                    </td>
-                                </tr>
-                            @else
-                                @foreach ($horarios as $horario)
-                                    <tr>
-                                        <td>{{ $diasSemana[$horario->dia_semana] }}</td>
-                                        <td>{{ substr($horario->hora_inicio, 0, 5) }}</td>
-                                        <td>{{ substr($horario->hora_fin, 0, 5) }}</td>
-                                        <td>
-                                            <span class="coordinacion-badge coordinacion-badge--{{ $horario->activo ? 'activo' : 'inactivo' }}">
-                                                {{ $horario->activo ? 'Activo' : 'Inactivo' }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <div class="coordinacion-citas-actions">
-                                                <form method="POST" action="{{ route('coordinacion.medicos.horarios.update', [$medico, $horario]) }}" style="display:inline;">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <select name="dia_semana" class="coordinacion-estado-select">
-                                                        <option value="0" {{ $horario->dia_semana == 0 ? 'selected' : '' }}>Domingo</option>
-                                                        <option value="1" {{ $horario->dia_semana == 1 ? 'selected' : '' }}>Lunes</option>
-                                                        <option value="2" {{ $horario->dia_semana == 2 ? 'selected' : '' }}>Martes</option>
-                                                        <option value="3" {{ $horario->dia_semana == 3 ? 'selected' : '' }}>Miércoles</option>
-                                                        <option value="4" {{ $horario->dia_semana == 4 ? 'selected' : '' }}>Jueves</option>
-                                                        <option value="5" {{ $horario->dia_semana == 5 ? 'selected' : '' }}>Viernes</option>
-                                                        <option value="6" {{ $horario->dia_semana == 6 ? 'selected' : '' }}>Sábado</option>
-                                                    </select>
-                                                    <input type="time" name="hora_inicio" value="{{ substr($horario->hora_inicio, 0, 5) }}" class="coordinacion-estado-select" style="width: 80px;">
-                                                    <input type="time" name="hora_fin" value="{{ substr($horario->hora_fin, 0, 5) }}" class="coordinacion-estado-select" style="width: 80px;">
-                                                    <label class="coordinacion-filter-checkbox" style="margin:0;">
-                                                        <input type="checkbox" name="activo" value="1" {{ $horario->activo ? 'checked' : '' }}>
-                                                        Activo
-                                                    </label>
-                                                    <button type="submit" class="coordinacion-citas-btn coordinacion-citas-btn--view">Guardar</button>
-                                                </form>
-                                                <form method="POST" action="{{ route('coordinacion.medicos.horarios.destroy', [$medico, $horario]) }}" style="display:inline; margin-left:0.5rem;">
-                                                    @csrf
-                                                    <button type="submit" class="coordinacion-citas-btn coordinacion-citas-btn--view" onclick="return confirm('¿Está seguro de que desea desactivar este horario?')">Desactivar</button>
-                                                </form>
+                                        <span class="coordinacion-horario-status">
+                                            <span aria-hidden="true"></span>
+                                            {{ $horario->activo ? 'Activo' : 'Inactivo' }}
+                                        </span>
+                                    </div>
+
+                                    <form id="horario-form-{{ $horario->id }}" method="POST" action="{{ route('coordinacion.medicos.horarios.update', [$medico, $horario]) }}" class="coordinacion-horario-edit-form">
+                                        @csrf
+                                        @method('PUT')
+                                        <div class="coordinacion-horario-form-grid coordinacion-horario-form-grid--edit">
+                                            <div class="coordinacion-form-field">
+                                                <label for="horario-dia-{{ $horario->id }}" class="coordinacion-form-label">Día</label>
+                                                <select id="horario-dia-{{ $horario->id }}" name="dia_semana" class="coordinacion-configuracion-input" required>
+                                                    @foreach ($diasSemana as $numeroDia => $nombreDia)
+                                                        <option value="{{ $numeroDia }}" {{ $horario->dia_semana == $numeroDia ? 'selected' : '' }}>{{ $nombreDia }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @endif
-                        </tbody>
-                    </table>
+                                            <div class="coordinacion-form-field">
+                                                <label for="horario-inicio-{{ $horario->id }}" class="coordinacion-form-label">Desde</label>
+                                                <input id="horario-inicio-{{ $horario->id }}" type="time" name="hora_inicio" value="{{ substr($horario->hora_inicio, 0, 5) }}" class="coordinacion-configuracion-input" required>
+                                            </div>
+                                            <div class="coordinacion-form-field">
+                                                <label for="horario-fin-{{ $horario->id }}" class="coordinacion-form-label">Hasta</label>
+                                                <input id="horario-fin-{{ $horario->id }}" type="time" name="hora_fin" value="{{ substr($horario->hora_fin, 0, 5) }}" class="coordinacion-configuracion-input" required>
+                                            </div>
+                                            <label class="coordinacion-horario-switch">
+                                                <input type="hidden" name="activo" value="0">
+                                                <input type="checkbox" name="activo" value="1" {{ $horario->activo ? 'checked' : '' }}>
+                                                <span class="coordinacion-horario-switch-track" aria-hidden="true"></span>
+                                                <span>Disponible</span>
+                                            </label>
+                                        </div>
+                                    </form>
+                                    <div class="coordinacion-horario-card-actions">
+                                        <button type="submit" form="horario-form-{{ $horario->id }}" class="coordinacion-horario-button coordinacion-horario-button--secondary">Guardar horario</button>
+                                        @if ($horario->activo)
+                                            <form method="POST" action="{{ route('coordinacion.medicos.horarios.destroy', [$medico, $horario]) }}" class="coordinacion-horario-deactivate-form" onsubmit="return confirm('¿Quieres desactivar este horario?');">
+                                                @csrf
+                                                <button type="submit" class="coordinacion-horario-button coordinacion-horario-button--quiet">Desactivar</button>
+                                            </form>
+                                        @endif
+                                        <form method="POST" action="{{ route('coordinacion.medicos.horarios.eliminar', [$medico, $horario]) }}" class="coordinacion-horario-delete-form" onsubmit="return confirm('¿Eliminar permanentemente este horario? Esta acción no se puede deshacer.');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="coordinacion-horario-button coordinacion-horario-button--delete">Eliminar</button>
+                                        </form>
+                                    </div>
+                                </article>
+                            @endforeach
+                        </div>
+                    @endif
                 </section>
             </div>
         </div>

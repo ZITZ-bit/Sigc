@@ -157,7 +157,6 @@ class MedicosController extends Controller
             'user',
             'especialidad',
             'departamento',
-            'horarios' => fn ($query) => $query->orderBy('dia_semana')->orderBy('hora_inicio'),
         ]);
         $especialidades = Especialidad::orderBy('name')->get();
         $departamentos = Departamento::orderBy('name')->get();
@@ -166,15 +165,6 @@ class MedicosController extends Controller
             'medico' => $medico,
             'especialidades' => $especialidades,
             'departamentos' => $departamentos,
-            'diasSemana' => [
-                0 => 'Domingo',
-                1 => 'Lunes',
-                2 => 'Martes',
-                3 => 'Miércoles',
-                4 => 'Jueves',
-                5 => 'Viernes',
-                6 => 'Sábado',
-            ],
         ]);
     }
 

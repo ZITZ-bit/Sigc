@@ -103,3 +103,8 @@
 </div>
 
 <button class="medico-sidebar-overlay" type="button" aria-label="Cerrar menú de navegación" data-mobile-nav-close="medico-mobile-sidebar" tabindex="-1"></button>
+
+@include('portal::toast', [
+    'notifications' => $toastNotifications,
+    'pollUrl' => route('medico.notificaciones.nuevas'),
+])

@@ -10,9 +10,7 @@ class ConsultaAsignada extends Notification
 {
     use Queueable;
 
-    public function __construct(protected Consulta $consulta)
-    {
-    }
+    public function __construct(protected Consulta $consulta) {}
 
     public function via(object $notifiable): array
     {
@@ -27,6 +25,8 @@ class ConsultaAsignada extends Notification
             'fecha' => $this->consulta->fecha,
             'hora' => $this->consulta->hora,
             'estado' => $this->consulta->estado,
+            'paciente' => $this->consulta->user?->name,
+            'especialidad' => $this->consulta->especialidad?->name,
         ];
     }
 }

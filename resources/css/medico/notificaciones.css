@@ -7,71 +7,177 @@
 .medico-notificaciones-list {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
 .medico-notificacion-item {
+  position: relative;
   display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  padding: 1.25rem;
-  background-color: var(--medico-color-surface);
+  align-items: center;
+  gap: 1.125rem;
+  padding: 1.35rem 1.5rem;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--medico-color-surface), var(--medico-color-bg));
   border: 1px solid var(--medico-color-border);
-  border-radius: var(--medico-radius);
+  border-radius: 18px;
+  box-shadow: var(--medico-shadow);
+  transition: transform var(--medico-transition), box-shadow var(--medico-transition), border-color var(--medico-transition);
+}
+
+.medico-notificacion-item:hover {
+  transform: translateY(-2px);
+  border-color: var(--medico-color-sage);
+  box-shadow: var(--medico-shadow-md);
 }
 
 .medico-notificacion-item--unread {
-  border-left: 4px solid var(--medico-color-forest);
-  background-color: var(--medico-color-mint);
+  border-color: color-mix(in srgb, var(--medico-color-forest) 25%, var(--medico-color-border));
+  background: linear-gradient(120deg, var(--medico-color-mint), var(--medico-color-surface) 70%);
+  box-shadow: 0 8px 24px rgb(20 55 38 / 0.07);
+}
+
+.medico-notificacion-item--unread::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--medico-color-sage), var(--medico-color-forest));
+  content: '';
 }
 
 .medico-notificacion-icon {
-  flex-shrink: 0;
-  width: 2.5rem;
-  height: 2.5rem;
+  flex: 0 0 3.25rem;
+  width: 3.25rem;
+  height: 3.25rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
-  background-color: var(--medico-color-forest);
-  border-radius: var(--medico-radius-sm);
-  font-size: 1.125rem;
+  color: var(--medico-color-forest-dark);
+  background: linear-gradient(145deg, var(--medico-color-pastel), var(--medico-color-mint));
+  border: 1px solid rgb(45 106 79 / 0.12);
+  border-radius: 15px;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.8);
+}
+
+.medico-notificacion-icon svg {
+  width: 1.4rem;
+  height: 1.4rem;
+  stroke-width: 2;
 }
 
 .medico-notificacion-content {
   flex: 1;
+  min-width: 0;
 }
 
 .medico-notificacion-title {
-  font-weight: 600;
+  margin: 0 0 0.4rem;
+  font-weight: 700;
   color: var(--medico-color-ink);
-  font-size: 0.9375rem;
-  margin-bottom: 0.25rem;
+  font-size: 1rem;
+  letter-spacing: -0.015em;
 }
 
 .medico-notificacion-text {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 0 0.5rem;
   font-size: 0.875rem;
-  color: var(--medico-color-text-muted);
+  color: var(--medico-color-text);
   line-height: 1.5;
-  margin-bottom: 0.5rem;
+}
+
+.medico-notificacion-text svg,
+.medico-notificacion-appointment svg {
+  flex: 0 0 auto;
+  width: 1rem;
+  height: 1rem;
+  color: var(--medico-color-forest);
+}
+
+.medico-notificacion-appointment {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  width: fit-content;
+  margin: 0.75rem 0;
+  padding: 0.55rem 0.75rem;
+  color: var(--medico-color-forest-dark);
+  background: rgb(232 245 233 / 0.8);
+  border: 1px solid rgb(45 106 79 / 0.12);
+  border-radius: 10px;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.medico-notificacion-appointment-time {
+  padding-left: 0.55rem;
+  border-left: 1px solid rgb(45 106 79 / 0.24);
+  font-variant-numeric: tabular-nums;
 }
 
 .medico-notificacion-time {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
   font-size: 0.75rem;
   color: var(--medico-color-text-muted);
-  display: block;
+}
+
+.medico-notificacion-item form {
+  flex: 0 0 auto;
+}
+
+.medico-notificacion-item .medico-filter-btn {
+  min-height: 2.5rem;
+  padding: 0.55rem 0.85rem;
+  color: var(--medico-color-forest-dark);
+  background: var(--medico-color-surface);
+  border: 1px solid var(--medico-color-border);
+  border-radius: 10px;
+  font-weight: 600;
+  transition: background var(--medico-transition), border-color var(--medico-transition), color var(--medico-transition);
+}
+
+.medico-notificacion-item .medico-filter-btn:hover {
+  color: #ffffff;
+  background: var(--medico-color-forest);
+  border-color: var(--medico-color-forest);
 }
 
 .medico-notificaciones-empty {
   text-align: center;
-  padding: 3rem 1rem;
+  padding: 3.5rem 1.5rem;
   color: var(--medico-color-text-muted);
+  background: linear-gradient(145deg, var(--medico-color-surface), var(--medico-color-bg));
+  border: 1px dashed var(--medico-color-border);
+  border-radius: 18px;
+}
+
+.medico-notificaciones-empty strong {
+  display: block;
+  margin-bottom: 0.45rem;
+  color: var(--medico-color-ink);
+  font-size: 1.05rem;
+}
+
+.medico-notificaciones-empty p {
+  max-width: 34rem;
+  margin: 0 auto;
+  line-height: 1.6;
 }
 
 .medico-notificaciones-empty-icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  opacity: 0.5;
+  display: grid;
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto 1rem;
+  place-items: center;
+  color: var(--medico-color-forest);
+  background: var(--medico-color-mint);
+  border-radius: 18px;
+  font-size: 1.8rem;
 }
 
 .medico-notificaciones-disclaimer {
@@ -79,4 +185,32 @@
   font-size: 0.8125rem;
   color: var(--medico-color-text-muted);
   font-style: italic;
+}
+
+@media (max-width: 640px) {
+  .medico-notificacion-item {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding: 1rem;
+  }
+
+  .medico-notificacion-icon {
+    flex-basis: 2.75rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 12px;
+  }
+
+  .medico-notificacion-content {
+    flex-basis: calc(100% - 4rem);
+  }
+
+  .medico-notificacion-item form {
+    width: 100%;
+    padding-left: 3.875rem;
+  }
+
+  .medico-notificacion-item .medico-filter-btn {
+    width: 100%;
+  }
 }
