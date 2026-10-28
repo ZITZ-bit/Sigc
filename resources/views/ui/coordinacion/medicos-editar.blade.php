@@ -43,7 +43,7 @@
                 @endif
 
                 <section class="coordinacion-section">
-                    <form method="POST" action="{{ route('coordinacion.medicos.update', $medico->id) }}">
+                    <form id="medico-edit-form" method="POST" action="{{ route('coordinacion.medicos.update', $medico->id) }}">
                         @csrf
                         @method('PUT')
 
@@ -104,13 +104,28 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="coordinacion-medicos-actions coordinacion-mt-2">
-                            <button type="submit" class="coordinacion-btn-primary">Guardar cambios</button>
-                            <a href="{{ route('coordinacion.medicos') }}" class="coordinacion-btn-secondary">Cancelar</a>
-                        </div>
                     </form>
 
+                    <div class="coordinacion-medico-edit-actions coordinacion-mt-2">
+                        <div class="coordinacion-medicos-actions">
+                            <button type="submit" form="medico-edit-form" class="coordinacion-btn-primary">Guardar cambios</button>
+                            <a href="{{ route('coordinacion.medicos') }}" class="coordinacion-btn-secondary">Cancelar</a>
+                        </div>
+
+                        <div class="coordinacion-medico-edit-actions--right">
+                            @if ($medico->estado === 'activo')
+                                <form method="POST" action="{{ route('coordinacion.medicos.destroy', $medico) }}" onsubmit="return confirm('¿Está seguro de que desea desactivar a este médico?')">
+                                    @csrf
+                                    <button type="submit" class="coordinacion-medicos-btn coordinacion-medicos-btn--deactivate">Desactivar médico</button>
+                                </form>
+                            @elseif ($medico->estado === 'inactivo')
+                                <form method="POST" action="{{ route('coordinacion.medicos.activate', $medico) }}">
+                                    @csrf
+                                    <button type="submit" class="coordinacion-medicos-btn coordinacion-medicos-btn--activate">Activar médico</button>
+                                </form>
+                            @endif
+                        </div>
+                    </div>
                 </section>
             </div>
         </div>

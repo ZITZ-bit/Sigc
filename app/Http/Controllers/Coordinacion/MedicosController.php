@@ -206,24 +206,24 @@ class MedicosController extends Controller
     /**
      * Deactivate a medic account (soft disable).
      */
-    public function destroy(Medico $medico)
+    public function destroy(Medico $medico): RedirectResponse
     {
         $medico->update(['estado' => 'inactivo']);
 
         return redirect()
-            ->route('coordinacion.medicos')
+            ->route('coordinacion.medicos.editar', $medico)
             ->with('success', 'Médico desactivado correctamente.');
     }
 
     /**
      * Reactivate a medic account.
      */
-    public function activate(Medico $medico)
+    public function activate(Medico $medico): RedirectResponse
     {
         $medico->update(['estado' => 'activo']);
 
         return redirect()
-            ->route('coordinacion.medicos')
+            ->route('coordinacion.medicos.editar', $medico)
             ->with('success', 'Médico activado correctamente.');
     }
 

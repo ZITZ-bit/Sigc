@@ -57,7 +57,7 @@
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody data-sync-list="medico-agenda">
                                 @if ($consultas->isEmpty())
                                     <tr>
                                         <td colspan="6">
@@ -69,7 +69,7 @@
                                     </tr>
                                 @else
                                     @foreach ($consultas as $consulta)
-                                        <tr>
+                                        <tr data-consulta-id="{{ $consulta->id }}" data-consulta-estado="{{ $consulta->estado }}">
                                             <td>{{ $consulta->hora }}</td>
                                             <td>{{ $consulta->user->name }}</td>
                                             <td>{{ $consulta->especialidad?->name ?: 'Sin especialidad' }}</td>

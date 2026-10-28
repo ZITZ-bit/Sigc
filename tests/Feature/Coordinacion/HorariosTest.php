@@ -109,7 +109,81 @@ class HorariosTest extends TestCase
             ->assertOk()
             ->assertSee('Editar médico')
             ->assertDontSee('Disponibilidad semanal')
+            ->assertSee('Desactivar médico')
+            ->assertSee(route('coordinacion.medicos.destroy', $medico), false)
+            ->assertSee('coordinacion-medico-edit-actions--right', false)
+            ->assertDontSee('Activar médico')
             ->assertDontSee(route('coordinacion.medicos.horarios.store', $medico), false);
+    }
+
+    public function test_listado_muestra_boton_destacado_de_horarios_y_no_muestra_desactivar(): void
+    {
+        $roles = $this->crearRoles();
+        $coordinator = User::factory()->coordinador()->create([
+            'role_id' => $roles['coordinador']->id,
+        ]);
+        $medico = $this->crearMedicoConHorario();
+
+        $this->withoutVite()
+            ->actingAs($coordinator)
+            ->get(route('coordinacion.medicos'))
+            ->assertOk()
+            ->assertSee('coordinacion-medicos-btn--horarios', false)
+            ->assertSee('calendar-clock', false)
+            ->assertSee('Horarios')
+            ->assertDontSee('Desactivar médico')
+            ->assertDontSee(route('coordinacion.medicos.destroy', $medico), false);
+    }
+
+    public function test_coordinador_puede_desactivar_medico_desde_edicion(): void
+    {
+        $roles = $this->crearRoles();
+        $coordinator = User::factory()->coordinador()->create([
+            'role_id' => $roles['coordinador']->id,
+        ]);
+        $medico = $this->crearMedicoConHorario();
+
+        $response = $this->actingAs($coordinator)
+            ->post(route('coordinacion.medicos.destroy', $medico));
+
+        $response->assertRedirectToRoute('coordinacion.medicos.editar', $medico);
+        $response->assertSessionHas('success', 'Médico desactivado correctamente.');
+        $this->assertDatabaseHas('medicos', [
+            'id' => $medico->id,
+            'estado' => 'inactivo',
+        ]);
+
+        $this->actingAs($coordinator)
+            ->get(route('coordinacion.medicos.editar', $medico))
+            ->assertOk()
+            ->assertSee('Activar médico')
+            ->assertDontSee('Desactivar médico');
+    }
+
+    public function test_coordinador_puede_reactivar_medico_desde_edicion(): void
+    {
+        $roles = $this->crearRoles();
+        $coordinator = User::factory()->coordinador()->create([
+            'role_id' => $roles['coordinador']->id,
+        ]);
+        $medico = $this->crearMedicoConHorario();
+        $medico->update(['estado' => 'inactivo']);
+
+        $response = $this->actingAs($coordinator)
+            ->post(route('coordinacion.medicos.activate', $medico));
+
+        $response->assertRedirectToRoute('coordinacion.medicos.editar', $medico);
+        $response->assertSessionHas('success', 'Médico activado correctamente.');
+        $this->assertDatabaseHas('medicos', [
+            'id' => $medico->id,
+            'estado' => 'activo',
+        ]);
+
+        $this->actingAs($coordinator)
+            ->get(route('coordinacion.medicos.editar', $medico))
+            ->assertOk()
+            ->assertSee('Desactivar médico')
+            ->assertDontSee('Activar médico');
     }
 
     public function test_pantalla_horarios_muestra_y_permite_actualizar_horarios_en_tarjetas(): void

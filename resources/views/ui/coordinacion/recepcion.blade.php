@@ -44,10 +44,10 @@
                                 <th>Estado</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody data-sync-list="coordinacion-recepcion">
                             @if (isset($consultas) && $consultas->isNotEmpty())
                                 @foreach ($consultas as $consulta)
-                                    <tr>
+                                    <tr data-consulta-id="{{ $consulta->id }}" data-consulta-estado="{{ $consulta->estado }}">
                                         <td>{{ \Carbon\Carbon::parse($consulta->fecha)->format('d/m/Y') }}</td>
                                         <td>{{ $consulta->hora }}</td>
                                         <td>{{ $consulta->user->name ?? 'N/A' }}</td>

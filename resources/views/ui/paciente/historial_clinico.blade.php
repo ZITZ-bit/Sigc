@@ -21,18 +21,57 @@
                     <div class="paciente-historial-list">
                         @if (isset($registros) && $registros->isNotEmpty())
                             @foreach ($registros as $registro)
-                                <div style="border:1px solid #e5e7eb; padding:1rem; margin-bottom:0.75rem; border-radius:8px; background:#ffffff;">
-                                    <strong>{{ \Carbon\Carbon::parse($registro->consulta->fecha ?? null)->format('d/m/Y') }} {{ $registro->consulta->hora ?? '' }}</strong>
-                                    <div style="margin-top:0.5rem; color:#374151;">
-                                        @if ($registro->diagnostico)<div><strong>Diagnóstico:</strong> {{ $registro->diagnostico }}</div>@endif
-                                        @if ($registro->nota)<div><strong>Nota:</strong> {{ $registro->nota }}</div>@endif
-                                        @if ($registro->tratamiento)<div><strong>Tratamiento:</strong> {{ $registro->tratamiento }}</div>@endif
+                                <article class="paciente-historial-item">
+                                    <header class="paciente-historial-item__header">
+                                        <div class="paciente-historial-date">
+                                            @if ($registro->consulta?->fecha)
+                                                <span class="paciente-historial-date-value">{{ \Carbon\Carbon::parse($registro->consulta->fecha)->format('d/m/Y') }}</span>
+                                            @else
+                                                <span class="paciente-historial-date-value">Fecha no disponible</span>
+                                            @endif
+                                            @if ($registro->consulta?->hora)
+                                                <span class="paciente-historial-time">{{ substr($registro->consulta->hora, 0, 5) }}</span>
+                                            @endif
+                                        </div>
+                                        <div class="paciente-historial-info">
+                                            <span class="paciente-historial-type">Registro de consulta</span>
+                                            <strong class="paciente-historial-doctor">{{ $registro->medico?->user?->name ?? 'Médico no disponible' }}</strong>
+                                            @if ($registro->consulta?->especialidad)
+                                                <span class="paciente-historial-specialty">{{ $registro->consulta->especialidad->name }}</span>
+                                            @endif
+                                        </div>
+                                        <span class="paciente-historial-status">Consulta atendida</span>
+                                    </header>
+
+                                    <div class="paciente-historial-fields">
+                                        @if ($registro->diagnostico)
+                                            <div class="paciente-historial-field paciente-historial-field--diagnosis">
+                                                <span class="paciente-historial-field-label">Diagnóstico</span>
+                                                <p>{{ $registro->diagnostico }}</p>
+                                            </div>
+                                        @endif
+                                        @if ($registro->nota)
+                                            <div class="paciente-historial-field">
+                                                <span class="paciente-historial-field-label">Nota médica</span>
+                                                <p>{{ $registro->nota }}</p>
+                                            </div>
+                                        @endif
+                                        @if ($registro->tratamiento)
+                                            <div class="paciente-historial-field">
+                                                <span class="paciente-historial-field-label">Tratamiento</span>
+                                                <p>{{ $registro->tratamiento }}</p>
+                                            </div>
+                                        @endif
+                                        @unless ($registro->diagnostico || $registro->nota || $registro->tratamiento)
+                                            <p class="paciente-historial-no-details">No se añadieron detalles clínicos a este registro.</p>
+                                        @endunless
                                     </div>
-                                </div>
+                                </article>
                             @endforeach
-                            <div>{{ $registros->links() }}</div>
+                            <div class="paciente-historial-pagination">{{ $registros->links() }}</div>
                         @else
-                            <div class="paciente-empty-state">
+                            <div class="paciente-empty-state paciente-historial-empty">
+                                <span class="paciente-historial-empty-icon" aria-hidden="true">+</span>
                                 <strong>No tienes registros clínicos</strong>
                                 <p>Los registros aparecerán aquí cuando tu médico los registre tras una consulta completada.</p>
                             </div>

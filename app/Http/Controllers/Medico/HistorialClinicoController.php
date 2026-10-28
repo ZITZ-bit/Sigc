@@ -15,14 +15,14 @@ class HistorialClinicoController extends Controller
     {
         $medico = Auth::user()->medico;
 
-        if (!$medico) {
+        if (! $medico) {
             return view('ui.medico.historial_clinico', [
                 'registros' => collect(),
                 'medico' => null,
             ]);
         }
 
-        $registros = HistorialClinico::with(['consulta', 'paciente'])
+        $registros = HistorialClinico::with(['consulta.especialidad', 'paciente'])
             ->where('medico_id', $medico->id)
             ->latest()
             ->paginate(15);
@@ -37,7 +37,7 @@ class HistorialClinicoController extends Controller
     {
         $medico = Auth::user()->medico;
 
-        if (!$medico || $consulta->medico_id !== $medico->id) {
+        if (! $medico || $consulta->medico_id !== $medico->id) {
             abort(403);
         }
 
@@ -59,7 +59,7 @@ class HistorialClinicoController extends Controller
     {
         $medico = Auth::user()->medico;
 
-        if (!$medico || $consulta->medico_id !== $medico->id) {
+        if (! $medico || $consulta->medico_id !== $medico->id) {
             abort(403);
         }
 
