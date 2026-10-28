@@ -27,14 +27,14 @@
                 </div>
 
                 @if (session('success'))
-                    <div class="coordinacion-card coordinacion-mb-2" style="background-color: var(--coordinacion-color-success-soft); border-color: var(--coordinacion-color-success);">
-                        <p style="color: var(--coordinacion-color-success); margin: 0; font-size: 0.9375rem;">{{ session('success') }}</p>
+                    <div class="coordinacion-horario-feedback coordinacion-horario-feedback--success coordinacion-mb-2" role="status">
+                        {{ session('success') }}
                     </div>
                 @endif
 
                 @if ($errors->any())
-                    <div class="coordinacion-card coordinacion-mb-2" style="background-color: var(--coordinacion-color-error-soft); border-color: var(--coordinacion-color-error);">
-                        <ul style="color: var(--coordinacion-color-error); margin: 0; padding-left: 1rem; font-size: 0.9375rem;">
+                    <div class="coordinacion-horario-feedback coordinacion-horario-feedback--error coordinacion-mb-2" role="alert">
+                        <ul>
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
                             @endforeach
@@ -111,56 +111,6 @@
                         </div>
                     </form>
 
-                    <div class="coordinacion-card coordinacion-mt-2">
-                        <h3 class="coordinacion-section-title">Horario de atención</h3>
-                        <p>Asigne un día y rango de atención para {{ $medico->user->name }}.</p>
-
-                        <form method="POST" action="{{ route('coordinacion.medicos.horarios.store', $medico) }}">
-                            @csrf
-                            <input type="hidden" name="return_to" value="edit">
-                            <div class="coordinacion-grid coordinacion-grid-cols-2">
-                                <div class="coordinacion-form-field coordinacion-mb-2">
-                                    <label for="dia_semana" class="coordinacion-form-label">Día</label>
-                                    <select id="dia_semana" name="dia_semana" class="coordinacion-configuracion-input" required>
-                                        @foreach ($diasSemana as $numeroDia => $nombreDia)
-                                            <option value="{{ $numeroDia }}" {{ old('dia_semana') == $numeroDia ? 'selected' : '' }}>{{ $nombreDia }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="coordinacion-form-field coordinacion-mb-2">
-                                    <label for="hora_inicio" class="coordinacion-form-label">Hora de inicio</label>
-                                    <input id="hora_inicio" type="time" name="hora_inicio" class="coordinacion-configuracion-input" value="{{ old('hora_inicio') }}" required>
-                                </div>
-                                <div class="coordinacion-form-field coordinacion-mb-2">
-                                    <label for="hora_fin" class="coordinacion-form-label">Hora de fin</label>
-                                    <input id="hora_fin" type="time" name="hora_fin" class="coordinacion-configuracion-input" value="{{ old('hora_fin') }}" required>
-                                </div>
-                                <div class="coordinacion-form-field coordinacion-mb-2">
-                                    <label class="coordinacion-form-label">
-                                        <input type="checkbox" name="activo" value="1" {{ old('activo', true) ? 'checked' : '' }}>
-                                        Horario activo
-                                    </label>
-                                </div>
-                            </div>
-                            <button type="submit" class="coordinacion-btn-primary">Asignar horario</button>
-                        </form>
-
-                        <h4 class="coordinacion-section-title coordinacion-mt-2">Horarios asignados</h4>
-                        @if ($medico->horarios->isEmpty())
-                            <p>Este médico aún no tiene horarios asignados.</p>
-                        @else
-                            <ul>
-                                @foreach ($medico->horarios as $horario)
-                                    <li>
-                                        {{ $diasSemana[$horario->dia_semana] }}:
-                                        {{ substr($horario->hora_inicio, 0, 5) }}–{{ substr($horario->hora_fin, 0, 5) }}
-                                        ({{ $horario->activo ? 'Activo' : 'Inactivo' }})
-                                    </li>
-                                @endforeach
-                            </ul>
-                        @endif
-                        <a href="{{ route('coordinacion.medicos.horarios', $medico) }}" class="coordinacion-btn-secondary">Editar horarios existentes</a>
-                    </div>
                 </section>
             </div>
         </div>

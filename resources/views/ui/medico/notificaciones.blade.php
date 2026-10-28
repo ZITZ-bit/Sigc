@@ -24,43 +24,7 @@
                 </div>
 
                 <section class="medico-section">
-                    <div class="medico-notificaciones-list">
-                        @if (isset($notifications) && $notifications->isNotEmpty())
-                            @foreach ($notifications as $notification)
-                                <div class="medico-notificacion-item" style="border:1px solid #e5e7eb; padding:1rem; margin-bottom:0.75rem; border-radius:8px; background: {{ is_null($notification->read_at) ? '#f0fdf4' : '#ffffff' }};">
-                                    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:1rem;">
-                                        <div>
-                                            <strong>{{ $notification->data['message'] ?? 'Notificación' }}</strong>
-                                            <p style="margin:0.25rem 0 0; color:#6b7280; font-size:0.9rem;">
-                                                {{ $notification->created_at->diffForHumans() }}
-                                                @if (!is_null($notification->read_at))
-                                                    · Leída
-                                                @else
-                                                    · Sin leer
-                                                @endif
-                                            </p>
-                                        </div>
-                                        @if (is_null($notification->read_at))
-                                            <form method="POST" action="{{ route('medico.notificaciones.leer', $notification->id) }}">
-                                                @csrf
-                                                <button type="submit" class="medico-filter-btn">Marcar como leída</button>
-                                            </form>
-                                        @endif
-                                    </div>
-                                </div>
-                            @endforeach
-                            <div style="margin-top:1rem;">
-                                {{ $notifications->links() }}
-                            </div>
-                        @else
-                            <div class="medico-empty-state">
-                                <strong>No tienes notificaciones recientes</strong>
-                                <p>Los avisos de agenda y atención aparecerán aquí cuando estén disponibles.</p>
-                            </div>
-                        @endif
-                    </div>
-
-                    <p class="medico-text-center">Las notificaciones se generan automáticamente según la actividad de tu consultorio.</p>
+                    @include('portal::medico.notificaciones', ['notifications' => $notifications])
                 </section>
             </div>
         </div>

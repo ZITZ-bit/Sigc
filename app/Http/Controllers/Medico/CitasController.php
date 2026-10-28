@@ -4,11 +4,8 @@ namespace App\Http\Controllers\Medico;
 
 use App\Http\Controllers\Controller;
 use App\Models\Consulta;
-use App\Models\Especialidad;
-use App\Notifications\ConsultaEstadoActualizado;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 
 class CitasController extends Controller
 {
@@ -19,7 +16,7 @@ class CitasController extends Controller
     {
         $medico = Auth::user()->medico;
 
-        if (!$medico) {
+        if (! $medico) {
             return view('ui.medico.agenda', [
                 'consultas' => collect(),
                 'medico' => null,
@@ -66,7 +63,7 @@ class CitasController extends Controller
     {
         $medico = Auth::user()->medico;
 
-        if (!$medico) {
+        if (! $medico) {
             return view('ui.medico.consultas', [
                 'consultas' => collect(),
                 'medico' => null,
@@ -114,7 +111,7 @@ class CitasController extends Controller
     {
         $medico = Auth::user()->medico;
 
-        if (!$medico || $consulta->medico_id !== $medico->id) {
+        if (! $medico || $consulta->medico_id !== $medico->id) {
             return back()
                 ->withErrors(['consulta' => 'No tiene permiso para modificar esta consulta.'])
                 ->withInput();
@@ -127,11 +124,6 @@ class CitasController extends Controller
         }
 
         $consulta->update(['estado' => 'completada']);
-        $consulta->load('user');
-
-        if ($consulta->user) {
-            $consulta->user->notify(new ConsultaEstadoActualizado($consulta, 'confirmada'));
-        }
 
         return redirect()
             ->route('medico.consultas')
@@ -145,7 +137,7 @@ class CitasController extends Controller
     {
         $medico = Auth::user()->medico;
 
-        if (!$medico) {
+        if (! $medico) {
             return view('ui.medico.horario', [
                 'medico' => null,
                 'horarios' => collect(),

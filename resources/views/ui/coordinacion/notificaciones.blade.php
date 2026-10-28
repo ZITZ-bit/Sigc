@@ -24,43 +24,7 @@
                 </div>
 
                 <section class="coordinacion-section">
-                    <div class="coordinacion-notificaciones-list">
-                        @if (isset($notifications) && $notifications->isNotEmpty())
-                            @foreach ($notifications as $notification)
-                                <div class="coordinacion-notificacion-item" style="border:1px solid #e5e7eb; padding:1rem; margin-bottom:0.75rem; border-radius:8px; background: {{ is_null($notification->read_at) ? '#f0fdf4' : '#ffffff' }};">
-                                    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:1rem;">
-                                        <div>
-                                            <strong>{{ $notification->data['message'] ?? 'Notificación' }}</strong>
-                                            <p style="margin:0.25rem 0 0; color:#6b7280; font-size:0.9rem;">
-                                                {{ $notification->created_at->diffForHumans() }}
-                                                @if (!is_null($notification->read_at))
-                                                    · Leída
-                                                @else
-                                                    · Sin leer
-                                                @endif
-                                            </p>
-                                        </div>
-                                        @if (is_null($notification->read_at))
-                                            <form method="POST" action="{{ route('coordinacion.notificaciones.leer', $notification->id) }}">
-                                                @csrf
-                                                <button type="submit" class="coordinacion-filter-btn">Marcar como leída</button>
-                                            </form>
-                                        @endif
-                                    </div>
-                                </div>
-                            @endforeach
-                            <div style="margin-top:1rem;">
-                                {{ $notifications->links() }}
-                            </div>
-                        @else
-                            <div class="coordinacion-empty-state">
-                                <strong>No hay notificaciones recientes</strong>
-                                <p>Los avisos de citas y disponibilidad aparecerán aquí cuando existan registros en el sistema.</p>
-                            </div>
-                        @endif
-                    </div>
-
-                    <p class="coordinacion-text-center">Las notificaciones se generan automáticamente según la actividad de la clínica.</p>
+                    @include('portal::coordinacion.notificaciones', ['notifications' => $notifications])
                 </section>
             </div>
         </div>

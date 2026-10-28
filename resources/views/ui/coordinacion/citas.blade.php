@@ -39,89 +39,95 @@
                                     <option value="{{ $estado }}" {{ $filtro_estado === $estado ? 'selected' : '' }}>{{ ucfirst($estado) }}</option>
                                 @endforeach
                             </select>
-                            <input type="date" name="fecha" class="coordinacion-filter-select" value="{{ $filtro_fecha }}">
                             <input type="search" name="search" class="coordinacion-filter-select" placeholder="Buscar paciente..." value="{{ $search }}">
                             <button type="submit" class="coordinacion-filter-btn coordinacion-filter-btn--active">Filtrar</button>
-                            <a href="{{ route('coordinacion.citas') }}" class="coordinacion-filter-btn">Limpiar</a>
                         </form>
                     </div>
 
-                    <table class="coordinacion-citas-table">
-                        <thead>
-                            <tr>
-                                <th>Fecha</th>
-                                <th>Hora</th>
-                                <th>Paciente</th>
-                                <th>Médico</th>
-                                <th>Especialidad</th>
-                                <th>Motivo</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if ($consultas->isEmpty())
-                                <tr>
-                                    <td colspan="8">
-                                        <div class="coordinacion-empty-state">
-                                            <strong>No hay consultas registradas</strong>
-                                            <p>Cuando los pacientes registren solicitudes de consulta, aparecerán aquí.</p>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @else
-                                @foreach ($consultas as $consulta)
-                                    <tr>
-                                        <td>{{ \Carbon\Carbon::parse($consulta->fecha)->format('d/m/Y') }}</td>
-                                        <td>{{ $consulta->hora }}</td>
-                                        <td>{{ $consulta->user->name }}</td>
-                                        <td>{{ $consulta->medico?->user?->name ?? 'Pendiente de asignación' }}</td>
-                                        <td>{{ $consulta->especialidad?->name ?: 'Sin especialidad' }}</td>
-                                        <td>{{ $consulta->motivo ?: 'Sin motivo registrado' }}</td>
-                                        <td>
-                                            <span class="coordinacion-badge coordinacion-badge--{{ $consulta->estado }}">{{ ucfirst($consulta->estado) }}</span>
-                                        </td>
-                                        <td>
-                                            <div class="coordinacion-citas-actions">
-                                                <form method="POST" action="{{ route('coordinacion.citas.estado', $consulta) }}" style="display:inline;">
-                                                    @csrf
-                                                    <select name="estado" class="coordinacion-estado-select" onchange="this.form.submit()">
-                                                        @php
-                                                            $transiciones = [
-                                                                'pendiente' => ['confirmada', 'cancelada'],
-                                                                'confirmada' => ['completada', 'cancelada'],
-                                                                'completada' => [],
-                                                                'cancelada' => [],
-                                                            ];
-                                                            $permitidas = $transiciones[$consulta->estado] ?? [];
-                                                        @endphp
-                                                        @foreach ($permitidas as $estadoDestino)
-                                                            <option value="{{ $estadoDestino }}" {{ old('estado', $consulta->estado) === $estadoDestino ? 'selected' : '' }}>{{ ucfirst($estadoDestino) }}</option>
-                                                        @endforeach
-                                                        @if (count($permitidas) === 0)
-                                                            <option disabled>Sin transiciones</option>
-                                                        @endif
-                                                    </select>
-                                                </form>
+                    <div class="coordinacion-citas-list">
+                        @forelse ($consultas as $consulta)
+                            <article class="coordinacion-cita-card">
+                                <div class="coordinacion-cita-card__header">
+                                    <div class="coordinacion-cita-card__when">
+                                        <span class="coordinacion-cita-card__date">{{ \Carbon\Carbon::parse($consulta->fecha)->format('d/m/Y') }}</span>
+                                        <span class="coordinacion-cita-card__time">{{ substr($consulta->hora, 0, 5) }}</span>
+                                    </div>
+                                    <span class="coordinacion-badge coordinacion-badge--{{ $consulta->estado }}">{{ ucfirst($consulta->estado) }}</span>
+                                </div>
+
+                                <div class="coordinacion-cita-card__details">
+                                    <div>
+                                        <span class="coordinacion-cita-card__label">Paciente</span>
+                                        <strong>{{ $consulta->user->name }}</strong>
+                                        <span class="coordinacion-cita-card__muted">{{ $consulta->user->email }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="coordinacion-cita-card__label">Médico</span>
+                                        <strong>{{ $consulta->medico?->user?->name ?? 'Pendiente de asignación' }}</strong>
+                                        <span class="coordinacion-cita-card__muted">{{ $consulta->especialidad?->name ?: 'Sin especialidad' }}</span>
+                                    </div>
+                                    <div class="coordinacion-cita-card__reason">
+                                        <span class="coordinacion-cita-card__label">Motivo de consulta</span>
+                                        <p>{{ $consulta->motivo ?: 'Sin motivo registrado' }}</p>
+                                    </div>
+                                </div>
+
+                                <div class="coordinacion-cita-card__actions">
+                                    @if (in_array($consulta->estado, ['pendiente', 'confirmada'], true))
+                                        <form method="POST" action="{{ route('coordinacion.citas.estado', $consulta) }}" onsubmit="return confirm('¿Cancelar esta cita?')">
+                                            @csrf
+                                            <input type="hidden" name="estado" value="cancelada">
+                                            <button type="submit" class="coordinacion-citas-btn coordinacion-citas-btn--cancel">Cancelar cita</button>
+                                        </form>
+                                    @endif
+
+                                    @if (in_array($consulta->estado, ['pendiente', 'confirmada'], true))
+                                        <form method="POST" action="{{ route('coordinacion.citas.estado', $consulta) }}" class="coordinacion-cita-card__status-form">
+                                            @csrf
+                                            <label class="visually-hidden" for="estado-{{ $consulta->id }}">Cambiar estado</label>
+                                            <select id="estado-{{ $consulta->id }}" name="estado" class="coordinacion-estado-select">
                                                 @if ($consulta->estado === 'pendiente')
-                                                    <form method="POST" action="{{ route('coordinacion.citas.asignar-medico', $consulta) }}" style="display:inline; margin-left:0.5rem;">
-                                                        @csrf
-                                                        <select name="medico_id" class="coordinacion-medico-select">
-                                                            <option value="">Asignar médico</option>
-                                                            @foreach ($medicos as $medico)
-                                                                <option value="{{ $medico->id }}" {{ old('medico_id', $consulta->medico_id) === $medico->id ? 'selected' : '' }}>{{ $medico->user->name }} ({{ $medico->especialidad?->name }})</option>
-                                                            @endforeach
-                                                        </select>
-                                                        <button type="submit" class="coordinacion-citas-btn coordinacion-citas-btn--asignar">Asignar</button>
-                                                    </form>
+                                                    <option value="confirmada">Confirmar</option>
+                                                @else
+                                                    <option value="completada">Marcar completada</option>
                                                 @endif
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @endif
-                        </tbody>
-                    </table>
+                                            </select>
+                                            <button type="submit" class="coordinacion-citas-btn coordinacion-citas-btn--asignar">Actualizar</button>
+                                        </form>
+                                    @endif
+
+                                    @if ($consulta->estado === 'pendiente')
+                                        <form method="POST" action="{{ route('coordinacion.citas.asignar-medico', $consulta) }}" class="coordinacion-cita-card__assign-form">
+                                            @csrf
+                                            <label class="visually-hidden" for="medico-{{ $consulta->id }}">Asignar médico</label>
+                                            <select id="medico-{{ $consulta->id }}" name="medico_id" class="coordinacion-medico-select" required>
+                                                <option value="">Asignar médico</option>
+                                                @foreach ($medicos as $medico)
+                                                    <option value="{{ $medico->id }}" {{ old('medico_id', $consulta->medico_id) === $medico->id ? 'selected' : '' }}>{{ $medico->user->name }} ({{ $medico->especialidad?->name }})</option>
+                                                @endforeach
+                                            </select>
+                                            <button type="submit" class="coordinacion-citas-btn coordinacion-citas-btn--asignar">Asignar</button>
+                                        </form>
+                                    @endif
+
+                                    @if (! $consulta->historialClinico)
+                                        <form method="POST" action="{{ route('coordinacion.citas.destroy', $consulta) }}" onsubmit="return confirm('¿Eliminar esta cita de forma permanente? Esta acción no se puede deshacer.')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="coordinacion-citas-btn coordinacion-citas-btn--delete">Eliminar cita</button>
+                                        </form>
+                                    @else
+                                        <span class="coordinacion-cita-card__protected">Protegida por historial clínico</span>
+                                    @endif
+                                </div>
+                            </article>
+                        @empty
+                            <div class="coordinacion-empty-state">
+                                <strong>No hay consultas registradas</strong>
+                                <p>Cuando los pacientes registren solicitudes de consulta, aparecerán aquí.</p>
+                            </div>
+                        @endforelse
+                    </div>
 
                     {{ $consultas->appends(request()->except('page'))->links() }}
                 </section>

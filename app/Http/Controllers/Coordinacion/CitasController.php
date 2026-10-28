@@ -7,9 +7,10 @@ use App\Models\Consulta;
 use App\Models\Especialidad;
 use App\Models\Horario;
 use App\Models\Medico;
-use App\Models\User;
 use App\Notifications\ConsultaAsignada;
 use App\Notifications\ConsultaEstadoActualizado;
+use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -20,7 +21,7 @@ class CitasController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Consulta::with(['user', 'medico.user', 'especialidad'])
+        $query = Consulta::with(['user', 'medico.user', 'especialidad', 'historialClinico'])
             ->orderBy('fecha', 'asc')
             ->orderBy('hora', 'asc');
 
@@ -98,23 +99,22 @@ class CitasController extends Controller
                 ->withInput();
         }
 
-        // Verificar disponibilidad del médico en ese horario (debe tener un horario activo que cubra la hora)
-        $diaSemanaHorario = intval(date('w', strtotime($consulta->fecha))); // 0=domingo, 1=lunes, ..., 6=sábado
-        $tieneDisponibilidad = Horario::where('medico_id', $medico->id)
-            ->where('dia_semana', $diaSemanaHorario)
-            ->where('activo', true)
-            ->where('hora_inicio', '<=', $consulta->hora)
-            ->where('hora_fin', '>', $consulta->hora)
-            ->exists();
-
-        if (!$tieneDisponibilidad) {
+        if (! $this->tieneHorarioActivo($medico->id, $consulta)) {
             return back()
-                ->withErrors(['medico_id' => 'El médico no tiene horario activo en esa fecha y hora.'])
+                ->withErrors(['medico_id' => $this->mensajeHorarioNoDisponible($consulta)])
                 ->withInput();
         }
 
-        $consulta->update(['medico_id' => $medico->id]);
+        $consulta->update([
+            'medico_id' => $medico->id,
+            'estado' => 'confirmada',
+        ]);
+        $consulta->load(['user', 'especialidad']);
         $consulta->load('medico.user');
+
+        if ($consulta->user) {
+            $consulta->user->notify(new ConsultaEstadoActualizado($consulta));
+        }
 
         // Notificar al médico asignado
         if ($medico->user) {
@@ -148,30 +148,21 @@ class CitasController extends Controller
 
         if (! in_array($nuevoEstado, $transicionesPermitidas[$estadoActual] ?? [], true)) {
             return back()
-                ->withErrors(['estado' => 'No se puede cambiar de "' . $estadoActual . '" a "' . $nuevoEstado . '".'])
+                ->withErrors(['estado' => 'No se puede cambiar de "'.$estadoActual.'" a "'.$nuevoEstado.'".'])
                 ->withInput();
         }
 
         // Si se confirma, requiere médico asignado y disponibilidad en ese horario
         if ($nuevoEstado === 'confirmada') {
-            if (!$consulta->medico_id) {
+            if (! $consulta->medico_id) {
                 return back()
                     ->withErrors(['estado' => 'No se puede confirmar una consulta sin médico asignado.'])
                     ->withInput();
             }
 
-            // Verificar disponibilidad del médico en ese horario
-            $diaSemanaHorario = intval(date('w', strtotime($consulta->fecha))); // 0=domingo, 1=lunes, ..., 6=sábado
-            $tieneDisponibilidad = Horario::where('medico_id', $consulta->medico_id)
-                ->where('dia_semana', $diaSemanaHorario)
-                ->where('activo', true)
-                ->where('hora_inicio', '<=', $consulta->hora)
-                ->where('hora_fin', '>', $consulta->hora)
-                ->exists();
-
-            if (!$tieneDisponibilidad) {
+            if (! $this->tieneHorarioActivo((int) $consulta->medico_id, $consulta)) {
                 return back()
-                    ->withErrors(['estado' => 'El médico no tiene horario activo en esa fecha y hora.'])
+                    ->withErrors(['estado' => $this->mensajeHorarioNoDisponible($consulta)])
                     ->withInput();
             }
 
@@ -191,11 +182,10 @@ class CitasController extends Controller
         }
 
         $consulta->update(['estado' => $nuevoEstado]);
-        $consulta->load('user');
+        $consulta->load(['user', 'medico.user', 'especialidad']);
 
-        // Notificar al paciente afectado cuando se confirme o cancele (y también cuando se complete si coherente)
-        if (in_array($nuevoEstado, ['confirmada', 'cancelada', 'completada'], true) && $consulta->user) {
-            $consulta->user->notify(new ConsultaEstadoActualizado($consulta, $estadoActual));
+        if ($nuevoEstado === 'confirmada' && $consulta->user) {
+            $consulta->user->notify(new ConsultaEstadoActualizado($consulta));
         }
 
         $estadoLabel = match ($nuevoEstado) {
@@ -207,6 +197,43 @@ class CitasController extends Controller
 
         return redirect()
             ->route('coordinacion.citas')
-            ->with('success', 'Estado de la consulta actualizado a "' . $estadoLabel . '".');
+            ->with('success', 'Estado de la consulta actualizado a "'.$estadoLabel.'".');
+    }
+
+    public function destroy(Consulta $consulta): RedirectResponse
+    {
+        if ($consulta->historialClinico()->exists()) {
+            return back()->withErrors([
+                'consulta' => 'No se puede eliminar esta cita porque tiene un historial clínico asociado.',
+            ]);
+        }
+
+        $consulta->delete();
+
+        return redirect()
+            ->route('coordinacion.citas')
+            ->with('success', 'La cita se eliminó correctamente.');
+    }
+
+    private function tieneHorarioActivo(int $medicoId, Consulta $consulta): bool
+    {
+        $horaConsulta = Carbon::parse($consulta->hora)->format('H:i:s');
+
+        return Horario::query()
+            ->where('medico_id', $medicoId)
+            ->where('dia_semana', Carbon::parse($consulta->fecha)->dayOfWeek)
+            ->where('activo', true)
+            ->whereTime('hora_inicio', '<=', $horaConsulta)
+            ->whereTime('hora_fin', '>', $horaConsulta)
+            ->exists();
+    }
+
+    private function mensajeHorarioNoDisponible(Consulta $consulta): string
+    {
+        $diasSemana = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+        $diaSemana = $diasSemana[Carbon::parse($consulta->fecha)->dayOfWeek];
+        $hora = Carbon::parse($consulta->hora)->format('H:i');
+
+        return "El médico no tiene un horario activo que cubra el {$diaSemana} a las {$hora}. Verifica que ese día esté activo y que la hora esté dentro del rango; la hora final no se incluye.";
     }
 }

@@ -96,3 +96,8 @@
 </div>
 
 <button class="paciente-sidebar-overlay" type="button" aria-label="Cerrar menú de navegación" data-mobile-nav-close="paciente-mobile-sidebar" tabindex="-1"></button>
+
+@include('portal::toast', [
+    'notifications' => $toastNotifications,
+    'pollUrl' => route('paciente.notificaciones.nuevas'),
+])

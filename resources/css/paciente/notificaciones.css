@@ -7,71 +7,174 @@
 .paciente-notificaciones-list {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
 .paciente-notificacion-item {
+  position: relative;
   display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  padding: 1.25rem;
-  background-color: var(--paciente-color-surface);
+  align-items: center;
+  gap: 1.125rem;
+  padding: 1.35rem 1.5rem;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--paciente-color-surface), var(--paciente-color-bg));
   border: 1px solid var(--paciente-color-border);
-  border-radius: var(--paciente-radius);
+  border-radius: 18px;
+  box-shadow: var(--paciente-shadow);
+  transition: transform var(--paciente-transition), box-shadow var(--paciente-transition), border-color var(--paciente-transition);
+}
+
+.paciente-notificacion-item:hover {
+  transform: translateY(-2px);
+  border-color: var(--paciente-color-sage);
+  box-shadow: var(--paciente-shadow-md);
 }
 
 .paciente-notificacion-item--unread {
-  border-left: 4px solid var(--paciente-color-forest);
-  background-color: var(--paciente-color-mint);
+  border-color: color-mix(in srgb, var(--paciente-color-forest) 25%, var(--paciente-color-border));
+  background: linear-gradient(120deg, var(--paciente-color-mint), var(--paciente-color-surface) 70%);
+  box-shadow: 0 8px 24px rgb(20 55 38 / 0.07);
+}
+
+.paciente-notificacion-item--unread::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--paciente-color-sage), var(--paciente-color-forest));
+  content: '';
 }
 
 .paciente-notificacion-icon {
-  flex-shrink: 0;
-  width: 2.5rem;
-  height: 2.5rem;
+  flex: 0 0 3.25rem;
+  width: 3.25rem;
+  height: 3.25rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
-  background-color: var(--paciente-color-forest);
-  border-radius: var(--paciente-radius-sm);
-  font-size: 1.125rem;
+  color: var(--paciente-color-forest-dark);
+  background: linear-gradient(145deg, var(--paciente-color-pastel), var(--paciente-color-mint));
+  border: 1px solid rgb(45 106 79 / 0.12);
+  border-radius: 15px;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.8);
+}
+
+.paciente-notificacion-icon svg {
+  width: 1.4rem;
+  height: 1.4rem;
+  stroke-width: 2;
 }
 
 .paciente-notificacion-content {
   flex: 1;
+  min-width: 0;
 }
 
 .paciente-notificacion-title {
-  font-weight: 600;
+  margin: 0 0 0.4rem;
+  font-weight: 700;
   color: var(--paciente-color-ink);
-  font-size: 0.9375rem;
-  margin-bottom: 0.25rem;
+  font-size: 1rem;
+  letter-spacing: -0.015em;
 }
 
 .paciente-notificacion-text {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 0 0.5rem;
   font-size: 0.875rem;
-  color: var(--paciente-color-text-muted);
+  color: var(--paciente-color-text);
   line-height: 1.5;
-  margin-bottom: 0.5rem;
+}
+
+.paciente-notificacion-appointment {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  width: fit-content;
+  margin: 0.75rem 0;
+  padding: 0.55rem 0.75rem;
+  color: var(--paciente-color-forest-dark);
+  background: rgb(232 245 233 / 0.8);
+  border: 1px solid rgb(45 106 79 / 0.12);
+  border-radius: 10px;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.paciente-notificacion-appointment svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.paciente-notificacion-appointment-time {
+  padding-left: 0.55rem;
+  border-left: 1px solid rgb(45 106 79 / 0.24);
+  font-variant-numeric: tabular-nums;
 }
 
 .paciente-notificacion-time {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
   font-size: 0.75rem;
   color: var(--paciente-color-text-muted);
-  display: block;
+}
+
+.paciente-notificacion-item form {
+  flex: 0 0 auto;
+}
+
+.paciente-notificacion-item .paciente-filter-btn {
+  min-height: 2.5rem;
+  padding: 0.55rem 0.85rem;
+  color: var(--paciente-color-forest-dark);
+  background: var(--paciente-color-surface);
+  border: 1px solid var(--paciente-color-border);
+  border-radius: 10px;
+  font-weight: 600;
+  transition: background var(--paciente-transition), border-color var(--paciente-transition), color var(--paciente-transition);
+}
+
+.paciente-notificacion-item .paciente-filter-btn:hover {
+  color: #ffffff;
+  background: var(--paciente-color-forest);
+  border-color: var(--paciente-color-forest);
 }
 
 .paciente-notificaciones-empty {
   text-align: center;
-  padding: 3rem 1rem;
+  padding: 3.5rem 1.5rem;
   color: var(--paciente-color-text-muted);
+  background: linear-gradient(145deg, var(--paciente-color-surface), var(--paciente-color-bg));
+  border: 1px dashed var(--paciente-color-border);
+  border-radius: 18px;
+}
+
+.paciente-notificaciones-empty strong {
+  display: block;
+  margin-bottom: 0.45rem;
+  color: var(--paciente-color-ink);
+  font-size: 1.05rem;
+}
+
+.paciente-notificaciones-empty p {
+  max-width: 34rem;
+  margin: 0 auto;
+  line-height: 1.6;
 }
 
 .paciente-notificaciones-empty-icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  opacity: 0.5;
+  display: grid;
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto 1rem;
+  place-items: center;
+  color: var(--paciente-color-forest);
+  background: var(--paciente-color-mint);
+  border-radius: 18px;
+  font-size: 1.8rem;
 }
 
 .paciente-notificaciones-disclaimer {
@@ -79,4 +182,32 @@
   font-size: 0.8125rem;
   color: var(--paciente-color-text-muted);
   font-style: italic;
+}
+
+@media (max-width: 640px) {
+  .paciente-notificacion-item {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding: 1rem;
+  }
+
+  .paciente-notificacion-icon {
+    flex-basis: 2.75rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 12px;
+  }
+
+  .paciente-notificacion-content {
+    flex-basis: calc(100% - 4rem);
+  }
+
+  .paciente-notificacion-item form {
+    width: 100%;
+    padding-left: 3.875rem;
+  }
+
+  .paciente-notificacion-item .paciente-filter-btn {
+    width: 100%;
+  }
 }

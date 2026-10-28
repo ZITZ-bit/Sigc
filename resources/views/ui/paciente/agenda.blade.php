@@ -23,12 +23,20 @@
                     </div>
                 </div>
 
+                @if (session('success'))
+                    <div class="paciente-agenda-feedback paciente-agenda-feedback--success" role="status">{{ session('success') }}</div>
+                @endif
+                @if ($errors->any())
+                    <div class="paciente-agenda-feedback paciente-agenda-feedback--error" role="alert">{{ $errors->first() }}</div>
+                @endif
+
                 <section class="paciente-section">
                     <div class="paciente-agenda-header">
-                        <div class="paciente-agenda-filters">
-                            <button class="paciente-filter-btn paciente-filter-btn--active" aria-pressed="true">Próximas</button>
-                            <button class="paciente-filter-btn" aria-pressed="false">Anteriores</button>
+                        <div>
+                            <h2 class="paciente-agenda-heading">Tus citas</h2>
+                            <p>Revisa los detalles y administra tus solicitudes.</p>
                         </div>
+                        <a href="{{ route('paciente.consulta') }}" class="paciente-btn-primary">Solicitar consulta</a>
                     </div>
 
                     <div class="paciente-agenda-list">
@@ -39,31 +47,44 @@
                             </div>
                         @else
                             @foreach ($consultas as $consulta)
-                                <div class="paciente-agenda-item">
-                                    <div class="paciente-agenda-date-time">
-                                        <span class="paciente-agenda-date">{{ \Carbon\Carbon::parse($consulta->fecha)->format('d M') }}</span>
-                                        <span class="paciente-agenda-time">{{ $consulta->hora }}</span>
+                                <article class="paciente-agenda-item">
+                                    <div class="paciente-agenda-date-time" aria-label="Fecha y hora de la consulta">
+                                        <span class="paciente-agenda-month">{{ \Carbon\Carbon::parse($consulta->fecha)->locale('es')->translatedFormat('M') }}</span>
+                                        <span class="paciente-agenda-date">{{ \Carbon\Carbon::parse($consulta->fecha)->format('d') }}</span>
+                                        <span class="paciente-agenda-time">{{ substr($consulta->hora, 0, 5) }}</span>
                                     </div>
                                     <div class="paciente-agenda-info">
                                         <span class="paciente-agenda-doctor">{{ $consulta->medico?->user?->name ?? 'Pendiente de asignación' }}</span>
                                         <span class="paciente-agenda-specialty">{{ $consulta->especialidad?->name ?: 'Sin especialidad' }}</span>
                                         @if ($consulta->motivo)
-                                            <span class="paciente-agenda-motivo">{{ $consulta->motivo }}</span>
+                                            <span class="paciente-agenda-motivo"><strong>Motivo:</strong> {{ $consulta->motivo }}</span>
                                         @endif
                                     </div>
-                                    <span class="paciente-badge paciente-badge--{{ $consulta->estado }}">{{ ucfirst($consulta->estado) }}</span>
-                                </div>
+                                    <div class="paciente-agenda-side">
+                                        <span class="paciente-badge paciente-badge--{{ $consulta->estado }}">{{ ucfirst($consulta->estado) }}</span>
+                                        <div class="paciente-agenda-actions">
+                                            @if (in_array($consulta->estado, ['pendiente', 'confirmada'], true))
+                                                <form method="POST" action="{{ route('paciente.consultas.cancelar', $consulta) }}" onsubmit="return confirm('¿Cancelar esta cita?')">
+                                                    @csrf
+                                                    <button type="submit" class="paciente-agenda-btn paciente-agenda-btn--cancel">Cancelar</button>
+                                                </form>
+                                            @endif
+                                            @if (! $consulta->historialClinico)
+                                                <form method="POST" action="{{ route('paciente.consultas.destroy', $consulta) }}" onsubmit="return confirm('¿Eliminar esta cita de forma permanente? Esta acción no se puede deshacer.')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="paciente-agenda-btn paciente-agenda-btn--delete">Eliminar</button>
+                                                </form>
+                                            @else
+                                                <span class="paciente-agenda-protected" title="Esta cita tiene un historial clínico asociado">Con historial clínico</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </article>
                             @endforeach
                         @endif
                     </div>
 
-                    @if ($consultas->isEmpty())
-                        <p class="paciente-text-center">
-                            <a href="{{ route('paciente.consulta') }}" class="paciente-btn-primary">Solicitar consulta</a>
-                        </p>
-                    @else
-                        <p class="paciente-text-center">Tus consultas se muestran ordenadas por fecha y hora.</p>
-                    @endif
                 </section>
             </div>
         </div>
