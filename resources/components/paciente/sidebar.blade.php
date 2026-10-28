@@ -56,7 +56,7 @@
         <div class="paciente-profile-summary">
             <div class="paciente-profile-avatar" aria-hidden="true">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
             <div class="paciente-profile-info">
-                <p class="paciente-profile-name">{{ auth()->user()->name }}</p>
+                <p class="paciente-profile-name">{{ auth()->check() ? auth()->user()->name : 'Usuario' }}</p>
                 <p class="paciente-profile-role">Usuario del portal</p>
             </div>
         </div>

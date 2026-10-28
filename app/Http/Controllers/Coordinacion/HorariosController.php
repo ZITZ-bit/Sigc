@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Consulta;
 use App\Models\Horario;
 use App\Models\Medico;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -48,6 +49,7 @@ class HorariosController extends Controller
             'hora_inicio' => ['required', 'date_format:H:i'],
             'hora_fin' => ['required', 'date_format:H:i', 'after:hora_inicio'],
             'activo' => ['sometimes', 'boolean'],
+            'return_to' => ['sometimes', 'in:edit'],
         ])->validate();
 
         // Verificar que no exista solapamiento con otro horario del mismo médico y día
@@ -78,9 +80,11 @@ class HorariosController extends Controller
             'activo' => $request->boolean('activo'),
         ]);
 
-        return redirect()
-            ->route('coordinacion.medicos.horarios', $medico)
-            ->with('success', 'Horario creado correctamente.');
+        $redirect = isset($validated['return_to'])
+            ? redirect()->route('coordinacion.medicos.editar', $medico)
+            : redirect()->route('coordinacion.medicos.horarios', $medico);
+
+        return $redirect->with('success', 'Horario creado correctamente.');
     }
 
     /**
@@ -123,28 +127,27 @@ class HorariosController extends Controller
         // Verificar consultas futuras que quedarían fuera del nuevo horario si se reduce o desactiva
         $consultasAfectadas = 0;
 
+        $consultasBase = Consulta::where('medico_id', $medico->id)
+            ->where('estado', 'confirmada')
+            ->whereDate('fecha', '>=', today())
+            ->get();
+
+        $consultasEnRango = $consultasBase->filter(function ($c) use ($horario) {
+            return Carbon::parse($c->fecha)->dayOfWeek === $horario->dia_semana
+                && $c->hora >= $horario->hora_inicio
+                && $c->hora < $horario->hora_fin;
+        });
+
         if (! $request->boolean('activo')) {
             // Al desactivar, todas las consultas confirmadas dentro del rango actual quedan sin cobertura.
-            $consultasAfectadas = Consulta::where('medico_id', $medico->id)
-                ->where('estado', 'confirmada')
-                ->whereDate('fecha', '>=', today())
-                ->whereRaw('DAYOFWEEK(fecha) = ?', [$horario->dia_semana + 1])
-                ->where('hora', '>=', $horario->hora_inicio)
-                ->where('hora', '<', $horario->hora_fin)
-                ->count();
+            $consultasAfectadas = $consultasEnRango->count();
         } else {
             // Al cambiar día u horas, solo peligran las consultas del rango anterior que queden fuera del nuevo.
-            $consultasQuery = Consulta::where('medico_id', $medico->id)
-                ->where('estado', 'confirmada')
-                ->whereDate('fecha', '>=', today())
-                ->whereRaw('DAYOFWEEK(fecha) = ?', [$horario->dia_semana + 1])
-                ->where('hora', '>=', $horario->hora_inicio)
-                ->where('hora', '<', $horario->hora_fin);
+            $consultasQuery = $consultasEnRango;
 
             if ((int) $validated['dia_semana'] === (int) $horario->dia_semana) {
-                $consultasQuery->where(function ($q) use ($validated) {
-                    $q->where('hora', '<', $validated['hora_inicio'])
-                        ->orWhere('hora', '>=', $validated['hora_fin']);
+                $consultasQuery = $consultasQuery->filter(function ($c) use ($validated) {
+                    return $c->hora < $validated['hora_inicio'] || $c->hora >= $validated['hora_fin'];
                 });
             }
 
@@ -186,10 +189,12 @@ class HorariosController extends Controller
         $consultasAfectadas = Consulta::where('medico_id', $medico->id)
             ->where('estado', 'confirmada')
             ->whereDate('fecha', '>=', today())
-            ->whereRaw('DAYOFWEEK(fecha) = ?', [$horario->dia_semana + 1])
-            ->where('hora', '>=', $horario->hora_inicio)
-            ->where('hora', '<', $horario->hora_fin)
-            ->count();
+            ->get()
+            ->filter(function ($c) use ($horario) {
+                return Carbon::parse($c->fecha)->dayOfWeek === $horario->dia_semana
+                    && $c->hora >= $horario->hora_inicio
+                    && $c->hora < $horario->hora_fin;
+            })->count();
 
         if ($consultasAfectadas > 0) {
             return back()

@@ -19,10 +19,13 @@ class RecepcionController extends Controller
                 $query->whereDate('fecha', today());
             } elseif ($request->get('filtro') === 'semana') {
                 $query->whereBetween('fecha', [now()->startOfWeek(), now()->endOfWeek()]);
+            } elseif ($request->get('filtro') === 'todas') {
+                // sin filtro por fecha
+            } else {
+                $query->whereDate('fecha', today());
             }
-        } else {
-            $query->whereDate('fecha', today());
         }
+        // Si no hay filtro, mostrar todas las solicitudes (incluidas futuras/pendientes)
 
         if ($request->filled('estado')) {
             $query->where('estado', $request->get('estado'));
@@ -32,7 +35,7 @@ class RecepcionController extends Controller
 
         return view('ui.coordinacion.recepcion', [
             'consultas' => $consultas,
-            'filtro' => $request->get('filtro', 'hoy'),
+            'filtro' => $request->get('filtro', 'todas'),
             'filtro_estado' => $request->get('estado', ''),
         ]);
     }

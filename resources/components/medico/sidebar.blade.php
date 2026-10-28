@@ -62,7 +62,7 @@
         <div class="medico-profile-summary">
             <div class="medico-profile-avatar" aria-hidden="true">{{ str(auth()->user()->name)->substr(0, 1)->upper() }}</div>
             <div class="medico-profile-info">
-                <p class="medico-profile-name">{{ auth()->user()->name }}</p>
+                <p class="medico-profile-name">{{ auth()->check() ? auth()->user()->name : 'Usuario' }}</p>
                 <p class="medico-profile-role">Médico del portal</p>
             </div>
         </div>

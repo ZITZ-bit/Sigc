@@ -181,13 +181,16 @@
   background-color: var(--coordinacion-color-border);
 }
 
-.coordinacion-medicos-btn--deactivate {
+.coordinacion-medicos-btn--deactivate,
+.coordinacion-medicos-btn--delete {
   background-color: var(--coordinacion-color-error-soft);
   color: var(--coordinacion-color-error);
 }
 
-.coordinacion-medicos-btn--deactivate:hover {
+.coordinacion-medicos-btn--deactivate:hover,
+.coordinacion-medicos-btn--delete:hover {
   background-color: var(--coordinacion-color-error);
+  color: white;
 }
 
 .coordinacion-medicos-btn--activate {

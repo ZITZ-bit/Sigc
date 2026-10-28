@@ -14,6 +14,7 @@
     <div class="coordinacion-page">
         @include('portal::coordinacion.sidebar')
 
+
         <div class="coordinacion-main">
             <div class="coordinacion-content-area">
                 <div class="coordinacion-header">
@@ -26,7 +27,8 @@
                 <section class="coordinacion-section">
                     <div class="coordinacion-recepcion-header">
                         <div class="coordinacion-recepcion-filters">
-                            <a href="{{ route('coordinacion.recepcion', ['filtro' => 'hoy']) }}" class="coordinacion-filter-btn {{ ($filtro ?? 'hoy') === 'hoy' ? 'coordinacion-filter-btn--active' : '' }}" aria-pressed="{{ ($filtro ?? 'hoy') === 'hoy' ? 'true' : 'false' }}">Hoy</a>
+                            <a href="{{ route('coordinacion.recepcion', ['filtro' => 'todas']) }}" class="coordinacion-filter-btn {{ ($filtro ?? 'todas') === 'todas' ? 'coordinacion-filter-btn--active' : '' }}" aria-pressed="{{ ($filtro ?? 'todas') === 'todas' ? 'true' : 'false' }}">Todas</a>
+                            <a href="{{ route('coordinacion.recepcion', ['filtro' => 'hoy']) }}" class="coordinacion-filter-btn {{ ($filtro ?? 'todas') === 'hoy' ? 'coordinacion-filter-btn--active' : '' }}" aria-pressed="{{ ($filtro ?? 'todas') === 'hoy' ? 'true' : 'false' }}">Hoy</a>
                             <a href="{{ route('coordinacion.recepcion', ['filtro' => 'semana']) }}" class="coordinacion-filter-btn {{ ($filtro ?? '') === 'semana' ? 'coordinacion-filter-btn--active' : '' }}" aria-pressed="{{ ($filtro ?? '') === 'semana' ? 'true' : 'false' }}">Esta semana</a>
                         </div>
                     </div>

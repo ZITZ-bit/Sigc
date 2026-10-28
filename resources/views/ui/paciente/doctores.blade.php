@@ -26,7 +26,7 @@
                 <section class="paciente-section">
                     <form method="GET" action="{{ route('paciente.doctores') }}" class="paciente-doctores-header">
                         <div class="paciente-doctores-search">
-                            <input type="search" name="search" class="paciente-consulta-input" placeholder="Buscar por nombre o especialidad..." aria-label="Buscar doctores" value="{{ $search }}">
+                            <input type="search" name="search" class="paciente-consulta-input" placeholder="Buscar por nombre o especialidad..." aria-label="Buscar doctores" value="{{ $search ?? request('search', '') }}">
                         </div>
                         <button type="submit" class="paciente-btn-primary">Buscar</button>
                     </form>

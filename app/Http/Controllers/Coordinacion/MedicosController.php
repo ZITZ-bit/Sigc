@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Coordinacion;
 
 use App\Http\Controllers\Controller;
+use App\Models\Consulta;
 use App\Models\Departamento;
 use App\Models\Especialidad;
+use App\Models\HistorialClinico;
 use App\Models\Invitacion;
 use App\Models\Medico;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -150,7 +153,12 @@ class MedicosController extends Controller
      */
     public function edit(Medico $medico)
     {
-        $medico->load(['user', 'especialidad', 'departamento']);
+        $medico->load([
+            'user',
+            'especialidad',
+            'departamento',
+            'horarios' => fn ($query) => $query->orderBy('dia_semana')->orderBy('hora_inicio'),
+        ]);
         $especialidades = Especialidad::orderBy('name')->get();
         $departamentos = Departamento::orderBy('name')->get();
 
@@ -158,6 +166,15 @@ class MedicosController extends Controller
             'medico' => $medico,
             'especialidades' => $especialidades,
             'departamentos' => $departamentos,
+            'diasSemana' => [
+                0 => 'Domingo',
+                1 => 'Lunes',
+                2 => 'Martes',
+                3 => 'Miércoles',
+                4 => 'Jueves',
+                5 => 'Viernes',
+                6 => 'Sábado',
+            ],
         ]);
     }
 
@@ -218,6 +235,36 @@ class MedicosController extends Controller
         return redirect()
             ->route('coordinacion.medicos')
             ->with('success', 'Médico activado correctamente.');
+    }
+
+    /**
+     * Permanently remove a medic account when it has no clinical records to preserve.
+     */
+    public function remove(Medico $medico): RedirectResponse
+    {
+        $hasClinicalRecords = HistorialClinico::query()
+            ->where('medico_id', $medico->id)
+            ->orWhere('paciente_id', $medico->user_id)
+            ->exists();
+        $hasOwnConsultations = Consulta::query()
+            ->where('user_id', $medico->user_id)
+            ->exists();
+
+        if ($hasClinicalRecords || $hasOwnConsultations) {
+            return redirect()
+                ->route('coordinacion.medicos')
+                ->withErrors([
+                    'medico' => 'No se puede eliminar este médico porque tiene consultas o historiales clínicos asociados. Puede desactivar su cuenta para conservar los registros.',
+                ]);
+        }
+
+        DB::transaction(function () use ($medico): void {
+            $medico->user()->delete();
+        });
+
+        return redirect()
+            ->route('coordinacion.medicos')
+            ->with('success', 'Médico eliminado correctamente.');
     }
 
     /**
