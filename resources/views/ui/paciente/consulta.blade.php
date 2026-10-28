@@ -14,6 +14,7 @@
     <div class="paciente-page">
         @include('portal::paciente.sidebar')
 
+
         <div class="paciente-main">
             <div class="paciente-content-area">
                 <div class="paciente-header">
@@ -51,7 +52,7 @@
                                 <label class="paciente-consulta-label" for="especialidad">Selecciona una especialidad</label>
                                 <select class="paciente-consulta-select" id="especialidad" name="especialidad" required>
                                     <option value="">Seleccionar...</option>
-                                    @foreach ($especialidades as $especialidad)
+                                    @foreach (($especialidades ?? []) as $especialidad)
                                         <option value="{{ $especialidad->slug }}" {{ old('especialidad') === $especialidad->slug ? 'selected' : '' }}>{{ $especialidad->name }}</option>
                                     @endforeach
                                 </select>

@@ -12,3 +12,75 @@
 @import './coordinacion/personal.css';
 @import './coordinacion/configuracion.css';
 @import './coordinacion/responsive.css';
+/* SIGC Toast */
+.sigc-toast-container {
+    position: fixed;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    pointer-events: none;
+}
+.sigc-toast-top-right {
+    top: 1rem;
+    right: 1rem;
+    align-items: flex-end;
+}
+.sigc-toast {
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    max-width: 420px;
+    font-size: 0.9375rem;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.sigc-toast--show {
+    opacity: 1;
+    transform: translateY(0);
+}
+.sigc-toast--hide {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+.sigc-toast--success {
+    background: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+.sigc-toast--error {
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+.sigc-toast--info {
+    background: #eff6ff;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
+}
+.sigc-toast__content {
+    flex: 1;
+}
+.sigc-toast__close {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    color: inherit;
+}
+@media (max-width: 640px) {
+    .sigc-toast-top-right {
+        left: 1rem;
+        right: 1rem;
+        align-items: stretch;
+    }
+    .sigc-toast {
+        max-width: 100%;
+    }
+}

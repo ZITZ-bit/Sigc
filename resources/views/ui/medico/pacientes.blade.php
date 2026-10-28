@@ -26,7 +26,7 @@
                 <section class="medico-section">
                     <div class="medico-pacientes-header">
                         <form method="GET" action="{{ route('medico.pacientes') }}" class="medico-pacientes-search" style="display:flex; gap:0.5rem;">
-                            <input type="search" name="search" class="medico-consulta-input" placeholder="Buscar por nombre o correo..." aria-label="Buscar pacientes" value="{{ $search }}">
+                            <input type="search" name="search" class="medico-consulta-input" placeholder="Buscar por nombre o correo..." aria-label="Buscar pacientes" value="{{ isset($search) ? $search : '' }}">
                             <button type="submit" class="medico-filter-btn medico-filter-btn--active">Buscar</button>
                         </form>
                     </div>

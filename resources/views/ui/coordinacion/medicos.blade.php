@@ -121,6 +121,7 @@
                                         <td>
                                             <div class="coordinacion-medicos-actions">
                                                 @if (Auth::user()->role?->slug === 'coordinador')
+                                                    <a href="{{ route('coordinacion.medicos.horarios', $medico) }}" class="coordinacion-medicos-btn coordinacion-medicos-btn--horarios" aria-label="Gestionar horarios">Horarios</a>
                                                     <a href="{{ route('coordinacion.medicos.editar', $medico->id) }}" class="coordinacion-medicos-btn coordinacion-medicos-btn--edit" aria-label="Editar">Editar</a>
                                                     @if ($medico->estado === 'activo')
                                                         <form method="POST" action="{{ route('coordinacion.medicos.destroy', $medico->id) }}" style="display: inline;">
@@ -133,6 +134,11 @@
                                                             <button type="submit" class="coordinacion-medicos-btn coordinacion-medicos-btn--activate" aria-label="Activar">Activar</button>
                                                         </form>
                                                     @endif
+                                                    <form method="POST" action="{{ route('coordinacion.medicos.remove', $medico) }}" style="display: inline;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="coordinacion-medicos-btn coordinacion-medicos-btn--delete" aria-label="Eliminar" onclick="return confirm('¿Eliminar permanentemente la cuenta de este médico? Esta acción no se puede deshacer.')">Eliminar</button>
+                                                    </form>
                                                     @if ($medico->estado === 'pendiente')
                                                         <form method="POST" action="{{ route('coordinacion.medicos.invite', $medico->id) }}" style="display: inline;">
                                                             @csrf

@@ -29,27 +29,5 @@ class DatabaseSeeder extends Seeder
             'name' => 'Coordinador',
             'slug' => 'coordinador',
         ]);
-
-        // Crear usuarios de prueba
-        User::create([
-            'name' => 'Paciente Demo',
-            'email' => 'paciente@sigc.test',
-            'password' => Hash::make('Paciente123!'),
-            'role_id' => $paciente->id,
-        ]);
-
-        User::create([
-            'name' => 'Medico Demo',
-            'email' => 'medico@sigc.test',
-            'password' => Hash::make('Medico123!'),
-            'role_id' => $medico->id,
-        ]);
-
-        User::create([
-            'name' => 'Coordinador Demo',
-            'email' => 'coordinador@sigc.test',
-            'password' => Hash::make('Coordinador123!'),
-            'role_id' => $coordinador->id,
-        ]);
     }
 }

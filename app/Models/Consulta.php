@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['user_id', 'medico_id', 'especialidad_id', 'fecha', 'hora', 'motivo', 'estado'])]
-class Consulta extends Authenticatable
+class Consulta extends Model
 {
     use HasFactory;
+
+    protected $table = 'consultas';
+
+    protected $fillable = ['user_id', 'medico_id', 'especialidad_id', 'fecha', 'hora', 'motivo', 'estado'];
 
     /**
      * Get the user that owns the consultation request.

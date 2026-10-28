@@ -56,12 +56,33 @@ Route::middleware(['auth', 'role:paciente'])->group(function () {
         return view('ui.paciente.agenda', compact('consultas'));
     })->name('paciente.agenda');
 
-    Route::get('/paciente/doctores', function () {
-        return view('ui.paciente.doctores');
+    Route::get('/paciente/doctores', function (Request $request) {
+        $search = $request->query('search', '');
+        $especialidades = \App\Models\Especialidad::orderBy('name')->get();
+        $medicos = \App\Models\Medico::with(['user', 'especialidad'])
+            ->where('estado', 'activo')
+            ->when($search, function ($q) use ($search) {
+                $q->whereHas('user', function ($uq) use ($search) {
+                    $uq->where('name', 'like', '%' . $search . '%');
+                })->orWhereHas('especialidad', function ($eq) use ($search) {
+                    $eq->where('name', 'like', '%' . $search . '%');
+                });
+            })
+            ->get();
+
+        return view('ui.paciente.doctores', [
+            'medicos' => $medicos,
+            'especialidades' => $especialidades,
+            'search' => $search,
+        ]);
     })->name('paciente.doctores');
 
     Route::get('/paciente/consulta', function () {
-        return view('ui.paciente.consulta');
+        $especialidades = \App\Models\Especialidad::orderBy('name')->get();
+
+        return view('ui.paciente.consulta', [
+            'especialidades' => $especialidades,
+        ]);
     })->name('paciente.consulta');
 
     Route::post('/paciente/consulta', function (Request $request) {
@@ -96,7 +117,7 @@ Route::middleware(['auth', 'role:paciente'])->group(function () {
 
         return redirect()
             ->route('paciente.agenda')
-            ->with('success', 'Tu solicitud de consulta ha sido registrada correctamente.');
+            ->with('success', '¡Solicitud enviada correctamente! Coordinación podrá revisarla en Recepción y seguimiento.');
     })->name('paciente.consulta.store');
 
     Route::get('/paciente/historial-clinico', function () {
@@ -105,6 +126,7 @@ Route::middleware(['auth', 'role:paciente'])->group(function () {
             ->where('paciente_id', $user->id)
             ->latest()
             ->paginate(15);
+
         return view('ui.paciente.historial_clinico', compact('registros'));
     })->name('paciente.historial.clinico');
 
@@ -114,6 +136,7 @@ Route::middleware(['auth', 'role:paciente'])->group(function () {
 
     Route::get('/paciente/notificaciones', function () {
         $notifications = auth()->user()->notifications()->latest()->paginate(20);
+
         return view('ui.paciente.notificaciones', compact('notifications'));
     })->name('paciente.notificaciones');
 
@@ -122,6 +145,7 @@ Route::middleware(['auth', 'role:paciente'])->group(function () {
         if (is_null($notification->read_at)) {
             $notification->markAsRead();
         }
+
         return back()->with('success', 'Notificación marcada como leída.');
     })->name('paciente.notificaciones.leer');
 });
@@ -164,8 +188,14 @@ Route::middleware(['auth', 'role:medico'])->group(function () {
 
     Route::get('/medico/agenda', [MedicoCitasController::class, 'index'])->name('medico.agenda');
 
-    Route::get('/medico/pacientes', function () {
-        return view('ui.medico.pacientes');
+    Route::get('/medico/pacientes', function (Request $request) {
+        $search = $request->query('search', '');
+
+        return view('ui.medico.pacientes', [
+            'pacientes' => collect(),
+            'search' => $search,
+            'medico' => auth()->user()->medico,
+        ]);
     })->name('medico.pacientes');
 
     Route::get('/medico/consultas', [MedicoCitasController::class, 'consultas'])->name('medico.consultas');
@@ -183,6 +213,7 @@ Route::middleware(['auth', 'role:medico'])->group(function () {
 
     Route::get('/medico/notificaciones', function () {
         $notifications = auth()->user()->notifications()->latest()->paginate(20);
+
         return view('ui.medico.notificaciones', compact('notifications'));
     })->name('medico.notificaciones');
 
@@ -191,6 +222,7 @@ Route::middleware(['auth', 'role:medico'])->group(function () {
         if (is_null($notification->read_at)) {
             $notification->markAsRead();
         }
+
         return back()->with('success', 'Notificación marcada como leída.');
     })->name('medico.notificaciones.leer');
 });
@@ -243,6 +275,7 @@ Route::middleware(['auth', 'role:coordinador'])->group(function () {
     Route::put('/coordinacion/medicos/{medico}', [MedicosController::class, 'update'])->name('coordinacion.medicos.update');
     Route::post('/coordinacion/medicos/{medico}/desactivar', [MedicosController::class, 'destroy'])->name('coordinacion.medicos.destroy');
     Route::post('/coordinacion/medicos/{medico}/activar', [MedicosController::class, 'activate'])->name('coordinacion.medicos.activate');
+    Route::delete('/coordinacion/medicos/{medico}', [MedicosController::class, 'remove'])->name('coordinacion.medicos.remove');
     Route::post('/coordinacion/medicos/{medico}/invitacion', [MedicosController::class, 'sendInvitation'])->name('coordinacion.medicos.invite');
 
     // Gestión de horarios médicos
@@ -257,6 +290,7 @@ Route::middleware(['auth', 'role:coordinador'])->group(function () {
 
     Route::get('/coordinacion/notificaciones', function () {
         $notifications = auth()->user()->notifications()->latest()->paginate(20);
+
         return view('ui.coordinacion.notificaciones', compact('notifications'));
     })->name('coordinacion.notificaciones');
 
@@ -265,6 +299,7 @@ Route::middleware(['auth', 'role:coordinador'])->group(function () {
         if (is_null($notification->read_at)) {
             $notification->markAsRead();
         }
+
         return back()->with('success', 'Notificación marcada como leída.');
     })->name('coordinacion.notificaciones.leer');
 
