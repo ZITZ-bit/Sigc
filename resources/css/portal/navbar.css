@@ -134,11 +134,13 @@
 }
 
 .portal-mobile-menu {
-  position: absolute;
+  position: fixed;
   top: var(--portal-header-height);
   left: 0;
   right: 0;
+  z-index: calc(var(--z-50, 50) + 1);
   background-color: #fffefa;
+  opacity: 0;
   border-bottom: 1px solid var(--portal-color-border);
   padding: 1rem;
   display: flex;
@@ -146,9 +148,10 @@
   gap: 0;
   box-shadow: var(--portal-shadow-md);
   visibility: hidden;
-  opacity: 0;
   pointer-events: none;
   clip-path: inset(0 0 100%);
+  max-height: calc(100dvh - var(--portal-header-height));
+  overflow-y: auto;
   transition: clip-path 0.22s ease, opacity 0.22s ease, visibility 0.22s ease;
 }
 
