@@ -105,6 +105,10 @@ Thumbs.db
 /bootstrap/cache/services.php
 /bootstrap/cache/.gitignore
 /storage/framework/views/.gitignore
+
+# Respaldo y certificados (no versionar)
+database/sigc-backup.sql
+ca.pem
 /storage/framework/cache/.gitignore
 /storage/framework/sessions/.gitignore
 /storage/framework/testing/.gitignore

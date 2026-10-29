@@ -90,3 +90,7 @@ Thumbs.db
 
 # Archivos de despliegue (se copian explícitamente en el Dockerfile)
 render.yaml
+
+# Respaldo y certificados (no llevar a la imagen)
+database/sigc-backup.sql
+ca.pem
