@@ -1,4 +1,5 @@
 import '../modules/dashboard-navigation.js';
+import '../modules/portal-navigation.js';
 
 /**
  * Módulo de sincronización automática de consultas entre Paciente, Médico y

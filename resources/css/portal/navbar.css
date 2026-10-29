@@ -145,12 +145,18 @@
   flex-direction: column;
   gap: 0;
   box-shadow: var(--portal-shadow-md);
-  clip-path: inset(0);
-  transition: clip-path 0.22s ease, box-shadow 0.22s ease;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  clip-path: inset(0 0 100%);
+  transition: clip-path 0.22s ease, opacity 0.22s ease, visibility 0.22s ease;
 }
 
 .portal-mobile-menu.open {
-  clip-path: inset(0 0 0 0);
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  clip-path: inset(0);
 }
 
 .portal-mobile-link {
@@ -173,12 +179,17 @@
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  width: 100%;
   padding-top: 1rem;
   border-top: 1px solid var(--portal-color-border);
 }
 
 .portal-mobile-btn {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 2.75rem;
   text-align: center;
   padding: 0.875rem 1rem;
   font-size: 1rem;
@@ -186,6 +197,18 @@
   color: #ffffff;
   background-color: var(--portal-color-forest);
   border-radius: var(--portal-radius-sm);
+  line-height: 1.25;
+}
+
+.portal-mobile-btn--primary {
+  border: 1px solid var(--portal-color-forest);
+  color: var(--portal-color-forest-dark);
+  background-color: transparent;
+}
+
+.portal-mobile-btn--primary:hover {
+  color: #ffffff;
+  background-color: var(--portal-color-forest-dark);
 }
 
 /* Botón de cierre de sesión en navbar y menú móvil */
