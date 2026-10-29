@@ -35,22 +35,21 @@
                         <form method="GET" action="{{ route('coordinacion.pacientes') }}" class="coordinacion-pacientes-search-form">
                             <input type="search" name="search" class="coordinacion-configuracion-input" placeholder="Buscar por nombre o correo..." aria-label="Buscar pacientes" value="{{ $search }}">
                             <button type="submit" class="coordinacion-filter-btn coordinacion-filter-btn--active">Buscar</button>
-                            <a href="{{ route('coordinacion.pacientes') }}" class="coordinacion-filter-btn">Limpiar</a>
                         </form>
                     </div>
 
-                    <div class="coordinacion-pacientes-grid">
-                        @if ($pacientes->isEmpty())
-                            <div class="coordinacion-empty-state">
-                                @if ($search)
-                                    <strong>No se encontraron pacientes</strong>
-                                    <p>No se encontraron pacientes que coincidan con "{{ $search }}".</p>
-                                @else
-                                    <strong>No hay pacientes registrados</strong>
-                                    <p>Los pacientes aparecerán aquí cuando se registren solicitudes de consulta.</p>
-                                @endif
-                            </div>
-                        @else
+                    @if ($pacientes->isEmpty())
+                        <div class="coordinacion-empty-state">
+                            @if ($search)
+                                <strong>No se encontraron pacientes</strong>
+                                <p>No se encontraron pacientes que coincidan con "{{ $search }}".</p>
+                            @else
+                                <strong>No hay pacientes registrados</strong>
+                                <p>Los pacientes aparecerán aquí cuando se registren solicitudes de consulta.</p>
+                            @endif
+                        </div>
+                    @else
+                        <div class="coordinacion-pacientes-list">
                             <div class="coordinacion-table-scroll" role="region" aria-label="Tabla de pacientes; desplázate horizontalmente para ver todas las columnas" tabindex="0">
                                 <table class="coordinacion-pacientes-table">
                                     <thead>
@@ -79,8 +78,8 @@
                             <div class="coordinacion-pagination">
                                 {{ $pacientes->appends(request()->except('page'))->links() }}
                             </div>
-                        @endif
-                    </div>
+                        </div>
+                    @endif
                 </section>
             </div>
         </div>

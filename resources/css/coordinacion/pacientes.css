@@ -9,9 +9,27 @@
   max-width: 320px;
 }
 
+.coordinacion-pacientes-search-form {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: min(100%, 36rem);
+}
+
+.coordinacion-pacientes-search-form input {
+  flex: 1 1 16rem;
+  min-width: 0;
+  width: auto;
+}
+
 .coordinacion-pacientes-grid {
   display: grid;
   gap: 1.5rem;
+}
+
+.coordinacion-pacientes-list {
+  display: grid;
+  gap: 1rem;
 }
 
 @media (min-width: 640px) {
@@ -114,6 +132,17 @@
   border: 1px solid var(--coordinacion-color-border);
   border-radius: var(--coordinacion-radius);
   overflow: hidden;
+}
+
+@media (max-width: 767px) {
+  .coordinacion-pacientes-search-form {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .coordinacion-pacientes-search-form input {
+    flex-basis: 100%;
+  }
 }
 
 .coordinacion-pacientes-table th {

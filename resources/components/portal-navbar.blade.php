@@ -45,13 +45,13 @@
             @endif
         </div>
 
-        <button class="portal-mobile-toggle" aria-controls="portal-mobile-menu" aria-expanded="false" aria-label="Abrir menú">
+        <button type="button" class="portal-mobile-toggle" aria-controls="portal-mobile-menu" aria-expanded="false" aria-label="Abrir menú">
             <span></span><span></span><span></span>
         </button>
     </div>
 </nav>
 
-<div id="portal-mobile-menu" class="portal-mobile-menu" role="navigation" aria-label="Menú móvil">
+<div id="portal-mobile-menu" class="portal-mobile-menu" role="navigation" aria-label="Menú móvil" aria-hidden="true">
     <a href="#servicios" class="portal-mobile-link">Servicios</a>
     <a href="#presentacion" class="portal-mobile-link">Presentación</a>
     <a href="#contacto" class="portal-mobile-link">Contacto</a>
