@@ -2,6 +2,7 @@ services:
   - type: web
     name: sigc
     runtime: docker
+    plan: free
     rootDir: .
     dockerfilePath: ./Dockerfile
     # Plan a elegir en Render (starter, standard, etc.)
