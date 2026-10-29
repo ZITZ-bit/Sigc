@@ -49,7 +49,6 @@ Thumbs.db
 /.gitattributes
 /.gitignore
 /npmrc
-/package-lock.json
 /yarn.lock
 /pnpm-lock.yaml
 /.npmrc
