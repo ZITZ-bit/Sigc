@@ -20,6 +20,12 @@ class UsuariosDemoSeeder extends Seeder
 {
     /**
      * Run the database seeder.
+     *
+     * Todo el seeder es idempotente: usa firstOrCreate y verificaciones de
+     * existencia para evitar duplicados en lanzamientos repetidos. Los datos
+     * clínicos (consultas, historiales, notificaciones) se generan de forma
+     * determinística a partir de índices para que las claves de búsqueda
+     * coincidan en cada ejecución.
      */
     public function run(): void
     {
@@ -78,9 +84,9 @@ class UsuariosDemoSeeder extends Seeder
             Medico::firstOrCreate(
                 ['user_id' => $usuario->id],
                 [
-                    'numero_licencia' => "LIC-{$i}-".Str::random(6),
-                    'telefono' => fake()->phoneNumber(),
-                    'fecha_incorporacion' => Carbon::now()->subDays(random_int(30, 730))->format('Y-m-d'),
+                    'numero_licencia' => "LIC-DEMO-{$i}",
+                    'telefono' => '+1-555-000-'.str_pad($i, 4, '0', STR_PAD_LEFT),
+                    'fecha_incorporacion' => Carbon::create(2024, 1, 15)->addDays($i)->format('Y-m-d'),
                     'estado' => 'activo',
                 ]
             );
@@ -144,10 +150,14 @@ class UsuariosDemoSeeder extends Seeder
             return;
         }
 
-        Medico::all()->each(function ($medico) use ($especialidades, $departamentos) {
+        $especialidadesArray = $especialidades->values()->all();
+        $departamentosArray = $departamentos->values()->all();
+
+        Medico::all()->each(function ($medico) use ($especialidadesArray, $departamentosArray) {
+            $indice = $medico->id % count($especialidadesArray);
             $medico->update([
-                'especialidad_id' => $especialidades->random()->id,
-                'departamento_id' => $departamentos->random()->id,
+                'especialidad_id' => $especialidadesArray[$indice]->id,
+                'departamento_id' => $departamentosArray[$medico->id % count($departamentosArray)]->id,
             ]);
         });
     }
@@ -155,13 +165,14 @@ class UsuariosDemoSeeder extends Seeder
     private function crearConsultasEHistoriales(): void
     {
         $pacientes = User::where('role_id', Role::where('slug', 'paciente')->first()->id)
+            ->orderBy('id')
             ->take(15)
             ->get();
 
-        $especialidades = Especialidad::all();
+        $especialidades = Especialidad::all()->values()->all();
         $medicos = Medico::where('estado', 'activo')->get();
 
-        if ($pacientes->isEmpty() || $especialidades->isEmpty() || $medicos->isEmpty()) {
+        if ($pacientes->isEmpty() || $especialidades === [] || $medicos->isEmpty()) {
             return;
         }
 
@@ -185,35 +196,53 @@ class UsuariosDemoSeeder extends Seeder
             'Consulta cardiológica',
         ];
 
-        foreach ($pacientes as $paciente) {
-            $numConsultas = fake()->numberBetween(1, 3);
+        foreach ($pacientes as $indicePaciente => $paciente) {
+            $numConsultas = ($indicePaciente % 3) + 1; // 1, 2 o 3 consultas por paciente
 
             for ($j = 0; $j < $numConsultas; $j++) {
-                $fecha = Carbon::now()->subDays(random_int(0, 180))->addDays(random_int(0, 60))->format('Y-m-d');
-                $hora = fake()->time('H:i:s');
-                $especialidad = $especialidades->random();
-                $medico = $medicos->where('especialidad_id', $especialidad->id)->first() ?? $medicos->random();
+                // Fecha determinística: base + días del paciente + semanas de la consulta
+                $fecha = Carbon::create(2026, 5, 1)
+                    ->addDays($indicePaciente)
+                    ->addWeeks($j)
+                    ->format('Y-m-d');
 
-                $consulta = Consulta::create([
-                    'user_id' => $paciente->id,
-                    'medico_id' => $medico->id,
-                    'especialidad_id' => $especialidad->id,
-                    'fecha' => $fecha,
-                    'hora' => $hora,
-                    'motivo' => $motivos[array_rand($motivos)],
-                    'estado' => $estados[array_rand($estados)],
-                ]);
+                $hora = sprintf('%02d:%02d:00', 9 + ($j % 4), ($j * 15) % 60);
+
+                $indiceEspecialidad = ($indicePaciente + $j) % count($especialidades);
+                $especialidad = $especialidades[$indiceEspecialidad];
+
+                $medico = $medicos->where('especialidad_id', $especialidad->id)->first()
+                    ?? $medicos->first();
+
+                $motivo = $motivos[($indicePaciente + $j) % count($motivos)];
+                $estado = $estados[($indicePaciente + $j) % count($estados)];
+
+                $consulta = Consulta::firstOrCreate(
+                    [
+                        'user_id' => $paciente->id,
+                        'fecha' => $fecha,
+                        'hora' => $hora,
+                        'motivo' => $motivo,
+                    ],
+                    [
+                        'medico_id' => $medico->id,
+                        'especialidad_id' => $especialidad->id,
+                        'estado' => $estado,
+                    ]
+                );
 
                 // Crear historial clínico para consultas completadas o confirmadas
-                if (in_array($consulta->estado, ['completada', 'confirmada']) && fake()->boolean(70)) {
-                    HistorialClinico::create([
-                        'consulta_id' => $consulta->id,
-                        'paciente_id' => $paciente->id,
-                        'medico_id' => $medico->id,
-                        'nota' => fake()->paragraph(),
-                        'diagnostico' => fake()->sentence(),
-                        'tratamiento' => fake()->sentence(),
-                    ]);
+                if (in_array($estado, ['completada', 'confirmada'])) {
+                    HistorialClinico::firstOrCreate(
+                        ['consulta_id' => $consulta->id],
+                        [
+                            'paciente_id' => $paciente->id,
+                            'medico_id' => $medico->id,
+                            'nota' => 'Nota clínica de demostración para paciente '.$paciente->id.' consulta '.($j + 1),
+                            'diagnostico' => 'Diagnóstico de demostración '.($j + 1),
+                            'tratamiento' => 'Tratamiento de demostración '.($j + 1),
+                        ]
+                    );
                 }
             }
         }
@@ -231,13 +260,8 @@ class UsuariosDemoSeeder extends Seeder
 
         $medicos->each(function ($medico) use ($dias) {
             foreach ($dias as $dia) {
-                $horaInicio = fake()->time('H:i:s', '08:00:00');
-                $horaFin = fake()->time('H:i:s', '17:00:00');
-
-                // Asegurar que hora_fin sea posterior a hora_inicio
-                if ($horaFin <= $horaInicio) {
-                    $horaFin = '17:00:00';
-                }
+                $horaInicio = sprintf('%02d:00:00', 8 + ($dia % 3));
+                $horaFin = '17:00:00';
 
                 Horario::firstOrCreate(
                     [
@@ -257,6 +281,7 @@ class UsuariosDemoSeeder extends Seeder
     private function crearNotificaciones(): void
     {
         $pacientes = User::where('role_id', Role::where('slug', 'paciente')->first()->id)
+            ->orderBy('id')
             ->take(10)
             ->get();
 
@@ -280,39 +305,52 @@ class UsuariosDemoSeeder extends Seeder
             'Recordatorio de consulta médica.',
         ];
 
-        foreach ($pacientes as $paciente) {
-            DB::table('notifications')->insert([
-                'id' => Str::uuid(),
-                'type' => $tipos[array_rand($tipos)],
-                'notifiable_type' => User::class,
-                'notifiable_id' => $paciente->id,
-                'data' => json_encode([
-                    'message' => $mensajes[array_rand($mensajes)],
-                    'consulta_id' => fake()->numberBetween(1, 100),
-                ]),
-                'read_at' => fake()->boolean(30) ? now() : null,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+        foreach ($pacientes as $indice => $paciente) {
+            $tipo = $tipos[$indice % count($tipos)];
+            $mensaje = $mensajes[$indice % count($mensajes)];
+
+            $existe = DB::table('notifications')
+                ->where('notifiable_id', $paciente->id)
+                ->where('type', $tipo)
+                ->exists();
+
+            if (! $existe) {
+                DB::table('notifications')->insert([
+                    'id' => Str::uuid(),
+                    'type' => $tipo,
+                    'notifiable_type' => User::class,
+                    'notifiable_id' => $paciente->id,
+                    'data' => json_encode(['message' => $mensaje]),
+                    'read_at' => $indice % 3 === 0 ? now() : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
         }
 
         // También notificaciones para médicos
         if ($medicos->isNotEmpty()) {
-            foreach ($medicos->take(5) as $medico) {
+            foreach ($medicos->take(5) as $indice => $medico) {
                 if ($medico->user) {
-                    DB::table('notifications')->insert([
-                        'id' => Str::uuid(),
-                        'type' => 'App\Notifications\ConsultaAsignada',
-                        'notifiable_type' => User::class,
-                        'notifiable_id' => $medico->user->id,
-                        'data' => json_encode([
-                            'message' => 'Tienes una nueva consulta asignada.',
-                            'medico_id' => $medico->id,
-                        ]),
-                        'read_at' => null,
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]);
+                    $tipo = 'App\Notifications\ConsultaAsignada';
+
+                    $existe = DB::table('notifications')
+                        ->where('notifiable_id', $medico->user->id)
+                        ->where('type', $tipo)
+                        ->exists();
+
+                    if (! $existe) {
+                        DB::table('notifications')->insert([
+                            'id' => Str::uuid(),
+                            'type' => $tipo,
+                            'notifiable_type' => User::class,
+                            'notifiable_id' => $medico->user->id,
+                            'data' => json_encode(['message' => 'Tienes una nueva consulta asignada.']),
+                            'read_at' => null,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
+                    }
                 }
             }
         }
