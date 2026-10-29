@@ -8,6 +8,7 @@ use App\Models\Invitacion;
 use App\Models\Medico;
 use App\Models\Role;
 use App\Models\User;
+use App\Providers\AppServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -52,6 +53,103 @@ class MedicosAuthTest extends TestCase
             'medico_id' => $user->medico->id,
             'email' => 'carlos.mendez@clinica.test',
         ]);
+    }
+
+    public function test_resend_invitation_uses_the_configured_local_app_url(): void
+    {
+        $roles = $this->crearRoles();
+        $coordinator = User::factory()->coordinador()->create([
+            'role_id' => $roles['coordinador']->id,
+        ]);
+        $medicoUser = User::factory()->medico()->create([
+            'role_id' => $roles['medico']->id,
+        ]);
+        $medico = Medico::create([
+            'user_id' => $medicoUser->id,
+            'estado' => 'pendiente',
+        ]);
+
+        config(['app.url' => 'http://localhost:8000']);
+        (new AppServiceProvider($this->app))->boot();
+
+        $response = $this->actingAs($coordinator)
+            ->post('http://127.0.0.1/coordinacion/medicos/'.$medico->id.'/invitacion');
+
+        $response->assertRedirectToRoute('coordinacion.medicos');
+        $response->assertSessionHas('invitacion_url', function (mixed $url): bool {
+            return is_string($url)
+                && str_starts_with($url, 'http://localhost:8000/medico/activar/');
+        });
+
+        $activationUrl = session('invitacion_url');
+        $this->assertIsString($activationUrl);
+        $this->get($activationUrl)
+            ->assertOk()
+            ->assertViewIs('auth.activar')
+            ->assertSee('Activa tu cuenta');
+    }
+
+    public function test_production_invitation_uses_app_url_and_activates_the_associated_medic(): void
+    {
+        $roles = $this->crearRoles();
+        $coordinator = User::factory()->coordinador()->create([
+            'role_id' => $roles['coordinador']->id,
+        ]);
+
+        config(['app.url' => 'https://sigc-ikoc.onrender.com']);
+        (new AppServiceProvider($this->app))->boot();
+
+        $response = $this->actingAs($coordinator)
+            ->post('http://127.0.0.1/coordinacion/medicos', [
+                'name' => 'Ana',
+                'apellido' => 'Méndez',
+                'email' => 'ana.mendez@clinica.test',
+                'estado_inicial' => 'pendiente',
+            ]);
+
+        $response->assertRedirectToRoute('coordinacion.medicos');
+        $response->assertSessionHas('invitacion_url');
+
+        $activationUrl = session('invitacion_url');
+        $this->assertIsString($activationUrl);
+        $activationUri = parse_url($activationUrl);
+        $this->assertIsArray($activationUri);
+        $this->assertSame('https://sigc-ikoc.onrender.com', $activationUri['scheme'].'://'.$activationUri['host']);
+        $this->assertStringStartsWith('/medico/activar/', $activationUri['path'] ?? '');
+
+        $activationToken = basename($activationUri['path']);
+        $medicoUser = User::where('email', 'ana.mendez@clinica.test')->firstOrFail();
+        $medico = $medicoUser->medico;
+
+        $this->assertSame($roles['medico']->id, $medicoUser->role_id);
+        $this->assertSame($medicoUser->id, $medico->user_id);
+        $this->assertDatabaseHas('invitaciones', [
+            'medico_id' => $medico->id,
+            'email' => $medicoUser->email,
+            'token_hash' => hash('sha256', $activationToken),
+        ]);
+
+        $this->get($activationUrl)
+            ->assertOk()
+            ->assertViewIs('auth.activar')
+            ->assertSee('Activa tu cuenta')
+            ->assertSee('Nueva contraseña');
+
+        $this->post($activationUrl, [
+            'password' => 'NuevaContrasena123!',
+            'password_confirmation' => 'NuevaContrasena123!',
+        ])->assertRedirectToRoute('medico.dashboard');
+
+        $this->assertTrue(Hash::check('NuevaContrasena123!', $medicoUser->fresh()->password));
+        $this->assertSame('activo', $medico->fresh()->estado);
+        $this->assertSame($roles['medico']->id, $medicoUser->fresh()->role_id);
+        $this->assertNotNull($medico->invitacion->fresh()->used_at);
+
+        $this->post($activationUrl, [
+            'password' => 'OtraContrasena123!',
+            'password_confirmation' => 'OtraContrasena123!',
+        ])->assertRedirectToRoute('medico.activar', ['token' => $activationToken])
+            ->assertSessionHasErrors('token');
     }
 
     public function test_medico_no_puede_iniciar_sesion_antes_de_activar_la_contrasena(): void

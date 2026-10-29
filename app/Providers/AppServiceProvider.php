@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,6 +22,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $appUrl = (string) config('app.url');
+
+        URL::useOrigin($appUrl);
+        URL::forceScheme(parse_url($appUrl, PHP_URL_SCHEME) ?: null);
+
         $this->loadViewsFrom(resource_path('components'), 'portal');
 
         View::composer([
