@@ -17,6 +17,8 @@ services:
         value: production
       - key: APP_DEBUG
         value: "false"
+      - key: APP_URL
+        value: https://sigc-ikoc.onrender.com
       - key: LOG_CHANNEL
         value: stderr
       - key: SESSION_DRIVER
@@ -50,10 +52,6 @@ services:
         # Generar con: php artisan key:generate --show
         # Valor esperado: base64:...
         # Persistente en Render: no se regenera en cada despliegue.
-        sync: false
-      - key: APP_URL
-        # Configurar tras el despliegue con el dominio real asignado por Render
-        # (ej: https://sigc-xxxx.onrender.com). No asumir un dominio fijo.
         sync: false
       - key: DB_PASSWORD
         # Contraseña del usuario avnadmin en Aiven (rotar si se comprometió)
