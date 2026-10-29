@@ -1,9 +1,9 @@
 services:
   - type: web
     name: sigc
-    env: docker
+    runtime: docker
     rootDir: .
-    dockerfile: ./Dockerfile
+    dockerfilePath: ./Dockerfile
     # Plan a elegir en Render (starter, standard, etc.)
     # plan: starter
     # region: oregon  # opcional, elegir la más cercana a Aiven
@@ -49,18 +49,18 @@ services:
         # Generar con: php artisan key:generate --show
         # Valor esperado: base64:...
         # Persistente en Render: no se regenera en cada despliegue.
-        required: true
+        sync: false
       - key: APP_URL
         # Configurar tras el despliegue con el dominio real asignado por Render
         # (ej: https://sigc-xxxx.onrender.com). No asumir un dominio fijo.
-        required: true
+        sync: false
       - key: DB_PASSWORD
         # Contraseña del usuario avnadmin en Aiven (rotar si se comprometió)
-        required: true
+        sync: false
       - key: DB_SSL_CA_CONTENT
         # Contenido PEM del certificado CA de Aiven (ca.pem).
         # El entrypoint lo escribe en DB_SSL_CA_PATH al iniciar el contenedor.
-        required: true
+        sync: false
 
     # Health check basado en la ruta /up que Laravel expone (bootstrap/app.php)
     # No depende de registros de negocio.
