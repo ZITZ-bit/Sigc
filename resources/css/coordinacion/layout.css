@@ -224,6 +224,114 @@ button {
   margin: 0 auto 2.25rem;
 }
 
+.coordinacion-table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  border-radius: var(--coordinacion-radius);
+  -webkit-overflow-scrolling: touch;
+}
+
+.coordinacion-pagination {
+  margin-top: 1.25rem;
+  overflow-x: auto;
+}
+
+.coordinacion-pagination nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.coordinacion-pagination nav > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.coordinacion-pagination nav > div:nth-child(2) {
+  display: none;
+}
+
+.coordinacion-pagination nav a,
+.coordinacion-pagination nav [aria-disabled="true"] span,
+.coordinacion-pagination nav [aria-current="page"] span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--coordinacion-color-border);
+  border-radius: var(--coordinacion-radius-sm);
+  background-color: var(--coordinacion-color-surface);
+  color: var(--coordinacion-color-forest-dark);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.coordinacion-pagination nav a:hover {
+  border-color: var(--coordinacion-color-forest);
+  background-color: var(--coordinacion-color-mint);
+}
+
+.coordinacion-pagination nav a:focus-visible {
+  outline: 3px solid var(--coordinacion-color-focus);
+  outline-offset: 2px;
+}
+
+.coordinacion-pagination nav [aria-current="page"] span {
+  border-color: var(--coordinacion-color-forest);
+  background-color: var(--coordinacion-color-forest);
+  color: var(--coordinacion-color-surface);
+}
+
+.coordinacion-pagination nav [aria-disabled="true"] span {
+  background-color: var(--coordinacion-color-bg-muted);
+  color: var(--coordinacion-color-text-muted);
+  cursor: not-allowed;
+}
+
+.coordinacion-pagination nav svg {
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .coordinacion-pagination nav {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .coordinacion-pagination nav > div:first-child {
+    display: none;
+  }
+
+  .coordinacion-pagination nav > div:nth-child(2) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  .coordinacion-pagination nav > div:nth-child(2) > div:last-child,
+  .coordinacion-pagination nav > div:nth-child(2) > div:last-child > span {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .coordinacion-pagination nav > div:nth-child(2) > div:last-child > span > :is(a, span) {
+    border-radius: 0;
+  }
+}
+
 .coordinacion-section-title {
   font-size: 1.125rem;
   font-weight: 600;

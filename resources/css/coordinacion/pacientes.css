@@ -108,6 +108,7 @@
 
 .coordinacion-pacientes-table {
   width: 100%;
+  min-width: 40rem;
   border-collapse: collapse;
   background-color: var(--coordinacion-color-surface);
   border: 1px solid var(--coordinacion-color-border);

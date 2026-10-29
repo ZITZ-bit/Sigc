@@ -105,6 +105,7 @@
 /* Tabla de médicos */
 .coordinacion-medicos-table {
   width: 100%;
+  min-width: 68rem;
   border-collapse: collapse;
   background-color: var(--coordinacion-color-surface);
   border: 1px solid var(--coordinacion-color-border);
@@ -305,6 +306,21 @@
 
 /* Responsive table */
 @media (max-width: 767px) {
+  .coordinacion-medicos-filters {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .coordinacion-medicos-filters > div {
+    width: 100%;
+    min-width: 0 !important;
+  }
+
+  .coordinacion-medicos-filters > :is(button, a) {
+    width: 100%;
+    text-align: center;
+  }
+
   .coordinacion-medicos-table {
     font-size: 0.8125rem;
   }
