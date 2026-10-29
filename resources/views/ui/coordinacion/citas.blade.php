@@ -128,7 +128,9 @@
                         @endforelse
                     </div>
 
-                    {{ $consultas->appends(request()->except('page'))->links() }}
+                    <div class="coordinacion-pagination">
+                        {{ $consultas->appends(request()->except('page'))->links() }}
+                    </div>
                 </section>
             </div>
         </div>

@@ -93,7 +93,9 @@
                             </tbody>
                         </table>
 
-                        {{ $consultas->appends(request()->except('page'))->links() }}
+                        <div class="medico-pagination">
+                            {{ $consultas->appends(request()->except('page'))->links() }}
+                        </div>
                     </section>
                 @endif
 

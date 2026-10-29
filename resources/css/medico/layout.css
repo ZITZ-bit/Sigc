@@ -224,6 +224,107 @@ button {
   margin: 0 auto 2.25rem;
 }
 
+.medico-pagination {
+  margin-top: 1.25rem;
+  overflow-x: auto;
+}
+
+.medico-pagination nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.medico-pagination nav > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.medico-pagination nav > div:nth-child(2) {
+  display: none;
+}
+
+.medico-pagination nav a,
+.medico-pagination nav [aria-disabled="true"] span,
+.medico-pagination nav [aria-current="page"] span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--medico-color-border);
+  border-radius: var(--medico-radius-sm);
+  background-color: var(--medico-color-surface);
+  color: var(--medico-color-forest-dark);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.medico-pagination nav a:hover {
+  border-color: var(--medico-color-forest);
+  background-color: var(--medico-color-mint);
+}
+
+.medico-pagination nav a:focus-visible {
+  outline: 3px solid var(--medico-color-focus);
+  outline-offset: 2px;
+}
+
+.medico-pagination nav [aria-current="page"] span {
+  border-color: var(--medico-color-forest);
+  background-color: var(--medico-color-forest);
+  color: var(--medico-color-surface);
+}
+
+.medico-pagination nav [aria-disabled="true"] span {
+  background-color: var(--medico-color-bg-muted);
+  color: var(--medico-color-text-muted);
+  cursor: not-allowed;
+}
+
+.medico-pagination nav svg {
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .medico-pagination nav {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .medico-pagination nav > div:first-child {
+    display: none;
+  }
+
+  .medico-pagination nav > div:nth-child(2) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  .medico-pagination nav > div:nth-child(2) > div:last-child,
+  .medico-pagination nav > div:nth-child(2) > div:last-child > span {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .medico-pagination nav > div:nth-child(2) > div:last-child > span > :is(a, span) {
+    border-radius: 0;
+  }
+}
+
 .medico-section-title {
   font-size: 1.125rem;
   font-weight: 600;
