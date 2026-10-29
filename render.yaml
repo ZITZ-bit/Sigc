@@ -1,0 +1,65 @@
+services:
+  - type: web
+    name: sigc
+    env: docker
+    rootDir: .
+    dockerfile: ./Dockerfile
+    # Plan a elegir en Render (starter, standard, etc.)
+    # plan: starter
+    # region: oregon  # opcional, elegir la más cercana a Aiven
+
+    envVars:
+      # =====================================================================
+      # Variables públicas / de configuración (no son secretos)
+      # =====================================================================
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_STORE
+        value: database
+      - key: QUEUE_CONNECTION
+        value: database
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        value: sigc-sigc.k.aivencloud.com
+      - key: DB_PORT
+        value: "27470"
+      - key: DB_DATABASE
+        value: sigc
+      - key: DB_USERNAME
+        value: avnadmin
+      - key: MYSQL_ATTR_SSL_CA
+        value: /etc/ssl/certs/aiven-ca.pem
+      - key: MYSQL_ATTR_SSL_VERIFY_SERVER_CERT
+        value: "true"
+      - key: DB_SSL_CA_PATH
+        value: /etc/ssl/certs/aiven-ca.pem
+
+      # =====================================================================
+      # Variables secretas — configurar en el dashboard de Render
+      # (no se escriben aquí para evitar exponerlas en Git)
+      # =====================================================================
+      - key: APP_KEY
+        # Generar con: php artisan key:generate --show
+        # Valor esperado: base64:...
+        # Persistente en Render: no se regenera en cada despliegue.
+        value: ""
+      - key: APP_URL
+        value: https://sigc-sigc.onrender.com
+      - key: DB_PASSWORD
+        # Contraseña del usuario avnadmin en Aiven (rotar si se comprometió)
+        value: ""
+      - key: DB_SSL_CA_CONTENT
+        # Contenido PEM del certificado CA de Aiven (ca.pem).
+        # Opcional: si se define, el entrypoint lo escribe en DB_SSL_CA_PATH.
+        value: ""
+
+    # Health check basado en la ruta /up que Laravel expone (bootstrap/app.php)
+    # No depende de registros de negocio.
+    healthCheckPath: /up
