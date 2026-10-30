@@ -41,6 +41,9 @@
                             </select>
                             <input type="search" name="search" class="coordinacion-filter-select" placeholder="Buscar paciente..." value="{{ $search }}">
                             <button type="submit" class="coordinacion-filter-btn coordinacion-filter-btn--active">Filtrar</button>
+                            @if ($search || $filtro_estado)
+                                <a href="{{ route('coordinacion.citas') }}" class="coordinacion-filter-btn">Limpiar</a>
+                            @endif
                         </form>
                     </div>
 
@@ -50,7 +53,7 @@
                                 <div class="coordinacion-cita-card__header">
                                     <div class="coordinacion-cita-card__when">
                                         <span class="coordinacion-cita-card__date">{{ \Carbon\Carbon::parse($consulta->fecha)->format('d/m/Y') }}</span>
-                                        <span class="coordinacion-cita-card__time">{{ substr($consulta->hora, 0, 5) }}</span>
+                                        <span class="coordinacion-cita-card__time">{{ \Carbon\Carbon::parse($consulta->hora)->format('h:i A') }}</span>
                                     </div>
                                     <span class="coordinacion-badge coordinacion-badge--{{ $consulta->estado }}">{{ ucfirst($consulta->estado) }}</span>
                                 </div>

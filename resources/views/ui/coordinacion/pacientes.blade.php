@@ -35,6 +35,9 @@
                         <form method="GET" action="{{ route('coordinacion.pacientes') }}" class="coordinacion-pacientes-search-form">
                             <input type="search" name="search" class="coordinacion-configuracion-input" placeholder="Buscar por nombre o correo..." aria-label="Buscar pacientes" value="{{ $search }}">
                             <button type="submit" class="coordinacion-filter-btn coordinacion-filter-btn--active">Buscar</button>
+                            @if ($search)
+                                <a href="{{ route('coordinacion.pacientes') }}" class="coordinacion-filter-btn">Limpiar</a>
+                            @endif
                         </form>
                     </div>
 
