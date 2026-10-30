@@ -1,8 +1,8 @@
 <nav class="medico-sidebar" data-dashboard-sidebar="medico" aria-label="Navegación principal del médico">
     <div class="medico-sidebar-header">
-        <a href="{{ route('medico.dashboard') }}" class="medico-brand" aria-label="{{ config('app.name') }} - Panel del médico">
+        <a href="{{ route('medico.dashboard') }}" class="medico-brand" aria-label="Panel del médico">
             <span class="medico-brand-icon" aria-hidden="true"><i data-lucide="heart-pulse"></i></span>
-            <span class="medico-brand-text">{{ config('app.name') }}</span>
+            <span class="medico-brand-text">Médico</span>
         </a>
         <button class="medico-sidebar-toggle" type="button" data-sidebar-toggle aria-label="Plegar menú" aria-pressed="false" title="Plegar menú"><i data-lucide="panel-left-close"></i></button>
     </div>

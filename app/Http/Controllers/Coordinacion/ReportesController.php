@@ -13,10 +13,16 @@ class ReportesController extends Controller
 {
     public function index(Request $request)
     {
-        $request->validate([
+        $rules = [
             'desde' => ['nullable', 'date'],
             'hasta' => ['nullable', 'date'],
-        ]);
+        ];
+
+        if ($request->filled('desde')) {
+            $rules['hasta'][] = 'after_or_equal:desde';
+        }
+
+        $request->validate($rules);
 
         $desde = $request->filled('desde') ? Carbon::parse($request->get('desde'))->startOfDay() : null;
         $hasta = $request->filled('hasta') ? Carbon::parse($request->get('hasta'))->endOfDay() : null;
@@ -35,6 +41,45 @@ class ReportesController extends Controller
             'confirmada' => (clone $baseQuery)->where('estado', 'confirmada')->count(),
             'completada' => (clone $baseQuery)->where('estado', 'completada')->count(),
             'cancelada' => (clone $baseQuery)->where('estado', 'cancelada')->count(),
+        ];
+
+        $chartEnd = $hasta ?? now()->startOfMonth();
+        $chartStart = $desde ?? $chartEnd->copy()->subMonths(5);
+
+        if ($chartStart->greaterThan($chartEnd)) {
+            $chartEnd = $chartStart->copy();
+        }
+
+        if ($chartStart->copy()->addMonths(11)->lessThan($chartEnd)) {
+            $chartStart = $chartEnd->copy()->subMonths(11);
+        }
+
+        $consultasPorFecha = (clone $baseQuery)
+            ->whereDate('fecha', '>=', $chartStart->toDateString())
+            ->whereDate('fecha', '<=', $chartEnd->copy()->endOfMonth()->toDateString())
+            ->select('fecha')
+            ->selectRaw('COUNT(*) as total')
+            ->groupBy('fecha')
+            ->get()
+            ->groupBy(fn ($consulta): string => Carbon::parse($consulta->fecha)->format('Y-m'));
+
+        $tendenciaMensual = collect();
+        $mes = $chartStart->copy();
+
+        while ($mes->lessThanOrEqualTo($chartEnd)) {
+            $tendenciaMensual->push([
+                'label' => $mes->locale('es')->translatedFormat('M y'),
+                'total' => (int) $consultasPorFecha->get($mes->format('Y-m'), collect())->sum('total'),
+            ]);
+
+            $mes->addMonth();
+        }
+
+        $consultasPorEstado = [
+            ['label' => 'Pendientes', 'total' => $totales['pendiente'], 'class' => 'pendiente'],
+            ['label' => 'Confirmadas', 'total' => $totales['confirmada'], 'class' => 'confirmada'],
+            ['label' => 'Completadas', 'total' => $totales['completada'], 'class' => 'completada'],
+            ['label' => 'Canceladas', 'total' => $totales['cancelada'], 'class' => 'cancelada'],
         ];
 
         $porEspecialidad = (clone $baseQuery)
@@ -72,6 +117,8 @@ class ReportesController extends Controller
             'totales' => $totales,
             'porEspecialidad' => $porEspecialidad,
             'porMedico' => $porMedico,
+            'tendenciaMensual' => $tendenciaMensual,
+            'consultasPorEstado' => $consultasPorEstado,
             'pacientesActivos' => $pacientesActivos,
             'medicosActivos' => $medicosActivos,
             'desde' => $request->get('desde'),

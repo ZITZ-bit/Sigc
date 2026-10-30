@@ -1,8 +1,8 @@
 <nav class="paciente-sidebar" data-dashboard-sidebar="paciente" aria-label="Navegación principal del paciente">
     <div class="paciente-sidebar-header">
-        <a href="{{ route('paciente.dashboard') }}" class="paciente-brand" aria-label="{{ config('app.name') }} - Panel de paciente">
+        <a href="{{ route('paciente.dashboard') }}" class="paciente-brand" aria-label="Panel de paciente">
             <span class="paciente-brand-icon" aria-hidden="true"><i data-lucide="heart-pulse"></i></span>
-            <span class="paciente-brand-text">{{ config('app.name') }}</span>
+            <span class="paciente-brand-text">Paciente</span>
         </a>
         <button class="paciente-sidebar-toggle" type="button" data-sidebar-toggle aria-label="Plegar menú" aria-pressed="false" title="Plegar menú"><i data-lucide="panel-left-close"></i></button>
     </div>
