@@ -70,7 +70,7 @@
                                 @else
                                     @foreach ($consultas as $consulta)
                                         <tr data-consulta-id="{{ $consulta->id }}" data-consulta-estado="{{ $consulta->estado }}">
-                                            <td>{{ $consulta->hora }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($consulta->hora)->format('h:i A') }}</td>
                                             <td>{{ $consulta->user->name }}</td>
                                             <td>{{ $consulta->especialidad?->name ?: 'Sin especialidad' }}</td>
                                             <td>{{ $consulta->motivo ?: 'Sin motivo registrado' }}</td>

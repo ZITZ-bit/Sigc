@@ -30,6 +30,9 @@
                             <a href="{{ route('coordinacion.recepcion', ['filtro' => 'todas']) }}" class="coordinacion-filter-btn {{ ($filtro ?? 'todas') === 'todas' ? 'coordinacion-filter-btn--active' : '' }}" aria-pressed="{{ ($filtro ?? 'todas') === 'todas' ? 'true' : 'false' }}">Todas</a>
                             <a href="{{ route('coordinacion.recepcion', ['filtro' => 'hoy']) }}" class="coordinacion-filter-btn {{ ($filtro ?? 'todas') === 'hoy' ? 'coordinacion-filter-btn--active' : '' }}" aria-pressed="{{ ($filtro ?? 'todas') === 'hoy' ? 'true' : 'false' }}">Hoy</a>
                             <a href="{{ route('coordinacion.recepcion', ['filtro' => 'semana']) }}" class="coordinacion-filter-btn {{ ($filtro ?? '') === 'semana' ? 'coordinacion-filter-btn--active' : '' }}" aria-pressed="{{ ($filtro ?? '') === 'semana' ? 'true' : 'false' }}">Esta semana</a>
+                            @if ($filtro_estado)
+                                <a href="{{ route('coordinacion.recepcion') }}" class="coordinacion-filter-btn">Limpiar filtros</a>
+                            @endif
                         </div>
                     </div>
 
@@ -49,7 +52,7 @@
                                 @foreach ($consultas as $consulta)
                                     <tr data-consulta-id="{{ $consulta->id }}" data-consulta-estado="{{ $consulta->estado }}">
                                         <td>{{ \Carbon\Carbon::parse($consulta->fecha)->format('d/m/Y') }}</td>
-                                        <td>{{ $consulta->hora }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($consulta->hora)->format('h:i A') }}</td>
                                         <td>{{ $consulta->user->name ?? 'N/A' }}</td>
                                         <td>{{ $consulta->especialidad?->name ?: 'Sin especialidad' }}</td>
                                         <td>{{ $consulta->medico?->user?->name ?? 'Pendiente de asignación' }}</td>

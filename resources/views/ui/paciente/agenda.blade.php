@@ -51,7 +51,7 @@
                                     <div class="paciente-agenda-date-time" aria-label="Fecha y hora de la consulta">
                                         <span class="paciente-agenda-month">{{ \Carbon\Carbon::parse($consulta->fecha)->locale('es')->translatedFormat('M') }}</span>
                                         <span class="paciente-agenda-date">{{ \Carbon\Carbon::parse($consulta->fecha)->format('d') }}</span>
-                                        <span class="paciente-agenda-time">{{ substr($consulta->hora, 0, 5) }}</span>
+                                        <span class="paciente-agenda-time">{{ \Carbon\Carbon::parse($consulta->hora)->format('h:i A') }}</span>
                                     </div>
                                     <div class="paciente-agenda-info">
                                         <span class="paciente-agenda-doctor">{{ $consulta->medico?->user?->name ?? 'Pendiente de asignación' }}</span>

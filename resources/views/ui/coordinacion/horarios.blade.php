@@ -112,7 +112,7 @@
                                     <div class="coordinacion-horario-card-heading">
                                         <div>
                                             <span class="coordinacion-horario-day">{{ $diasSemana[$horario->dia_semana] }}</span>
-                                            <span class="coordinacion-horario-range">{{ substr($horario->hora_inicio, 0, 5) }} <span aria-hidden="true">—</span> {{ substr($horario->hora_fin, 0, 5) }}</span>
+                                            <span class="coordinacion-horario-range">{{ \Carbon\Carbon::parse($horario->hora_inicio)->format('h:i A') }} <span aria-hidden="true">—</span> {{ \Carbon\Carbon::parse($horario->hora_fin)->format('h:i A') }}</span>
                                         </div>
                                         <span class="coordinacion-horario-status">
                                             <span aria-hidden="true"></span>
@@ -134,11 +134,11 @@
                                             </div>
                                             <div class="coordinacion-form-field">
                                                 <label for="horario-inicio-{{ $horario->id }}" class="coordinacion-form-label">Desde</label>
-                                                <input id="horario-inicio-{{ $horario->id }}" type="time" name="hora_inicio" value="{{ substr($horario->hora_inicio, 0, 5) }}" class="coordinacion-configuracion-input" required>
+                                                <input id="horario-inicio-{{ $horario->id }}" type="time" name="hora_inicio" value="{{ \Carbon\Carbon::parse($horario->hora_inicio)->format('H:i') }}" class="coordinacion-configuracion-input" required>
                                             </div>
                                             <div class="coordinacion-form-field">
                                                 <label for="horario-fin-{{ $horario->id }}" class="coordinacion-form-label">Hasta</label>
-                                                <input id="horario-fin-{{ $horario->id }}" type="time" name="hora_fin" value="{{ substr($horario->hora_fin, 0, 5) }}" class="coordinacion-configuracion-input" required>
+                                                <input id="horario-fin-{{ $horario->id }}" type="time" name="hora_fin" value="{{ \Carbon\Carbon::parse($horario->hora_fin)->format('H:i') }}" class="coordinacion-configuracion-input" required>
                                             </div>
                                             <label class="coordinacion-horario-switch">
                                                 <input type="hidden" name="activo" value="0">

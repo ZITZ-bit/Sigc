@@ -66,7 +66,7 @@
                                     @foreach ($consultas as $consulta)
                                         <tr>
                                             <td>{{ \Carbon\Carbon::parse($consulta->fecha)->format('d/m/Y') }}</td>
-                                            <td>{{ $consulta->hora }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($consulta->hora)->format('h:i A') }}</td>
                                             <td>{{ $consulta->especialidad?->name ?: 'Sin especialidad' }}</td>
                                             <td>{{ $consulta->motivo ?: 'Sin motivo registrado' }}</td>
                                             <td>

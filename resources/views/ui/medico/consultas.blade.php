@@ -70,7 +70,7 @@
                                         <tr data-consulta-id="{{ $consulta->id }}" data-consulta-estado="{{ $consulta->estado }}">
                                             <td>{{ $consulta->user->name }}</td>
                                             <td>{{ \Carbon\Carbon::parse($consulta->fecha)->format('d/m/Y') }}</td>
-                                            <td>{{ $consulta->hora }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($consulta->hora)->format('h:i A') }}</td>
                                             <td>{{ $consulta->especialidad?->name ?: 'Sin especialidad' }}</td>
                                             <td>
                                                 <span class="medico-badge medico-badge--{{ $consulta->estado }}">{{ ucfirst($consulta->estado) }}</span>
