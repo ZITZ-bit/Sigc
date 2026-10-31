@@ -86,7 +86,7 @@
                                                 @foreach ($horasDisponibles as $hora)
                                                     <label class="paciente-consulta-time-option">
                                                         <input type="radio" name="hora" value="{{ $hora }}" {{ old('hora') === $hora ? 'checked' : '' }} required>
-                                                        <span>{{ $hora }}</span>
+                                                        <span>{{ \Carbon\Carbon::parse('1970-01-01 ' . $hora)->format('h:i A') }}</span>
                                                     </label>
                                                 @endforeach
                                             </div>

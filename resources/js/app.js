@@ -98,7 +98,7 @@ function sincronizarConsulta(contenedor, consulta) {
 
 function plantillaFila(contenedor, c) {
   const fecha = c.fecha ? new Date(`${c.fecha}T00:00:00`).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '';
-  const hora = c.hora ? String(c.hora).substring(0, 5) : '';
+  const hora = c.hora ? new Date(`1970-01-01T${c.hora}:00`).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: true }) : '';
   const etiquetaEstado = estadoLabel(c.estado);
   const medico = c.medico || 'Pendiente de asignación';
   const especialidad = c.especialidad || 'Sin especialidad';
