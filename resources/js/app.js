@@ -8,14 +8,27 @@ import '../modules/portal-navigation.js';
  * Usa polling autenticado e incremental sobre endpoints existentes:
  *   GET /consultas/sincronizar?since=<ts>  -> consultas actualizadas del usuario
  *   GET /:rol/notificaciones/nuevas        -> notificaciones no leídas (toasts)
+ *   POST /:rol/notificaciones/{id}/leer    -> marcar notificación como leída
  *
  * No modifica estilos, animaciones ni la apariencia de las pantallas. Solo
  * actualiza texto, estados (clases de insignia ya existentes) e inserta filas
  * nuevas usando las mismas clases CSS que las vistas Blade.
+ *
+ * Características de robustez:
+ *   - Intervalo reducido a 15 segundos.
+ *   - Pausa automática cuando la pestaña está oculta (visibilitychange).
+ *   - Bloqueo de solicitudes simultáneas (una petición a la vez).
+ *   - Reintento con retroceso exponencial ante errores de red.
+ *   - Marcado de notificación como leída al hacer clic en el toast.
  */
-const SYNC_INTERVAL_MS = 25000;
+const SYNC_INTERVAL_MS = 15000;
+const MAX_RETRIES = 3;
+
 let lastSyncAt = null;
 let pollingTimer = null;
+let isPolling = false;
+let visibilityHidden = false;
+let retryCount = 0;
 
 function estadoLabel(estado) {
   return String(estado || '').charAt(0).toUpperCase() + String(estado || '').slice(1);
@@ -169,17 +182,39 @@ function plantillaFila(contenedor, c) {
   return '';
 }
 
+/**
+ * Ejecuta una sola sincronización. Bloquea mientras hay una petición en vuelo
+ * para evitar solicitudes simultáneas o duplicadas.
+ */
 async function sincronizarUnaVez() {
+  if (isPolling || visibilityHidden) return;
+
   const contenedores = document.querySelectorAll('[data-sync-list]');
   if (contenedores.length === 0) return;
+
+  isPolling = true;
 
   try {
     const url = new URL('/consultas/sincronizar', window.location.origin);
     if (lastSyncAt) url.searchParams.set('since', lastSyncAt);
-    const respuesta = await fetch(url, { credentials: 'same-origin', headers: { Accept: 'application/json' }, cache: 'no-store' });
-    if (!respuesta.ok) return;
+
+    const controlador = new AbortController();
+    const temporizador = setTimeout(() => controlador.abort(), 10000);
+
+    const respuesta = await fetch(url, {
+      credentials: 'same-origin',
+      headers: { Accept: 'application/json', 'Cache-Control': 'no-store' },
+      signal: controlador.signal,
+    });
+    clearTimeout(temporizador);
+
+    if (!respuesta.ok) {
+      throw new Error(`HTTP ${respuesta.status}`);
+    }
+
     const payload = await respuesta.json();
     lastSyncAt = payload.since || lastSyncAt;
+    retryCount = 0;
 
     const consultas = Array.isArray(payload.consultas) ? payload.consultas : [];
     for (const consulta of consultas) {
@@ -188,13 +223,30 @@ async function sincronizarUnaVez() {
       }
     }
   } catch (error) {
-    // Silencioso: el polling se reintentará solo en el siguiente ciclo.
+    // Silencioso: el polling se reintentará con retroceso exponencial.
+    retryCount += 1;
+    if (retryCount <= MAX_RETRIES) {
+      const retraso = Math.min(1000 * Math.pow(2, retryCount - 1), 30000);
+      setTimeout(() => {
+        isPolling = false;
+        sincronizarUnaVez();
+      }, retraso);
+      return;
+    }
+  } finally {
+    isPolling = false;
   }
 }
 
+/**
+ * Consulta notificaciones no leídas y las muestra como toasts.
+ */
 async function consultarNotificacionesNuevas() {
+  if (visibilityHidden) return;
+
   const contenedor = document.querySelector('[data-sync-list]');
   if (!contenedor) return;
+
   const nombre = contenedor.dataset.syncList || '';
   let rol = 'paciente';
   if (nombre.startsWith('coordinacion')) rol = 'coordinador';
@@ -202,15 +254,49 @@ async function consultarNotificacionesNuevas() {
 
   try {
     const url = `/${rol}/notificaciones/nuevas`;
-    const respuesta = await fetch(url, { credentials: 'same-origin', headers: { Accept: 'application/json' }, cache: 'no-store' });
+    const controlador = new AbortController();
+    const temporizador = setTimeout(() => controlador.abort(), 10000);
+
+    const respuesta = await fetch(url, {
+      credentials: 'same-origin',
+      headers: { Accept: 'application/json', 'Cache-Control': 'no-store' },
+      signal: controlador.signal,
+    });
+    clearTimeout(temporizador);
+
     if (!respuesta.ok) return;
+
     const payload = await respuesta.json();
     const notificaciones = Array.isArray(payload.notifications) ? payload.notifications : [];
     for (const notif of notificaciones) {
-      mostrarToast(notif.title || 'Nueva notificación', notif.data?.message || '');
+      mostrarToast(notif.id, notif.title || 'Nueva notificación', notif.data?.message || '', rol);
     }
   } catch (error) {
     // Silencioso.
+  }
+}
+
+/**
+ * Marca una notificación como leída en el servidor.
+ */
+async function marcarLeida(notificacionId, rol) {
+  try {
+    const controlador = new AbortController();
+    const temporizador = setTimeout(() => controlador.abort(), 10000);
+
+    await fetch(`/${rol}/notificaciones/${notificacionId}/leer`, {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        Accept: 'application/json',
+        'X-XSRF-TOKEN': getCsrfToken(),
+        'Cache-Control': 'no-store',
+      },
+      signal: controlador.signal,
+    });
+    clearTimeout(temporizador);
+  } catch (error) {
+    // Silencioso: la notificación seguirá mostrándose hasta que se marque manualmente.
   }
 }
 
@@ -226,13 +312,13 @@ function asegurarToastContenedor() {
     display: 'flex',
     flexDirection: 'column',
     gap: '0.5rem',
-    pointerEvents: 'none',
+    pointerEvents: 'auto',
   });
   document.body.appendChild(toastContenedor);
   return toastContenedor;
 }
 
-function mostrarToast(titulo, cuerpo) {
+function mostrarToast(id, titulo, cuerpo, rol) {
   const contenedor = asegurarToastContenedor();
   const toast = document.createElement('div');
   Object.assign(toast.style, {
@@ -246,14 +332,29 @@ function mostrarToast(titulo, cuerpo) {
     fontSize: '0.875rem',
     lineHeight: '1.4',
     color: '#111827',
+    cursor: 'pointer',
   });
+  toast.dataset.notificacionId = id;
+  toast.dataset.rol = rol;
   toast.innerHTML = `<div style="font-weight:600; font-size:0.9rem; margin-bottom:0.25rem;">${escapeHtml(titulo)}</div>${cuerpo ? `<div style="color:#4b5563; font-size:0.8rem;">${escapeHtml(cuerpo)}</div>` : ''}`;
   contenedor.appendChild(toast);
-  setTimeout(() => {
+
+  // Al hacer clic, marca como leída en el servidor y elimina el toast.
+  toast.addEventListener('click', () => {
+    marcarLeida(id, rol);
     toast.style.opacity = '0';
     toast.style.transform = 'translateX(100%)';
     toast.style.transition = 'all 0.3s ease';
     setTimeout(() => toast.remove(), 300);
+  });
+
+  setTimeout(() => {
+    if (toast.isConnected) {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(100%)';
+      toast.style.transition = 'all 0.3s ease';
+      setTimeout(() => toast.remove(), 300);
+    }
   }, 5000);
 }
 
@@ -261,6 +362,14 @@ function escapeHtml(texto) {
   const div = document.createElement('div');
   div.textContent = texto;
   return div.innerHTML;
+}
+
+/**
+ * Lee el token CSRF de la cookie XSRF-TOKEN que Laravel establece automáticamente.
+ */
+function getCsrfToken() {
+  const match = document.cookie.match(/(?:^|; )XSRF-TOKEN=([^;]+)/);
+  return match ? decodeURIComponent(match[1]) : '';
 }
 
 function iniciarPolling() {
@@ -273,8 +382,26 @@ function iniciarPolling() {
   }, SYNC_INTERVAL_MS);
 }
 
+function pausarPolling() {
+  visibilityHidden = true;
+}
+
+function reanudarPolling() {
+  visibilityHidden = false;
+  sincronizarUnaVez();
+  consultarNotificacionesNuevas();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   if (document.querySelector('[data-sync-list]')) {
     iniciarPolling();
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        pausarPolling();
+      } else {
+        reanudarPolling();
+      }
+    });
   }
 });
