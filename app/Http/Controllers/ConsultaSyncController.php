@@ -37,9 +37,9 @@ class ConsultaSyncController extends Controller
 
         $since = $request->query('since');
         if ($since && Carbon::hasFormat($since, 'Y-m-d H:i:s')) {
-            $query->where('updated_at', '>', Carbon::parse($since));
+            $query->where('updated_at', '>=', Carbon::parse($since));
         } elseif ($since) {
-            $query->where('updated_at', '>', Carbon::parse($since));
+            $query->where('updated_at', '>=', Carbon::parse($since));
         }
 
         $consultas = $query->orderBy('updated_at', 'desc')->limit(50)->get();

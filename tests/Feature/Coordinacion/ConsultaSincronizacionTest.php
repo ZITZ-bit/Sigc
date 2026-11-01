@@ -7,7 +7,11 @@ use App\Models\Especialidad;
 use App\Models\Medico;
 use App\Models\Role;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class ConsultaSincronizacionTest extends TestCase
@@ -71,8 +75,7 @@ class ConsultaSincronizacionTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function coordinador_ve_consulta_nueva_de_paciente_en_sincronizacion(): void
+    public function test_coordinador_ve_consulta_nueva_de_paciente_en_sincronizacion(): void
     {
         $consulta = $this->crearConsulta();
 
@@ -82,8 +85,7 @@ class ConsultaSincronizacionTest extends TestCase
         $this->assertContains($consulta->id, array_column($consultas, 'id'));
     }
 
-    /** @test */
-    public function paciente_no_ve_consultas_de_otros_pacientes(): void
+    public function test_paciente_no_ve_consultas_de_otros_pacientes(): void
     {
         $otroPaciente = User::create([
             'name' => 'Otro Paciente',
@@ -109,13 +111,18 @@ class ConsultaSincronizacionTest extends TestCase
         $this->assertCount(1, $consultas);
     }
 
-    /** @test */
-    public function medico_ve_solo_sus_consultas_asignadas(): void
+    public function test_medico_ve_solo_sus_consultas_asignadas(): void
     {
         $asignada = $this->crearConsulta(['medico_id' => $this->medicoRecord->id, 'estado' => 'confirmada']);
+        $otroMedicoUser = User::factory()->medico()->create(['role_id' => $this->rolMedico->id]);
+        $otroMedico = Medico::create([
+            'user_id' => $otroMedicoUser->id,
+            'especialidad_id' => $this->especialidad->id,
+            'estado' => 'activo',
+        ]);
         Consulta::create([
             'user_id' => $this->pacienteUsuario->id,
-            'medico_id' => 99999,
+            'medico_id' => $otroMedico->id,
             'especialidad_id' => $this->especialidad->id,
             'fecha' => '2026-11-05',
             'hora' => '11:00:00',
@@ -130,8 +137,7 @@ class ConsultaSincronizacionTest extends TestCase
         $this->assertCount(1, $consultas);
     }
 
-    /** @test */
-    public function coordinador_ve_todas_las_consultas(): void
+    public function test_coordinador_ve_todas_las_consultas(): void
     {
         $this->crearConsulta();
         $this->crearConsulta(['medico_id' => $this->medicoRecord->id, 'estado' => 'confirmada']);
@@ -142,8 +148,7 @@ class ConsultaSincronizacionTest extends TestCase
         $this->assertGreaterThanOrEqual(2, count($consultas));
     }
 
-    /** @test */
-    public function sincronizacion_incremental_solo_devuelve_consultas_cambiadas_despues_de_since(): void
+    public function test_sincronizacion_incremental_solo_devuelve_consultas_cambiadas_despues_de_since(): void
     {
         $consulta = $this->crearConsulta();
         $antes = now()->subMinutes(5)->toDateTimeString();
@@ -154,13 +159,13 @@ class ConsultaSincronizacionTest extends TestCase
         $this->assertContains($consulta->id, array_column($primera, 'id'));
 
         // Sin cambios después de ahora, la segunda sincronización debe estar vacía.
-        $despues = now()->toDateTimeString();
+        // since es estrictamente posterior al updated_at de la consulta, así que no se devuelve.
+        $despues = Carbon::parse($consulta->updated_at)->addSecond()->toDateTimeString();
         $segunda = $this->sincronizar($despues);
         $this->assertSame([], $segunda);
     }
 
-    /** @test */
-    public function cambio_de_estado_de_coordinacion_se_refleja_en_sincronizacion_de_paciente_y_medico(): void
+    public function test_cambio_de_estado_de_coordinacion_se_refleja_en_sincronizacion_de_paciente_y_medico(): void
     {
         $consulta = $this->crearConsulta([
             'medico_id' => $this->medicoRecord->id,
@@ -182,8 +187,7 @@ class ConsultaSincronizacionTest extends TestCase
         $this->assertSame('completada', collect($consultasMedico)->firstWhere('id', $consulta->id)['estado']);
     }
 
-    /** @test */
-    public function medico_completa_consulta_y_se_refleja_en_paciente_y_coordinador(): void
+    public function test_medico_completa_consulta_y_se_refleja_en_paciente_y_coordinador(): void
     {
         $consulta = $this->crearConsulta([
             'medico_id' => $this->medicoRecord->id,
@@ -205,8 +209,7 @@ class ConsultaSincronizacionTest extends TestCase
         $this->assertSame('completada', collect($consultasCoordinador)->firstWhere('id', $consulta->id)['estado']);
     }
 
-    /** @test */
-    public function paciente_cancela_consulta_y_coordinador_lo_ve_en_sincronizacion(): void
+    public function test_paciente_cancela_consulta_y_coordinador_lo_ve_en_sincronizacion(): void
     {
         $consulta = $this->crearConsulta(['estado' => 'confirmada']);
 
@@ -218,15 +221,13 @@ class ConsultaSincronizacionTest extends TestCase
         $this->assertSame('cancelada', collect($consultas)->firstWhere('id', $consulta->id)['estado']);
     }
 
-    /** @test */
-    public function sincronizacion_requiere_autenticacion(): void
+    public function test_sincronizacion_requiere_autenticacion(): void
     {
         $response = $this->getJson('/consultas/sincronizar');
         $response->assertStatus(302); // redirige al login al no estar autenticado
     }
 
-    /** @test */
-    public function no_se_duplican_consultas_en_sincronizaciones_sucesivas(): void
+    public function test_no_se_duplican_consultas_en_sincronizaciones_sucesivas(): void
     {
         $consulta = $this->crearConsulta(['medico_id' => $this->medicoRecord->id, 'estado' => 'confirmada']);
 
@@ -235,8 +236,8 @@ class ConsultaSincronizacionTest extends TestCase
 
         $this->assertContains($consulta->id, array_column($primera, 'id'));
 
-        // Una sincronización con since igual o posterior al updated_at de la consulta no debe repetirla.
-        $desdeActualizada = $primera[0]['updated_at'] ?? now()->toDateTimeString();
+        // Una sincronización con since estrictamente posterior al updated_at no debe repetirla.
+        $desdeActualizada = Carbon::parse($consulta->updated_at)->addSecond()->toDateTimeString();
         $segunda = $this->sincronizar($desdeActualizada);
         $this->assertNotContains($consulta->id, array_column($segunda, 'id'));
     }
@@ -272,5 +273,74 @@ class ConsultaSincronizacionTest extends TestCase
         $contenido = $respuesta->decodeResponseJson();
 
         return $contenido['consultas'] ?? [];
+    }
+
+    public function test_sincronizacion_incremental_no_pierde_registros_con_timestamp_igual(): void
+    {
+        $consulta = $this->crearConsulta();
+        $desdeActualizada = $consulta->updated_at->toDateTimeString();
+
+        $this->actingAs($this->coordinadorUsuario);
+
+        // Con since igual al updated_at de la consulta, no debe perderse (usa >=).
+        $sincronizada = $this->sincronizar($desdeActualizada);
+        $this->assertContains($consulta->id, array_column($sincronizada, 'id'));
+    }
+
+    public function test_paciente_no_puede_marcar_notificacion_de_otro_usuario_como_leida(): void
+    {
+        $otroPaciente = User::create([
+            'name' => 'Otro Paciente',
+            'email' => 'otro.paciente.notif@sigc.test',
+            'password' => bcrypt('password'),
+            'role_id' => $this->rolPaciente->id,
+        ]);
+
+        $notification = DatabaseNotification::create([
+            'id' => (string) Str::uuid(),
+            'type' => 'App\Notifications\ConsultaEstadoActualizado',
+            'notifiable_type' => User::class,
+            'notifiable_id' => $otroPaciente->id,
+            'data' => json_encode(['message' => 'Notificación ajena']),
+            'read_at' => null,
+        ]);
+        $notificacionId = $notification->id;
+
+        $this->actingAs($this->pacienteUsuario)
+            ->post(route('paciente.notificaciones.leer', $notificacionId), [], [
+                'X-XSRF-TOKEN' => 'token-invalido',
+            ])
+            ->assertStatus(404);
+
+        // La notificación del otro usuario no debe haberse modificado.
+        $this->assertDatabaseHas('notifications', [
+            'id' => $notificacionId,
+            'read_at' => null,
+        ]);
+    }
+
+    /** @test */
+    public function test_paciente_puede_marcar_su_propia_notificacion_como_leida(): void
+    {
+        $notification = DatabaseNotification::create([
+            'id' => (string) Str::uuid(),
+            'type' => 'App\Notifications\ConsultaEstadoActualizado',
+            'notifiable_type' => User::class,
+            'notifiable_id' => $this->pacienteUsuario->id,
+            'data' => json_encode(['message' => 'Notificación propia']),
+            'read_at' => null,
+        ]);
+        $notificacionId = $notification->id;
+
+        $this->actingAs($this->pacienteUsuario)
+            ->post(route('paciente.notificaciones.leer', $notificacionId), [], [
+                'X-XSRF-TOKEN' => 'cualquier-token',
+            ])
+            ->assertStatus(302);
+
+        // La notificación debe haberse marcado como leída.
+        $this->assertNotNull(
+            DB::table('notifications')->where('id', $notificacionId)->value('read_at')
+        );
     }
 }

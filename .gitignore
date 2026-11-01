@@ -106,7 +106,7 @@ Thumbs.db
 /storage/framework/views/.gitignore
 
 # Respaldo y certificados (no versionar)
-database/sigc-backup.sql
+database/*.sql
 ca.pem
 /storage/framework/cache/.gitignore
 /storage/framework/sessions/.gitignore

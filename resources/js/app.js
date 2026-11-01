@@ -284,7 +284,7 @@ async function marcarLeida(notificacionId, rol) {
     const controlador = new AbortController();
     const temporizador = setTimeout(() => controlador.abort(), 10000);
 
-    await fetch(`/${rol}/notificaciones/${notificacionId}/leer`, {
+    const respuesta = await fetch(`/${rol}/notificaciones/${notificacionId}/leer`, {
       method: 'POST',
       credentials: 'same-origin',
       headers: {
@@ -295,6 +295,22 @@ async function marcarLeida(notificacionId, rol) {
       signal: controlador.signal,
     });
     clearTimeout(temporizador);
+
+    if (!respuesta.ok) {
+      if (respuesta.status === 419) {
+        console.error('Error CSRF: Token de sesión expirado o inválido (419). Vuelva a cargar la página.');
+      } else if (respuesta.status === 403) {
+        console.error('Error 403: No autorizado para marcar esta notificación como leída.');
+      } else {
+        console.error(`Error al marcar notificación como leída: HTTP ${respuesta.status}`);
+      }
+      return;
+    }
+
+    const respuestaJson = await respuesta.json();
+    if (respuestaJson.success) {
+      // La notificación se marcó como leída; el toast se elimina por el click handler.
+    }
   } catch (error) {
     // Silencioso: la notificación seguirá mostrándose hasta que se marque manualmente.
   }
