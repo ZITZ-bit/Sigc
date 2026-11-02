@@ -67,7 +67,7 @@
                                 </div>
                                 <div class="coordinacion-form-field coordinacion-mb-2">
                                     <label class="coordinacion-form-label">Teléfono</label>
-                                    <input type="tel" name="telefono" class="coordinacion-configuracion-input" value="{{ old('telefono') }}" placeholder="+34 600 000 000">
+                                    <input type="tel" name="telefono" class="coordinacion-configuracion-input" value="{{ old('telefono') }}" placeholder="+58 600 000 000">
                                 </div>
                                 <div class="coordinacion-form-field coordinacion-mb-2">
                                     <label class="coordinacion-form-label">Dirección</label>

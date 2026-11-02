@@ -54,11 +54,8 @@
                 <a href="mailto:contacto@clinica.com" class="portal-footer-link">
                     &#x2709; contacto@clinica.com
                 </a>
-                <a href="tel:+34600000000" class="portal-footer-link">
-                    &#x260e; +34 600 000 000
-                </a>
-                <a href="#" class="portal-footer-link">
-                    &#x1F4CD; Dirección — configurar en .env
+                <a href="tel:+58600000000" class="portal-footer-link">
+                    &#x260e; +58 600 000 000
                 </a>
             </div>
         </div>

@@ -49,8 +49,17 @@
                             @foreach ($consultas as $consulta)
                                 <article class="paciente-agenda-item" data-consulta-id="{{ $consulta->id }}" data-consulta-estado="{{ $consulta->estado }}">
                                     <div class="paciente-agenda-date-time" aria-label="Fecha y hora de la consulta">
-                                        <span class="paciente-agenda-month">{{ \Carbon\Carbon::parse($consulta->fecha)->locale('es')->translatedFormat('M') }}</span>
-                                        <span class="paciente-agenda-date">{{ \Carbon\Carbon::parse($consulta->fecha)->format('d') }}</span>
+                                        <?php
+                                        $mesesEs = [
+                                            'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+                                            'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+                                        ];
+                                        $fechaConsulta = \Carbon\Carbon::parse($consulta->fecha);
+                                        $mesIndex = (int) $fechaConsulta->format('m') - 1;
+                                        $mesEs = $mesesEs[$mesIndex] ?? $fechaConsulta->format('M');
+                                        ?>
+                                        <span class="paciente-agenda-month">{{ $mesEs }}</span>
+                                        <span class="paciente-agenda-date">{{ $fechaConsulta->format('d') }}</span>
                                         <span class="paciente-agenda-time">{{ \Carbon\Carbon::parse($consulta->hora)->format('h:i A') }}</span>
                                     </div>
                                     <div class="paciente-agenda-info">

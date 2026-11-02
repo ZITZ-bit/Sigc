@@ -100,16 +100,18 @@
                 <div class="portal-contact-grid">
                     <div class="portal-contact-item">
                         <span class="portal-contact-label">Teléfono</span>
-                        <span class="portal-contact-value placeholder">+34 600 000 000</span>
+                        <span class="portal-contact-value placeholder">+58 600 000 000</span>
                     </div>
                     <div class="portal-contact-item">
                         <span class="portal-contact-label">Correo electrónico</span>
                         <span class="portal-contact-value placeholder">contacto@clinica.com</span>
                     </div>
-                    <div class="portal-contact-item">
-                        <span class="portal-contact-label">Dirección</span>
-                        <span class="portal-contact-value placeholder">Por configurar en el archivo .env</span>
-                    </div>
+@if (config('app.direccion'))
+<div class="portal-contact-item">
+    <span class="portal-contact-label">Dirección</span>
+    <span class="portal-contact-value">{{ config('app.direccion') }}</span>
+</div>
+@endif
                     <div class="portal-contact-item">
                         <span class="portal-contact-label">Horario</span>
                         <span class="portal-contact-value placeholder">Lunes a viernes, 9:00 — 20:00</span>

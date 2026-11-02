@@ -52,7 +52,7 @@ class UsuariosDemoSeeder extends Seeder
         $rolPaciente = Role::where('slug', 'paciente')->firstOrFail();
 
         for ($i = 1; $i <= 20; $i++) {
-            $email = "paciente.demo{$i}@sigc.test";
+            $email = "paciente.demo{$i}@gmail.com";
 
             User::firstOrCreate(
                 ['email' => $email],
