@@ -53,6 +53,19 @@ class DatosInicialesOficialesSeeder extends Seeder
         Role::firstOrCreate(['slug' => 'coordinador'], ['name' => 'Coordinador']);
     }
 
+    private function getSeederPassword(): string
+    {
+        $password = env('SEEDER_PASSWORD');
+        if (empty($password)) {
+            throw new \RuntimeException(
+                'SEEDER_PASSWORD environment variable is required for seeding. '
+                .'Set it before running the seeder in production.'
+            );
+        }
+
+        return $password;
+    }
+
     private function crearEspecialidadesYDepartamentos(): void
     {
         $especialidades = [
@@ -115,7 +128,7 @@ class DatosInicialesOficialesSeeder extends Seeder
                 ['email' => $paciente['email']],
                 [
                     'name' => $paciente['name'],
-                    'password' => Hash::make(env('SEEDER_PASSWORD', 'ClaveInicial2026!')),
+                    'password' => Hash::make($this->getSeederPassword()),
                     'role_id' => $rolPaciente->id,
                 ]
             );
@@ -154,7 +167,7 @@ class DatosInicialesOficialesSeeder extends Seeder
                 ['email' => $m['email']],
                 [
                     'name' => $m['name'],
-                    'password' => Hash::make(env('SEEDER_PASSWORD', 'ClaveInicial2026!')),
+                    'password' => Hash::make($this->getSeederPassword()),
                     'role_id' => Role::where('slug', 'medico')->first()->id,
                 ]
             );
@@ -203,7 +216,7 @@ class DatosInicialesOficialesSeeder extends Seeder
                 ['email' => $c['email']],
                 [
                     'name' => $c['name'],
-                    'password' => Hash::make(env('SEEDER_PASSWORD', 'ClaveInicial2026!')),
+                    'password' => Hash::make($this->getSeederPassword()),
                     'role_id' => $rolCoordinador->id,
                 ]
             );
