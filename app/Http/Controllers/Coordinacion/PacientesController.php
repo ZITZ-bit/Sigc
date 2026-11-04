@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Coordinacion;
 
 use App\Http\Controllers\Controller;
+use App\Models\Consulta;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class PacientesController extends Controller
 {
@@ -17,7 +17,7 @@ class PacientesController extends Controller
     {
         $pacienteRole = Role::where('slug', 'paciente')->first();
 
-        if (!$pacienteRole) {
+        if (! $pacienteRole) {
             return view('ui.coordinacion.pacientes', [
                 'pacientes' => collect(),
                 'search' => $request->get('search', ''),
@@ -39,6 +39,13 @@ class PacientesController extends Controller
 
         $pacientes = $query->paginate(10);
 
+        if ($request->ajax()) {
+            return view('ui.coordinacion.partials.pacientes-lista', [
+                'pacientes' => $pacientes,
+                'search' => $request->get('search', ''),
+            ]);
+        }
+
         return view('ui.coordinacion.pacientes', [
             'pacientes' => $pacientes,
             'search' => $request->get('search', ''),
@@ -52,11 +59,11 @@ class PacientesController extends Controller
     {
         $pacienteRole = Role::where('slug', 'paciente')->first();
 
-        if (!$pacienteRole || $paciente->role_id !== $pacienteRole->id) {
+        if (! $pacienteRole || $paciente->role_id !== $pacienteRole->id) {
             abort(404, 'El usuario solicitado no es un paciente.');
         }
 
-        $consultas = \App\Models\Consulta::with('especialidad')
+        $consultas = Consulta::with('especialidad')
             ->where('user_id', $paciente->id)
             ->orderBy('fecha', 'desc')
             ->orderBy('hora', 'desc')

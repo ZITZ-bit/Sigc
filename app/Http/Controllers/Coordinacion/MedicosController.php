@@ -55,6 +55,16 @@ class MedicosController extends Controller
         $especialidades = Especialidad::orderBy('name')->get();
         $departamentos = Departamento::orderBy('name')->get();
 
+        if ($request->ajax()) {
+            return view('ui.coordinacion.partials.medicos-lista', [
+                'medicos' => $medicos,
+                'search' => $request->get('search', ''),
+                'filtro_especialidad' => $request->get('especialidad_id', ''),
+                'filtro_departamento' => $request->get('departamento_id', ''),
+                'filtro_estado' => $request->get('estado', ''),
+            ]);
+        }
+
         return view('ui.coordinacion.medicos', [
             'medicos' => $medicos,
             'especialidades' => $especialidades,

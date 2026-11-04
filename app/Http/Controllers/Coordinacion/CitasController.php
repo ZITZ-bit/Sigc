@@ -49,6 +49,16 @@ class CitasController extends Controller
         $medicos = Medico::with('user')->where('estado', 'activo')->orderBy('id')->get();
         $estados = ['pendiente', 'confirmada', 'completada', 'cancelada'];
 
+        if ($request->ajax()) {
+            return view('ui.coordinacion.partials.citas-lista', [
+                'consultas' => $consultas,
+                'medicos' => $medicos,
+                'search' => $request->get('search', ''),
+                'filtro_estado' => $request->get('estado', ''),
+                'filtro_fecha' => $request->get('fecha', ''),
+            ]);
+        }
+
         return view('ui.coordinacion.citas', [
             'consultas' => $consultas,
             'especialidades' => $especialidades,

@@ -33,6 +33,14 @@ class RecepcionController extends Controller
 
         $consultas = $query->get();
 
+        if ($request->ajax()) {
+            return view('ui.coordinacion.partials.recepcion-lista', [
+                'consultas' => $consultas,
+                'filtro' => $request->get('filtro', 'todas'),
+                'filtro_estado' => $request->get('estado', ''),
+            ]);
+        }
+
         return view('ui.coordinacion.recepcion', [
             'consultas' => $consultas,
             'filtro' => $request->get('filtro', 'todas'),

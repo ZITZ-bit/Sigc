@@ -33,70 +33,25 @@
                 @else
                     <section class="medico-section">
                         <div class="medico-agenda-header">
-                            <form method="GET" action="{{ route('medico.agenda') }}" class="medico-agenda-filters">
-                                <select name="estado" class="medico-filter-select">
+                            <form method="GET" action="{{ route('medico.agenda') }}" class="medico-agenda-filters" data-filtros-form="true" data-filtros-target="#medico-agenda">
+                                <select name="estado" class="medico-filter-select" data-filtros-input>
                                     <option value="">Todos los estados</option>
                                     @foreach ($estados as $estado)
                                         <option value="{{ $estado }}" {{ $filtro_estado === $estado ? 'selected' : '' }}>{{ ucfirst($estado) }}</option>
                                     @endforeach
                                 </select>
-                                <input type="search" name="search" class="medico-filter-select" placeholder="Buscar paciente..." value="{{ $search }}">
-                                <button type="submit" class="medico-filter-btn medico-filter-btn--active">Filtrar</button>
-                                <a href="{{ route('medico.agenda') }}" class="medico-filter-btn">Limpiar</a>
+                                <input type="search" name="search" class="medico-filter-select" placeholder="Buscar paciente..." value="{{ $search }}" data-filtros-input>
+                                <button type="button" class="medico-filter-btn medico-filter-btn--clear" data-filtros-limpiar>Limpiar</button>
                             </form>
                         </div>
 
-                        <table class="medico-agenda-table">
-                            <thead>
-                                <tr>
-                                    <th>Hora</th>
-                                    <th>Paciente</th>
-                                    <th>Especialidad</th>
-                                    <th>Motivo</th>
-                                    <th>Estado</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody data-sync-list="medico-agenda">
-                                @if ($consultas->isEmpty())
-                                    <tr>
-                                        <td colspan="6">
-                                            <div class="medico-empty-state">
-                                                <strong>No tiene consultas asignadas</strong>
-                                                <p>Cuando los pacientes le asignen una consulta, aparecerá aquí con fecha, hora y estado.</p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @else
-                                    @foreach ($consultas as $consulta)
-                                        <tr data-consulta-id="{{ $consulta->id }}" data-consulta-estado="{{ $consulta->estado }}">
-                                            <td>{{ \Carbon\Carbon::parse($consulta->hora)->format('h:i A') }}</td>
-                                            <td>{{ $consulta->user->name }}</td>
-                                            <td>{{ $consulta->especialidad?->name ?: 'Sin especialidad' }}</td>
-                                            <td>{{ $consulta->motivo ?: 'Sin motivo registrado' }}</td>
-                                            <td>
-                                                <span class="medico-badge medico-badge--{{ $consulta->estado }}">{{ ucfirst($consulta->estado) }}</span>
-                                            </td>
-                                            <td>
-                                                <div class="medico-agenda-actions">
-                                                    @if ($consulta->estado === 'confirmada')
-                                                        <form method="POST" action="{{ route('medico.consultas.completar', $consulta) }}" style="display:inline;">
-                                                            @csrf
-                                                            <button type="submit" class="medico-agenda-btn medico-agenda-btn--completar">Completar</button>
-                                                        </form>
-                                                    @elseif ($consulta->estado === 'completada' && ! $consulta->historialClinico)
-                                                        <a href="{{ route('medico.historial.clinico.create', $consulta) }}" class="medico-agenda-btn medico-agenda-btn--completar">Registrar nota</a>
-                                                    @endif
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                @endif
-                            </tbody>
-                        </table>
-
-                        <div class="medico-pagination">
-                            {{ $consultas->appends(request()->except('page'))->links() }}
+                        <div id="medico-agenda" data-sync-list="medico-agenda" data-filtros-target>
+                            @include('ui.medico.partials.agenda-lista', [
+                                'consultas' => $consultas,
+                                'medico' => $medico,
+                                'search' => $search,
+                                'filtro_estado' => $filtro_estado,
+                            ])
                         </div>
                     </section>
                 @endif

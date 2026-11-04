@@ -18,6 +18,8 @@ use App\Models\Consulta;
 use App\Models\Especialidad;
 use App\Models\HistorialClinico;
 use App\Models\Medico;
+use App\Models\Role;
+use App\Models\User;
 use App\Notifications\ConsultaEstadoActualizado;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -79,6 +81,13 @@ Route::middleware(['auth', 'role:paciente'])->group(function () {
                 });
             })
             ->get();
+
+        if ($request->ajax()) {
+            return view('ui.paciente.partials.doctores-lista', [
+                'medicos' => $medicos,
+                'search' => $search,
+            ]);
+        }
 
         return view('ui.paciente.doctores', [
             'medicos' => $medicos,
@@ -168,11 +177,42 @@ Route::middleware(['auth', 'role:medico'])->group(function () {
 
     Route::get('/medico/pacientes', function (Request $request) {
         $search = $request->query('search', '');
+        $medico = auth()->user()->medico;
+
+        $pacienteRole = Role::where('slug', 'paciente')->first();
+
+        if (! $medico || ! $pacienteRole) {
+            $pacientes = collect();
+        } else {
+            $pacienteIds = Consulta::where('medico_id', $medico->id)
+                ->distinct()
+                ->pluck('user_id');
+
+            $query = User::where('role_id', $pacienteRole->id)
+                ->whereIn('id', $pacienteIds)
+                ->orderBy('created_at', 'desc');
+
+            if ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
+                });
+            }
+
+            $pacientes = $query->paginate(10);
+        }
+
+        if ($request->ajax()) {
+            return view('ui.medico.partials.pacientes-lista', [
+                'pacientes' => $pacientes,
+                'search' => $search,
+            ]);
+        }
 
         return view('ui.medico.pacientes', [
-            'pacientes' => collect(),
+            'pacientes' => $pacientes,
             'search' => $search,
-            'medico' => auth()->user()->medico,
+            'medico' => $medico,
         ]);
     })->name('medico.pacientes');
 

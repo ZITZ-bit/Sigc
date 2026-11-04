@@ -49,6 +49,15 @@ class CitasController extends Controller
         $consultas = $query->paginate(10);
         $estados = ['pendiente', 'confirmada', 'completada', 'cancelada'];
 
+        if ($request->ajax()) {
+            return view('ui.medico.partials.agenda-lista', [
+                'consultas' => $consultas,
+                'medico' => $medico,
+                'search' => $request->get('search', ''),
+                'filtro_estado' => $request->get('estado', ''),
+            ]);
+        }
+
         return view('ui.medico.agenda', [
             'consultas' => $consultas,
             'medico' => $medico,
@@ -96,6 +105,15 @@ class CitasController extends Controller
 
         $consultas = $query->paginate(10);
         $estados = ['pendiente', 'confirmada', 'completada', 'cancelada'];
+
+        if ($request->ajax()) {
+            return view('ui.medico.partials.consultas-lista', [
+                'consultas' => $consultas,
+                'medico' => $medico,
+                'search' => $request->get('search', ''),
+                'filtro_estado' => $request->get('estado', ''),
+            ]);
+        }
 
         return view('ui.medico.consultas', [
             'consultas' => $consultas,

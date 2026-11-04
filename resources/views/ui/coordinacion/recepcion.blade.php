@@ -25,53 +25,35 @@
                 </div>
 
                 <section class="coordinacion-section">
-                    <div class="coordinacion-recepcion-header">
-                        <div class="coordinacion-recepcion-filters">
-                            <a href="{{ route('coordinacion.recepcion', ['filtro' => 'todas']) }}" class="coordinacion-filter-btn {{ ($filtro ?? 'todas') === 'todas' ? 'coordinacion-filter-btn--active' : '' }}" aria-pressed="{{ ($filtro ?? 'todas') === 'todas' ? 'true' : 'false' }}">Todas</a>
-                            <a href="{{ route('coordinacion.recepcion', ['filtro' => 'hoy']) }}" class="coordinacion-filter-btn {{ ($filtro ?? 'todas') === 'hoy' ? 'coordinacion-filter-btn--active' : '' }}" aria-pressed="{{ ($filtro ?? 'todas') === 'hoy' ? 'true' : 'false' }}">Hoy</a>
-                            <a href="{{ route('coordinacion.recepcion', ['filtro' => 'semana']) }}" class="coordinacion-filter-btn {{ ($filtro ?? '') === 'semana' ? 'coordinacion-filter-btn--active' : '' }}" aria-pressed="{{ ($filtro ?? '') === 'semana' ? 'true' : 'false' }}">Esta semana</a>
-                            @if ($filtro_estado)
-                                <a href="{{ route('coordinacion.recepcion') }}" class="coordinacion-filter-btn">Limpiar filtros</a>
-                            @endif
+                        <div class="coordinacion-recepcion-header">
+                            <div class="coordinacion-recepcion-filters">
+                                <a href="{{ route('coordinacion.recepcion', ['filtro' => 'todas']) }}" class="coordinacion-filter-btn {{ ($filtro ?? 'todas') === 'todas' ? 'coordinacion-filter-btn--active' : '' }}" aria-pressed="{{ ($filtro ?? 'todas') === 'todas' ? 'true' : 'false' }}" data-filtros-link="todas" data-filtros-target="#coordinacion-recepcion">Todas</a>
+                                <a href="{{ route('coordinacion.recepcion', ['filtro' => 'hoy']) }}" class="coordinacion-filter-btn {{ ($filtro ?? 'todas') === 'hoy' ? 'coordinacion-filter-btn--active' : '' }}" aria-pressed="{{ ($filtro ?? 'todas') === 'hoy' ? 'true' : 'false' }}" data-filtros-link="hoy" data-filtros-target="#coordinacion-recepcion">Hoy</a>
+                                <a href="{{ route('coordinacion.recepcion', ['filtro' => 'semana']) }}" class="coordinacion-filter-btn {{ ($filtro ?? '') === 'semana' ? 'coordinacion-filter-btn--active' : '' }}" aria-pressed="{{ ($filtro ?? '') === 'semana' ? 'true' : 'false' }}" data-filtros-link="semana" data-filtros-target="#coordinacion-recepcion">Esta semana</a>
+                                @if ($filtro_estado)
+                                    <button type="button" class="coordinacion-filter-btn" data-filtros-limpiar data-filtros-target="#coordinacion-recepcion">Limpiar filtros</button>
+                                @endif
+                            </div>
                         </div>
-                    </div>
 
-                    <table class="coordinacion-recepcion-table">
-                        <thead>
-                            <tr>
-                                <th>Fecha</th>
-                                <th>Hora</th>
-                                <th>Paciente</th>
-                                <th>Especialidad</th>
-                                <th>Médico asignado</th>
-                                <th>Estado</th>
-                            </tr>
-                        </thead>
-                        <tbody data-sync-list="coordinacion-recepcion">
-                            @if (isset($consultas) && $consultas->isNotEmpty())
-                                @foreach ($consultas as $consulta)
-                                    <tr data-consulta-id="{{ $consulta->id }}" data-consulta-estado="{{ $consulta->estado }}">
-                                        <td>{{ \Carbon\Carbon::parse($consulta->fecha)->format('d/m/Y') }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($consulta->hora)->format('h:i A') }}</td>
-                                        <td>{{ $consulta->user->name ?? 'N/A' }}</td>
-                                        <td>{{ $consulta->especialidad?->name ?: 'Sin especialidad' }}</td>
-                                        <td>{{ $consulta->medico?->user?->name ?? 'Pendiente de asignación' }}</td>
-                                        <td>
-                                            <span class="coordinacion-badge coordinacion-badge--{{ $consulta->estado }}">{{ ucfirst($consulta->estado) }}</span>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @else
+                        <table class="coordinacion-recepcion-table">
+                            <thead>
                                 <tr>
-                                    <td colspan="6">
-                                        <div class="coordinacion-empty-state">
-                                            <strong>No hay pacientes en recepción</strong>
-                                            <p>Cuando haya citas programadas para el periodo seleccionado, aparecerán aquí.</p>
-                                        </div>
-                                    </td>
+                                    <th>Fecha</th>
+                                    <th>Hora</th>
+                                    <th>Paciente</th>
+                                    <th>Especialidad</th>
+                                    <th>Médico asignado</th>
+                                    <th>Estado</th>
                                 </tr>
-                            @endif
-                        </tbody>
+                            </thead>
+                            <tbody id="coordinacion-recepcion" data-sync-list="coordinacion-recepcion" data-filtros-target>
+                                @include('ui.coordinacion.partials.recepcion-lista', [
+                                    'consultas' => $consultas,
+                                    'filtro' => $filtro,
+                                    'filtro_estado' => $filtro_estado,
+                                ])
+                            </tbody>
                     </table>
                     <p class="coordinacion-text-center">La recepción se actualiza a partir de las consultas registradas en el sistema.</p>
                 </section>
