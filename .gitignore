@@ -105,6 +105,13 @@ Thumbs.db
 /bootstrap/cache/.gitignore
 /storage/framework/views/.gitignore
 
+# IA / agent configuration (no versionar)
+.agents/
+.claude/skills/
+AGENTS.md
+CLAUDE.md
+opencode.json
+
 # Respaldo y certificados (no versionar)
 database/*.sql
 ca.pem
